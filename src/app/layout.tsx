@@ -1,10 +1,3 @@
-import type { ReactNode } from "react";
-import type { Metadata } from "next";
-import { Montserrat, Poppins } from "next/font/google";
-
-import { GoogleAnalytics } from "@next/third-parties/google";
-
-import type { MessageDictionary } from "@/types/messages";
 import { seoConfig } from "@/config/seo";
 import { siteConfig } from "@/config/site";
 import { env } from "@/env";
@@ -15,7 +8,14 @@ import { Providers } from "@/providers";
 
 import "@/tailwind";
 
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import { Montserrat, Poppins } from "next/font/google";
+
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Toaster } from "sonner";
+
+import type { MessageDictionary } from "@/types/messages";
 
 const poppins = Poppins({
   variable: "--font-poppins",

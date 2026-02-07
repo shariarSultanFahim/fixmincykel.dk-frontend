@@ -88,5 +88,60 @@
     "navFaq": "FAQ",
     "login": "Login",
     "menuLabel": "Open menu"
+  },
+  "Login": {
+    "backToHome": "Back to Home",
+    "brand": "FixMinCykel.dk",
+    "title": "Cyclist Login",
+    "subtitle": "Log in to FixMinCykel.dk",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "submit": "Log In",
+    "orContinue": "Or continue with",
+    "google": "Google",
+    "facebook": "Facebook",
+    "newTo": "New to FixMinCykel.dk?",
+    "createAccount": "Create an account"
+  },
+  "LoginSchema": {
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 6 characters"
+  },
+  "Register": {
+    "backToHome": "Back to Home",
+    "brand": "FixMinCykel.dk",
+    "title": "Create Your Account",
+    "subtitle": "Join FixMinCykel.dk today",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "Enter your phone number",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Create a password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "submit": "Create Account",
+    "orContinue": "Or continue with",
+    "google": "Google",
+    "facebook": "Facebook",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Log in here",
+    "nextStepsTitle": "Next Steps:",
+    "nextStepOne": "Verify email",
+    "nextStepTwo": "Add bike details",
+    "nextStepThree": "Submit first repair"
+  },
+  "RegisterSchema": {
+    "fullNameMin": "Full name must be at least 2 characters",
+    "emailInvalid": "Please enter a valid email address",
+    "phoneInvalid": "Please enter a valid phone number",
+    "passwordMin": "Password must be at least 6 characters",
+    "confirmPasswordMatch": "Passwords must match"
   }
 }

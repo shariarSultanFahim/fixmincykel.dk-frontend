@@ -55,7 +55,7 @@
   --input: hsl(210 20% 98%);
   --ring: hsl(182 100% 41%);
 
-  --radius: 1.5rem; /* 24px for the cartoon look */
+  --radius: 0.5rem; /* 24px for the cartoon look */
 }
 
 @theme {
@@ -163,7 +163,7 @@
   }
 
   .card-cartoon {
-    @apply rounded-4xl border border-navy bg-white p-6 shadow-subtle md:p-8;
+    @apply rounded-md border border-navy bg-white p-6 shadow-subtle md:p-8;
   }
 
   .input-standard {
