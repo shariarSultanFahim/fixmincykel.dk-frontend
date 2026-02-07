@@ -1,7 +1,5 @@
 export default function Home() {
   return (
-    <section className="flex flex-col items-center justify-center pb-40">
-      This Is FixMinCykel.dk
-    </section>
+    <section className="flex flex-col items-center justify-center">This Is FixMinCykel.dk</section>
   );
 }

@@ -11,10 +11,11 @@ import { env } from "@/env";
 
 import messages from "@/messages/en.json";
 
-import { Toaster } from "@/ui";
 import { Providers } from "@/providers";
 
 import "@/tailwind";
+
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",

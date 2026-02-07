@@ -67,5 +67,26 @@
     "searchAction": "Search",
     "imageAlt": "Illustration of a confused person holding a broken sign",
     "imageCaption": "404 illustration"
+  },
+  "Footer": {
+    "brand": "FixMinCykel.dk",
+    "contactPhone": "+45 0000 0000",
+    "contactEmail": "info@fixmincykel.dk",
+    "ctaPrimary": "Submit your bike issue",
+    "ctaSecondary": "For workshops - join today",
+    "description": "FixMinCykel.dk connects cyclists with trusted local workshops for quick, reliable bike repairs and services. Book online, chat with providers, and get back on the road faster.",
+    "socialFacebook": "Visit Facebook",
+    "socialInstagram": "Visit Instagram",
+    "socialSend": "Send a message",
+    "copyright": "© 2026 FixMinCykel.dk"
+  },
+  "Header": {
+    "brand": "FixMinCykel",
+    "navHow": "How it Works",
+    "navExplore": "Explore",
+    "navAbout": "About us",
+    "navFaq": "FAQ",
+    "login": "Login",
+    "menuLabel": "Open menu"
   }
 }
