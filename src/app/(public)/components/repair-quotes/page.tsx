@@ -29,18 +29,12 @@ export default function RepairQuotes() {
   ];
 
   return (
-    <div className="container my-10 space-y-10">
+    <div className="container my-10 space-y-5">
       <h1 className="flex justify-center text-center">It’s that easy to get repair quotes</h1>
       <div className="flex items-center justify-center">
-        <Image
-          src="/underline.svg"
-          alt="underline"
-          width={400}
-          height={20}
-          className="w-full max-w-xs md:max-w-md lg:max-w-lg"
-        />
+        <Image src="/underline.svg" alt="underline" width={400} height={20} />
       </div>
-      <div className="grid grid-cols-1 items-stretch gap-10 md:grid-cols-3">
+      <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-3">
         {repairQuotes.map((quote, index) => (
           <RepairQuoteCard
             key={index}
@@ -48,7 +42,7 @@ export default function RepairQuotes() {
             description={quote.description}
             imageSrc={quote.imageSrc}
             imageAlt={quote.imageAlt}
-            className="h-full"
+            className="w-full max-w-sm"
           />
         ))}
       </div>
