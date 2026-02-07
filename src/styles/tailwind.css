@@ -142,10 +142,22 @@
     @apply mx-auto px-4;
   }
 
-  h1,
-  h2,
+  h1 {
+    @apply font-bold text-navy;
+    font-size: clamp(30px, 5vw, 56px);
+    line-height: 1.2;
+  }
+
+  h2 {
+    @apply font-bold text-navy;
+    font-size: clamp(24px, 4vw, 40px);
+    line-height: 1.2;
+  }
+
   h3 {
-    @apply leading-[1.2] font-bold;
+    @apply font-bold text-navy;
+    font-size: clamp(18px, 3vw, 30px);
+    line-height: 1.2;
   }
 
   p {
