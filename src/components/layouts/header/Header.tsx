@@ -21,7 +21,7 @@ export const Header = () => {
   const copy = messages as MessageDictionary;
 
   return (
-    <header className="bg-white">
+    <header className="bg-transparent">
       <div className="container">
         <div className="flex items-center justify-between gap-6 py-6">
           <Link href="/" className="flex flex-col items-center gap-3">

@@ -143,5 +143,21 @@
     "phoneInvalid": "Please enter a valid phone number",
     "passwordMin": "Password must be at least 6 characters",
     "confirmPasswordMatch": "Passwords must match"
+  },
+  "Hero": {
+    "title": "Upload your bike issue. Get offers. Book repair.",
+    "subtitle": "Find local bike repair shops, compare offers, and book a repair in minutes.",
+    "ctaPrimary": "Submit your bike issue",
+    "imageAlt": "Cyclist riding toward the city"
+  },
+  "Stats": {
+    "jobsCompleted": "25,000+",
+    "verifiedWorkshops": "1,200+",
+    "averageRating": "4.8/5",
+    "serviceRequests": "60,000+",
+    "jobsCompletedText": "Jobs completed successfully",
+    "verifiedWorkshopsText": "Verified workshops & mechanics",
+    "averageRatingText": "Average rating from customers",
+    "serviceRequestsText": " Service requests every year"
   }
 }
