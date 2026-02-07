@@ -2,7 +2,41 @@
 applyTo: "**"
 ---
 
-## Copilot Rules for this project
+# FixMinCykel.dk | Frontend Branding & Style Instructions
+
+You are an expert frontend developer. Follow these strict branding and implementation guidelines for FixMinCykel.dk.
+
+## 1. Design Philosophy
+
+- **Style:** Clean, modern, flat, and cartoon-inspired.
+- **Vibe:** Friendly, accessible, and high-usability.
+- **Component Strategy:** Use shadcn/ui components customized with the brand theme.
+
+## 2. Brand Theme & Tailwind v4 Mapping
+
+Register these variables in the `@theme` block. Use these names for consistency.
+
+| Brand Element    | Hex Code  | Tailwind Variable        | shadcn Mapping                          |
+| :--------------- | :-------- | :----------------------- | :-------------------------------------- |
+| **Primary Blue** | `#00C6CF` | `--color-primary`        | `--primary`                             |
+| **Mint Green**   | `#C3FFF2` | `--color-secondary-mint` | `--secondary`                           |
+| **Dark Navy**    | `#002E5D` | `--color-navy`           | `--foreground` & `--primary-foreground` |
+| **White**        | `#FFFFFF` | `--color-white`          | `--background`                          |
+| **Light Grey**   | `#F6F8FA` | `--color-muted`          | `--muted`                               |
+
+## 3. Typography & Spacing
+
+- **Fonts:** Poppins (Regular 400, Bold 700).
+- **H1-H3:** Bold, Navy (`#002E5D`). Desktop: 42-56px, Mobile: 30-36px.
+- **Body:** 16-18px, Navy. Line-height: 1.4-1.5.
+- **Cards:** Padding 20-32px. Use `--radius-lg` (set to 24px) for a "cartoon" rounded look.
+
+## 4. shadcn Component Requirements
+
+- **Buttons:** Must use primary blue (`#00C6CF`) with white text.
+- **Inputs:** Use Light Grey (`#F6F8FA`) backgrounds with subtle shadows.
+- **Outlines:** Illustrations and key cards should use a 2px solid Dark Navy (`#002E5D`) border for the "flat cartoon" look.
+- **Utility:** Use the `cn()` helper for all class merging.
 
 ## General
 

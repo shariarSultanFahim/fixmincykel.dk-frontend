@@ -60,8 +60,12 @@
     "description": "A showcase of the features of the project."
   },
   "NotFound": {
-    "title": "Not Found",
-    "description": "Could not find requested resource",
-    "action": "Return Home"
+    "title": "Oops! Page Not Found",
+    "description": "The page you are looking is not available or has been removed. Try going to Homepage by using the button below.",
+    "action": "Back to Home",
+    "searchPlaceholder": "Search here",
+    "searchAction": "Search",
+    "imageAlt": "Illustration of a confused person holding a broken sign",
+    "imageCaption": "404 illustration"
   }
 }
