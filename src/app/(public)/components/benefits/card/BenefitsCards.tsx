@@ -24,8 +24,8 @@ export function BenefitsCard({
         className
       )}
     >
-      <div className="\ flex size-20 items-center justify-center">
-        <Image src={imageSrc} alt={imageAlt} width={60} height={60} className="object-contain" />
+      <div className="flex size-20 items-center justify-center">
+        <Image src={imageSrc} alt={imageAlt} width={100} height={100} className="object-contain" />
       </div>
       <div className="space-y-2">
         <h3 className="text-base font-semibold text-navy md:text-lg">{title}</h3>
