@@ -2,7 +2,7 @@
   "name": "fam",
   "version": "16.0.0",
   "private": true,
-  "description": "Production-ready Next.js 16+ starter built with Tailwind CSS 4 and TypeScript.",
+  "description": "Cycle repair service in Copenhagen connecting customers with local workshops for quick and reliable bike repairs.",
   "author": {
     "name": "Shariar Sultan",
     "email": "shariarsfahim@gmail.com",
@@ -106,24 +106,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/omergulcicek/nizam.git"
+    "url": "https://github.com/shariarSultanFahim/fixmincykel.dk-frontend.git"
   },
-  "homepage": "https://github.com/omergulcicek/nizam",
-  "bugs": {
-    "url": "https://github.com/omergulcicek/nizam/issues"
-  },
+  "homepage": "https://fa-m.dev",
   "license": "MIT",
   "keywords": [
     "nextjs",
-    "nextjs16",
-    "boilerplate",
-    "starter",
-    "template",
-    "typescript",
     "react",
+    "typescript",
     "tailwindcss",
-    "shadcn",
-    "framework",
-    "nizam"
+    "tanstack-query",
+    "boilerplate"
   ]
 }
