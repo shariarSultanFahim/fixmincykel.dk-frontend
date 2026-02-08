@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Header } from "@/components/layouts";
 
 import Benefits from "./components/benefits/page";
+import Feedback from "./components/feedback/page";
 import Hero from "./components/hero/hero";
 import RepairQuotes from "./components/repair-quotes/page";
 
@@ -30,6 +31,7 @@ export default function Home() {
       </section>{" "}
       <RepairQuotes />
       <Benefits />
+      <Feedback />
     </section>
   );
 }

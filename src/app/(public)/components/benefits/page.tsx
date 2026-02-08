@@ -36,7 +36,7 @@ export default function Benefits() {
   ];
 
   return (
-    <section className="relative container my-10 overflow-hidden py-10">
+    <section className="relative container overflow-hidden py-20">
       <Image
         src="/benifitsEllipse.svg"
         alt=""

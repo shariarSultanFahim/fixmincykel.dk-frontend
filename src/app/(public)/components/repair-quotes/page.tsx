@@ -29,7 +29,7 @@ export default function RepairQuotes() {
   ];
 
   return (
-    <div className="container my-10 space-y-5 py-10">
+    <div className="container space-y-5 py-20">
       <h1 className="flex justify-center text-center">It’s that easy to get repair quotes</h1>
       <div className="flex items-center justify-center">
         <Image
