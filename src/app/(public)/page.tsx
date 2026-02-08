@@ -1,8 +1,10 @@
 import Image from "next/image";
 
-import { Header } from "@/components/layouts";
+import { Footer, Header } from "@/components/layouts";
 
+import BecomePartner from "./components/become-partner/page";
 import Benefits from "./components/benefits/page";
+import Faq from "./components/faq/page";
 import Feedback from "./components/feedback/page";
 import Hero from "./components/hero/hero";
 import NewsTipsMaintenance from "./components/news-tips-maintenance/page";
@@ -30,12 +32,15 @@ export default function Home() {
             </div>
           </section>
         </section>
-      </section>{" "}
+      </section>
       <RepairQuotes />
       <Benefits />
       <Feedback />
       <WorkshopLocationMap />
       <NewsTipsMaintenance />
+      <Faq />
+      <BecomePartner />
+      <Footer />
     </section>
   );
 }

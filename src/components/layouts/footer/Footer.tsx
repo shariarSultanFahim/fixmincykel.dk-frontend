@@ -19,7 +19,7 @@ export function Footer() {
       <div className="container py-12">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
           <div className="flex items-center gap-2">
-            <Image src={logo} alt="FixMinCykel Logo" width={72} height={72} />
+            <Image src={logo} alt="FixMinCykel Logo" width={80} height={80} />
 
             <div className="flex flex-col items-start justify-between gap-3 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold">

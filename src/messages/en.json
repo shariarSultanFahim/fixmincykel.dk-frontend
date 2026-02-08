@@ -199,5 +199,42 @@
         "tag": "Guides"
       }
     }
+  },
+  "Faq": {
+    "title": "FAQs",
+    "subtitle": "Quick answers to the most common questions about FixMinCykel.dk.",
+    "items": {
+      "repairCost": {
+        "question": "How much does a repair cost?",
+        "answer": "Pricing depends on the repair type and bike model. Submit your issue to receive fixed-price offers before you book."
+      },
+      "workshopResponse": {
+        "question": "How fast do workshops respond?",
+        "answer": "Most workshops reply within a few hours during business days. You will be notified as soon as offers arrive."
+      },
+      "supportedCities": {
+        "question": "What cities are supported?",
+        "answer": "FixMinCykel.dk is expanding across Denmark. Enter your location to see workshops near you."
+      },
+      "supportedBikes": {
+        "question": "Which bikes are supported (e-bike, cargo bike, etc.)?",
+        "answer": "We support city bikes, road bikes, mountain bikes, cargo bikes, and e-bikes. Share details in your request so workshops can match parts."
+      }
+    }
+  },
+  "Partner": {
+    "kicker": "For workshops",
+    "title": "Grow your workshop with ",
+    "subtitle": "Offending belonging promotion provision an be oh consulted ourselves it. Blessing welcomed ladyship she met humoured sir breeding her.",
+    "cta": "Become a Partner",
+    "imageAlt": "Mechanic working on a bicycle in a workshop",
+    "imageCaption": "Workshop partner spotlight",
+    "benefits": {
+      "localCustomers": "More local customers",
+      "directPayment": "Direct payment",
+      "easyCommunication": "Easy communication",
+      "transparentScheduling": "Transparent scheduling",
+      "improveRating": "Improve your workshop rating"
+    }
   }
 }
