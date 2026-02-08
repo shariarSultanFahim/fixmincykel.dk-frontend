@@ -9,7 +9,7 @@
     "url": "https://fa-m.dev"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "next dev",
