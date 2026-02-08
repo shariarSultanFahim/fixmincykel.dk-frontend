@@ -159,5 +159,45 @@
     "verifiedWorkshopsText": "Verified workshops & mechanics",
     "averageRatingText": "Average rating from customers",
     "serviceRequestsText": " Service requests every year"
+  },
+  "NewsTipsMaintenance": {
+    "title": "News, tips & maintenance",
+    "subtitle": "Quick reads to keep your bike running smooth, safe, and ready for the next ride.",
+    "cta": "See all",
+    "ctaAria": "See all news, tips and maintenance",
+    "cardAction": "Read more",
+    "cardActionAria": "Read more about",
+    "cards": {
+      "maintenanceBasics": {
+        "title": "Bike Maintenance Basics",
+        "description": "Keep your ride smooth with simple routine care like tire pressure checks, chain cleaning, and quick bolt inspections.",
+        "tag": "Basics"
+      },
+      "flatTireFast": {
+        "title": "Fix a Flat Tire Fast",
+        "description": "Step-by-step tips and when it makes sense to book a workshop instead.",
+        "tag": "Fix"
+      },
+      "brakeProblems": {
+        "title": "Brake Problems Explained",
+        "description": "Squeaks, rubbing, or soft braking can signal worn pads or dirty rotors. Learn the quick checks and safe fixes.",
+        "tag": "Safety"
+      },
+      "ebikeCare": {
+        "title": "E-Bike Care & Battery Tips",
+        "description": "Charge smart, store safely, and extend battery life with simple habits that protect your e-bike.",
+        "tag": "E-Bike"
+      },
+      "tuneUpTime": {
+        "title": "Best Time for a Tune-Up",
+        "description": "Hear new noises or feel rough shifting? This checklist helps you catch small issues before they become costly repairs.",
+        "tag": "Checklist"
+      },
+      "chooseWorkshop": {
+        "title": "Choosing the Right Workshop",
+        "description": "Compare pricing, response time, and service quality to book with confidence and get the right fix.",
+        "tag": "Guides"
+      }
+    }
   }
 }

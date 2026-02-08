@@ -5,6 +5,7 @@ import { Header } from "@/components/layouts";
 import Benefits from "./components/benefits/page";
 import Feedback from "./components/feedback/page";
 import Hero from "./components/hero/hero";
+import NewsTipsMaintenance from "./components/news-tips-maintenance/page";
 import RepairQuotes from "./components/repair-quotes/page";
 import WorkshopLocationMap from "./components/workshopLocationMap/page";
 
@@ -34,6 +35,7 @@ export default function Home() {
       <Benefits />
       <Feedback />
       <WorkshopLocationMap />
+      <NewsTipsMaintenance />
     </section>
   );
 }
