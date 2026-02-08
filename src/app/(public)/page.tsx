@@ -6,6 +6,7 @@ import Benefits from "./components/benefits/page";
 import Feedback from "./components/feedback/page";
 import Hero from "./components/hero/hero";
 import RepairQuotes from "./components/repair-quotes/page";
+import WorkshopLocationMap from "./components/workshopLocationMap/page";
 
 export default function Home() {
   return (
@@ -32,6 +33,7 @@ export default function Home() {
       <RepairQuotes />
       <Benefits />
       <Feedback />
+      <WorkshopLocationMap />
     </section>
   );
 }
