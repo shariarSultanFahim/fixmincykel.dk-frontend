@@ -76,7 +76,7 @@ export default function FAQPage() {
               <Input
                 id="client-faq-search"
                 placeholder={t("searchPlaceholder")}
-                className="h-10 rounded-full border-0 bg-white px-5 text-sm text-navy shadow-sm placeholder:text-navy/60"
+                className="h-10 rounded-[14px] border-0 bg-white px-5 text-sm text-navy shadow-sm placeholder:text-navy/60"
               />
             </div>
           </div>
