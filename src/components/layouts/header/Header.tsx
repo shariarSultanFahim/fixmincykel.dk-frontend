@@ -33,16 +33,16 @@ export const Header = () => {
             aria-label="Main"
             className="hidden items-center gap-8 rounded-full border border-border px-8 py-3 text-sm text-navy md:flex"
           >
-            <Link href="/how-it-works" className="hover:text-primary">
+            <Link href="/client-home/how-it-works" className="hover:text-primary">
               {getMessage(copy, "Header.navHow")}
             </Link>
-            <Link href="/explore" className="hover:text-primary">
+            <Link href="/client-home/explore" className="hover:text-primary">
               {getMessage(copy, "Header.navExplore")}
             </Link>
-            <Link href="/about-us" className="hover:text-primary">
+            <Link href="/client-home/about-us" className="hover:text-primary">
               {getMessage(copy, "Header.navAbout")}
             </Link>
-            <Link href="/faq" className="hover:text-primary">
+            <Link href="/client-home/faq" className="hover:text-primary">
               {getMessage(copy, "Header.navFaq")}
             </Link>
           </nav>
@@ -67,16 +67,16 @@ export const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/how-it-works">{getMessage(copy, "Header.navHow")}</Link>
+                  <Link href="/client-home/how-it-works">{getMessage(copy, "Header.navHow")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/explore">{getMessage(copy, "Header.navExplore")}</Link>
+                  <Link href="/client-home/explore">{getMessage(copy, "Header.navExplore")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/about-us">{getMessage(copy, "Header.navAbout")}</Link>
+                  <Link href="/client-home/about-us">{getMessage(copy, "Header.navAbout")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/faq">{getMessage(copy, "Header.navFaq")}</Link>
+                  <Link href="/client-home/faq">{getMessage(copy, "Header.navFaq")}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

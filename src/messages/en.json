@@ -89,6 +89,11 @@
     "login": "Login",
     "menuLabel": "Open menu"
   },
+  "PublicNav": {
+    "ariaLabel": "Public navigation",
+    "clientCta": "I need a repair",
+    "serviceCta": "Service providers"
+  },
   "Login": {
     "backToHome": "Back to Home",
     "brand": "FixMinCykel.dk",
@@ -220,6 +225,61 @@
         "question": "Which bikes are supported (e-bike, cargo bike, etc.)?",
         "answer": "We support city bikes, road bikes, mountain bikes, cargo bikes, and e-bikes. Share details in your request so workshops can match parts."
       }
+    }
+  },
+  "ClientFaq": {
+    "title": "Ask us anything",
+    "subtitle": "Have any questions? We're here to assist you.",
+    "searchPlaceholder": "Search here",
+    "searchAria": "Search FAQs",
+    "cards": {
+      "accountEmail": {
+        "question": "How do I change my account email?",
+        "answer": "You can log in to your account and change it from your Profile > Edit Profile. Then go to the General tab to change your email."
+      },
+      "paymentFails": {
+        "question": "What should I do if my payment fails?",
+        "answer": "If your payment fails, you can use the (COD) payment option, if available on that order. If your payment is debited from your account after a payment failure, it will be credited back within 7-10 days."
+      },
+      "cancellation": {
+        "question": "What is your cancellation policy?",
+        "answer": "You can now cancel an order when it is in packed/shipped status. Any amount paid will be credited into the same payment mode using which the payment was made."
+      },
+      "deliveryStatus": {
+        "question": "How do I check order delivery status?",
+        "answer": "Please tap on \"My Orders\" section under main menu of App/Website/M-site to check your order status."
+      },
+      "instantRefunds": {
+        "question": "What is Instant Refunds?",
+        "answer": "Upon successful pickup of the return product at your doorstep, Myntra will instantly initiate the refund to your source account or chosen method. Instant Refunds are not available in a few select pin codes and for all self-ship returns."
+      },
+      "applyCoupon": {
+        "question": "How do I apply a coupon on my order?",
+        "answer": "You can apply a coupon on cart page before order placement. The complete list of your unused and valid coupons will be available under \"My Coupons\" tab of App/Website/M-site."
+      }
+    },
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Can't find the answer you're looking for? Please chat to our friendly team.",
+      "button": "Get in touch"
+    }
+  },
+  "GetInTouch": {
+    "title": "Get in <accent>touch</accent>",
+    "subtitle": "Enim tempor eget pharetra facilisis sed maecenas adipiscing. Eu leo molestie vel, ornare non id blandit netus.",
+    "form": {
+      "fullName": "Full Name",
+      "address": "Address",
+      "email": "Email",
+      "phone": "Phone Number",
+      "message": "Messages",
+      "placeholder": "Input Field",
+      "submit": "Send Message"
+    },
+    "illustration": {
+      "alt": "Contact support illustration",
+      "title": "Kontakt Os",
+      "subtitle": "Vi sidder klar til at hjælpe!"
     }
   },
   "Partner": {

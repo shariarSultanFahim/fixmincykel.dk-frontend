@@ -1,1 +1,0 @@
-export { FaqItem } from "./FaqItem";
