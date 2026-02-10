@@ -205,6 +205,75 @@
       }
     }
   },
+  "Explore": {
+    "title": "Explore",
+    "featuredTag": "Featured Article",
+    "articleTitle": "How to Prepare Your Bike for the Danish Winter",
+    "articleDescription": "Master the art of winter maintenance and keep your gear running smoothly through the salt, slush, and snow of the Nordics.",
+    "readTime": "10 min read",
+    "date": "Nov 24, 2024",
+    "cta": "Read Article",
+    "imageAlt": "Cyclist riding a bike in winter conditions",
+    "tabs": {
+      "allPosts": "All Posts",
+      "forCyclists": "For Cyclists",
+      "forWorkshop": "For Workshop",
+      "techTips": "Tech Tips"
+    },
+    "alsoRead": {
+      "title": "Also read",
+      "prevAria": "Previous articles",
+      "nextAria": "Next articles",
+      "cards": {
+        "essentialTools": {
+          "title": "5 Essential Tools for Home Repair",
+          "imageAlt": "Cyclist riding through snowy terrain"
+        },
+        "homeRepair": {
+          "title": "Quick Home Repair Wins for Busy Riders",
+          "imageAlt": "Minimalist bicycle leaning against a wall"
+        },
+        "workshopSetup": {
+          "title": "Workshop Setup Tips for Faster Fixes",
+          "imageAlt": "Mechanic working on a bike in a workshop"
+        }
+      }
+    },
+    "cards": {
+      "essentialTools": {
+        "tag": "Tech Tips",
+        "title": "5 Essential Tools for Home Repair",
+        "description": "The ultimate guide for the hobbyist mechanic looking to save money and maintain their ride at home.",
+        "readTime": "10 min read",
+        "date": "Nov 24, 2024",
+        "imageAlt": "Cyclist riding through winter snow"
+      },
+      "homeRepairGuide": {
+        "tag": "Tech Tips",
+        "title": "Workshop-Ready Home Repair Guide",
+        "description": "Create a clean workspace, keep tools organized, and make fixes faster with simple routines.",
+        "readTime": "8 min read",
+        "date": "Nov 20, 2024",
+        "imageAlt": "Cyclist riding through winter snow"
+      },
+      "winterSetup": {
+        "tag": "For Cyclists",
+        "title": "Winter Setup Checklist for Safer Rides",
+        "description": "From lights to tires, prepare your bike for dark mornings and slippery streets.",
+        "readTime": "7 min read",
+        "date": "Nov 12, 2024",
+        "imageAlt": "Cyclist riding through winter snow"
+      },
+      "workshopUpgrades": {
+        "tag": "For Workshop",
+        "title": "Quick Workshop Upgrades That Save Time",
+        "description": "Small changes that speed up diagnostics, reduce rework, and improve customer handoffs.",
+        "readTime": "6 min read",
+        "date": "Nov 5, 2024",
+        "imageAlt": "Cyclist riding through winter snow"
+      }
+    }
+  },
   "Faq": {
     "title": "FAQs",
     "subtitle": "Quick answers to the most common questions about FixMinCykel.dk.",
