@@ -1,4 +1,4 @@
-import Newsletter from "../../components/newslatter";
+import Newsletter from "../components/newslatter";
 import HowItWorksHero from "./components/hero";
 import SimpleProcess from "./components/simple-process";
 import Steps from "./components/steps";

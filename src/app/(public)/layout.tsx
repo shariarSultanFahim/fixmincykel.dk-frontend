@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useCopy } from "@/hooks/use-copy";
 
 const NAV_ITEMS = [
-  { href: "/client-home", labelKey: "clientCta" },
+  { href: "/", labelKey: "clientCta" },
   { href: "/service-home", labelKey: "serviceCta" }
 ];
 
@@ -16,6 +16,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const { t } = useCopy("PublicNav");
   const firstSegment = pathname.split("/").filter(Boolean)[0] ?? "";
+  const isServiceRoute = firstSegment === "service-home";
 
   return (
     <section className="bg-white">
@@ -26,8 +27,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         >
           <div className="flex items-end">
             {NAV_ITEMS.map((item) => {
-              const itemSegment = item.href.split("/").filter(Boolean)[0] ?? "";
-              const isActive = firstSegment === itemSegment;
+              const isActive = item.href === "/" ? !isServiceRoute : isServiceRoute;
 
               return (
                 <Link

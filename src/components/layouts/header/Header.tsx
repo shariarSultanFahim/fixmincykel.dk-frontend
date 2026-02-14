@@ -33,16 +33,16 @@ export const Header = () => {
             aria-label="Main"
             className="hidden items-center gap-8 rounded-full border border-border px-8 py-3 text-sm text-navy md:flex"
           >
-            <Link href="/client-home/how-it-works" className="hover:text-primary">
+            <Link href="/how-it-works" className="hover:text-primary">
               {getMessage(copy, "Header.navHow")}
             </Link>
-            <Link href="/client-home/explore" className="hover:text-primary">
+            <Link href="/explore" className="hover:text-primary">
               {getMessage(copy, "Header.navExplore")}
             </Link>
-            <Link href="/client-home/about-us" className="hover:text-primary">
+            <Link href="/about-us" className="hover:text-primary">
               {getMessage(copy, "Header.navAbout")}
             </Link>
-            <Link href="/client-home/faq" className="hover:text-primary">
+            <Link href="/faq" className="hover:text-primary">
               {getMessage(copy, "Header.navFaq")}
             </Link>
           </nav>

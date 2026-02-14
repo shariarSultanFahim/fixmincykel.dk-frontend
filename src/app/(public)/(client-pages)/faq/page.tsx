@@ -103,7 +103,7 @@ export default function FAQPage() {
 
         <section className="flex flex-col items-start justify-between gap-4 rounded-2xl bg-navy px-6 py-6 text-white md:flex-row md:items-center">
           <p className="text-sm text-white/80">{t("cta.subtitle")}</p>
-          <Link href="/client-home/get-in-touch">
+          <Link href="/get-in-touch">
             <Button className="h-10 px-6" type="button">
               {t("cta.button")}
             </Button>

@@ -1,5 +1,5 @@
-import AlsoReadCarousel from "../../components/also-read-carousel";
-import Newsletter from "../../components/newslatter";
+import AlsoReadCarousel from "../components/also-read-carousel";
+import Newsletter from "../components/newslatter";
 import Article from "./component/article";
 
 export default function AboutUsPage() {
