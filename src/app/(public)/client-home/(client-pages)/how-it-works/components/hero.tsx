@@ -7,7 +7,7 @@ import messages from "@/messages/en.json";
 
 import { Button } from "@/components/ui";
 
-export default function Hero() {
+export default function HowItWorksHero() {
   const copy = messages as MessageDictionary;
 
   return (

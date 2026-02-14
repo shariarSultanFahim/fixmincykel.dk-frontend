@@ -1,0 +1,82 @@
+[
+  {
+    "id": "common-bike-problems",
+    "imageId": "yellow-cycle",
+    "imageAltKey": "cards.commonProblems.imageAlt",
+    "tagKey": "cards.commonProblems.tag",
+    "titleKey": "cards.commonProblems.title",
+    "readTimeKey": "cards.commonProblems.readTime",
+    "dateKey": "cards.commonProblems.date",
+    "introKey": "cards.commonProblems.intro",
+    "sections": [
+      {
+        "titleKey": "cards.commonProblems.sections.squeakyBrakes.title",
+        "bodyKey": "cards.commonProblems.sections.squeakyBrakes.body"
+      },
+      {
+        "titleKey": "cards.commonProblems.sections.skippingGears.title",
+        "bodyKey": "cards.commonProblems.sections.skippingGears.body"
+      },
+      {
+        "titleKey": "cards.commonProblems.sections.clickingSound.title",
+        "bodyKey": "cards.commonProblems.sections.clickingSound.body"
+      },
+      {
+        "titleKey": "cards.commonProblems.sections.softTires.title",
+        "bodyKey": "cards.commonProblems.sections.softTires.body"
+      },
+      {
+        "titleKey": "cards.commonProblems.sections.looseChain.title",
+        "bodyKey": "cards.commonProblems.sections.looseChain.body"
+      }
+    ]
+  },
+  {
+    "id": "winter-maintenance-tips",
+    "imageId": "cycle-beach",
+    "imageAltKey": "cards.winterMaintenance.imageAlt",
+    "tagKey": "cards.winterMaintenance.tag",
+    "titleKey": "cards.winterMaintenance.title",
+    "readTimeKey": "cards.winterMaintenance.readTime",
+    "dateKey": "cards.winterMaintenance.date",
+    "introKey": "cards.winterMaintenance.intro",
+    "sections": [
+      {
+        "titleKey": "cards.winterMaintenance.sections.cleanDrive.title",
+        "bodyKey": "cards.winterMaintenance.sections.cleanDrive.body"
+      },
+      {
+        "titleKey": "cards.winterMaintenance.sections.brakePads.title",
+        "bodyKey": "cards.winterMaintenance.sections.brakePads.body"
+      },
+      {
+        "titleKey": "cards.winterMaintenance.sections.tirePressure.title",
+        "bodyKey": "cards.winterMaintenance.sections.tirePressure.body"
+      }
+    ]
+  },
+  {
+    "id": "choosing-right-chain-lube",
+    "imageId": "cycle-workshop",
+    "imageAltKey": "cards.chainLube.imageAlt",
+    "tagKey": "cards.chainLube.tag",
+    "titleKey": "cards.chainLube.title",
+    "readTimeKey": "cards.chainLube.readTime",
+    "dateKey": "cards.chainLube.date",
+    "introKey": "cards.chainLube.intro",
+    "sections": [
+      {
+        "titleKey": "cards.chainLube.sections.weather.title",
+        "bodyKey": "cards.chainLube.sections.weather.body"
+      },
+      {
+        "titleKey": "cards.chainLube.sections.cleanFirst.title",
+        "bodyKey": "cards.chainLube.sections.cleanFirst.body"
+      },
+      {
+        "titleKey": "cards.chainLube.sections.wipeDown.title",
+        "bodyKey": "cards.chainLube.sections.wipeDown.body"
+      }
+    ]
+  }
+]

@@ -235,6 +235,90 @@
       }
     }
   },
+  "AboutArticle": {
+    "nav": {
+      "previous": "Previous Article",
+      "next": "Next Article",
+      "previousAria": "Show previous article",
+      "nextAria": "Show next article"
+    },
+    "cards": {
+      "commonProblems": {
+        "tag": "Maintenance",
+        "title": "5 Common Bike Problems You Can Diagnose Before Visiting a Workshop",
+        "readTime": "10 min read",
+        "date": "Nov 24, 2024",
+        "imageAlt": "Yellow bike against a wall",
+        "intro": "Before you rush to your local shop, many common bike issues have tell-tale signs you can spot yourself. Here is how to diagnose the most frequent mechanical headaches.",
+        "sections": {
+          "squeakyBrakes": {
+            "title": "Squeaky Brakes",
+            "body": "Few things are more annoying than a high-pitched squeal every time you pull the lever. This is usually caused by contaminated pads or glazed brake surfaces. Check if there is oil or grease on the rims or rotors."
+          },
+          "skippingGears": {
+            "title": "Skipping Gears",
+            "body": "If your chain jumps between cogs while you're pedaling, it's often a sign of cable stretch. Most new bikes go through a \"break-in\" period where the shift cables settle into their housing."
+          },
+          "clickingSound": {
+            "title": "The Infamous \"Clicking\" Sound",
+            "body": "Rhythmic clicking can be hard to track down. It might be a loose pedal, a dry bottom bracket, or even just a cable end hitting your crank arm. Focus on when the sound happens—is it only when you're pedaling hard?"
+          },
+          "softTires": {
+            "title": "Soft Tires / Slow Leaks",
+            "body": "A tire that goes flat overnight but feels okay for a short ride has a \"slow leak.\" This is often a tiny piece of glass or wire embedded in the rubber that you can't see at first glance."
+          },
+          "looseChain": {
+            "title": "Loose Chain or Drivetrain Grime",
+            "body": "A noisy, crunchy-sounding drivetrain is screaming for maintenance. Grime acts like sandpaper on your expensive components, wearing them down prematurely."
+          }
+        }
+      },
+      "winterMaintenance": {
+        "tag": "Guides",
+        "title": "Winter Maintenance Tips That Keep Your Bike Running Smooth",
+        "readTime": "8 min read",
+        "date": "Nov 18, 2024",
+        "imageAlt": "Bike parked near the beach",
+        "intro": "Cold, wet weather is tough on components. A few small routines will keep your bike reliable and safe all season.",
+        "sections": {
+          "cleanDrive": {
+            "title": "Clean the Drivetrain More Often",
+            "body": "Road salt and grime wear chains quickly. Wipe and re-lube after wet rides to keep shifting crisp."
+          },
+          "brakePads": {
+            "title": "Check Brake Pads",
+            "body": "Pads wear faster in winter. Inspect thickness and replace early to protect rims or rotors."
+          },
+          "tirePressure": {
+            "title": "Monitor Tire Pressure",
+            "body": "Air pressure drops in the cold. Top up regularly to avoid pinch flats and keep handling sharp."
+          }
+        }
+      },
+      "chainLube": {
+        "tag": "Basics",
+        "title": "Choosing the Right Chain Lube for Your Ride",
+        "readTime": "7 min read",
+        "date": "Nov 10, 2024",
+        "imageAlt": "Mechanic working in a bike workshop",
+        "intro": "The right lubricant keeps your chain quiet and extends component life. Match the lube to your weather and riding habits.",
+        "sections": {
+          "weather": {
+            "title": "Match Lube to Weather",
+            "body": "Use wet lube for rainy conditions and dry lube for dusty routes. It keeps dirt from clinging to the chain."
+          },
+          "cleanFirst": {
+            "title": "Clean First",
+            "body": "Apply lube only on a clean chain. A quick degrease makes the new lube last longer."
+          },
+          "wipeDown": {
+            "title": "Wipe the Excess",
+            "body": "After applying, wipe off extra oil so it does not attract grit or grime."
+          }
+        }
+      }
+    }
+  },
   "Stats": {
     "jobsCompleted": "25,000+",
     "verifiedWorkshops": "1,200+",

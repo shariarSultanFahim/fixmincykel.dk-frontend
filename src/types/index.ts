@@ -1,3 +1,4 @@
+export type { ArticleItem, ArticleSection } from "./article";
 export type { DataTableProps } from "./data-table";
 export type { FaqItem } from "./faq-item";
 export type { HowItWorksSimpleStep, HowItWorksStat, HowItWorksStep } from "./how-it-works";

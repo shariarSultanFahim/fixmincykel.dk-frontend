@@ -1,4 +1,4 @@
-import AlsoReadCarousel from "./components/also-read-carousel";
+import AlsoReadCarousel from "../../components/also-read-carousel";
 import FeaturedArticle from "./components/featured-article";
 import PostsSection from "./components/posts-section";
 
