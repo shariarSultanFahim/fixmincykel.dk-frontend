@@ -155,6 +155,86 @@
     "ctaPrimary": "Submit your bike issue",
     "imageAlt": "Cyclist riding toward the city"
   },
+  "HowItWorksHero": {
+    "eyebrow": "About FixMinCykel.dk",
+    "title": "About FixMinCykel.dk",
+    "subtitle": "We make bicycle repairs simple by connecting cyclists with nearby workshops—submit your issue, receive offers, and book a repair in minutes.",
+    "ctaPrimary": "Create repair request",
+    "ctaSecondary": "Become a workshop partner",
+    "imageAlt": "Close-up of a bicycle handlebar",
+    "imageCaption": "FixMinCykel.dk hero image"
+  },
+  "HowItWorksVision": {
+    "eyebrow": "Our Vision",
+    "title": "A modern way to get your bike fixed",
+    "body": "FixMinCykel.dk is a platform built to reduce the hassle of finding the right bicycle repair shop. Instead of calling around, you can send one request and let workshops come back with offers.",
+    "imageAlt": "Close-up of a bicycle frame",
+    "imageCaption": "How it works vision hero",
+    "stats": {
+      "workshops": {
+        "value": "500+",
+        "label": "Workshops"
+      },
+      "repairs": {
+        "value": "15k+",
+        "label": "Repairs done"
+      },
+      "reviews": {
+        "value": "4.9/5",
+        "label": "Reviews"
+      }
+    }
+  },
+  "HowItWorksSteps": {
+    "title": "Everything in one place",
+    "subtitle": "Create a request, compare offers, and book with confidence in a few simple steps.",
+    "items": {
+      "create": {
+        "title": "Create request",
+        "description": "Submit a short description and photos of the issue."
+      },
+      "offers": {
+        "title": "Get offers",
+        "description": "Receive offers from workshops near you."
+      },
+      "compare": {
+        "title": "Compare",
+        "description": "Compare price, distance, and availability."
+      },
+      "chat": {
+        "title": "Chat",
+        "description": "Clarify details before confirming the repair."
+      },
+      "book": {
+        "title": "Book",
+        "description": "Pick a time that works and confirm the job."
+      },
+      "review": {
+        "title": "Review",
+        "description": "Complete the repair and leave feedback."
+      }
+    }
+  },
+  "HowItWorksSimpleProcess": {
+    "title": "Simple 3-step process",
+    "steps": {
+      "describe": {
+        "title": "Describe",
+        "description": "Tell us what’s wrong with your bike in a few words—flat tire, noisy brakes, gear slipping, or anything else. Add photos if you can, and include details like bike type (road, MTB, e-bike), urgency, and preferred time. The more you share, the faster workshops can understand the issue and send accurate offers",
+        "imageAlt": "Cyclist describing a bike issue"
+      },
+      "receive": {
+        "title": "Receive",
+        "description": "Nearby workshops review your request and send you offers based on your description and photos. You’ll see clear pricing (fixed price or estimate), expected repair time, and what’s included. Compare ratings, response speed, and workshop specialties—so you can feel confident you’re choosing the right place for your bike.",
+        "imageAlt": "Mechanic working on a bicycle wheel"
+      },
+      "choose": {
+        "title": "Choose",
+        "description": "Pick the offer that fits your budget, timing, and quality expectations—then book instantly. You can message the workshop to ask questions before confirming, and you’ll receive booking details right away. After the repair, you can rate the service and help other riders find trusted workshops.",
+        "imageAlt": "Cyclist choosing a repair workshop"
+      }
+    }
+  },
   "Stats": {
     "jobsCompleted": "25,000+",
     "verifiedWorkshops": "1,200+",
