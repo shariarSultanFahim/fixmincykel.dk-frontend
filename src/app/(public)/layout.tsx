@@ -9,14 +9,14 @@ import { useCopy } from "@/hooks/use-copy";
 
 const NAV_ITEMS = [
   { href: "/", labelKey: "clientCta" },
-  { href: "/service-home", labelKey: "serviceCta" }
+  { href: "/service-provider", labelKey: "serviceCta" }
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { t } = useCopy("PublicNav");
   const firstSegment = pathname.split("/").filter(Boolean)[0] ?? "";
-  const isServiceRoute = firstSegment === "service-home";
+  const isServiceRoute = firstSegment === "service-provider";
 
   return (
     <section className="bg-white">
