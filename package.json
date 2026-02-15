@@ -118,5 +118,8 @@
     "tailwindcss",
     "tanstack-query",
     "boilerplate"
-  ]
+  ],
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "^1.31.1"
+  }
 }
