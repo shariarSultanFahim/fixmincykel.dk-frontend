@@ -18,8 +18,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
-  SidebarTrigger
+  SidebarRail
 } from "@/components/ui/sidebar";
 
 const data = {
@@ -51,17 +50,19 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex items-center justify-center">
-              <SidebarMenuButton size="lg" asChild className="group-data-[collapsible=icon]:hidden">
-                <Link href="/user">
-                  <div className="flex items-center text-sm leading-tight">
-                    <ToolCase className="m-2 size-8 rounded-lg bg-primary text-white" />
-                    <span className="truncate text-lg font-bold">{data.info.title}</span>
-                  </div>
-                </Link>
-              </SidebarMenuButton>
-              <SidebarTrigger className="flex items-center" />
-            </div>
+            <SidebarMenuButton size="lg" asChild>
+              <Link href="/workshop">
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full">
+                  <ToolCase className="size-8 rounded-lg bg-primary text-white" />
+                </div>
+                <div className="grid flex-1 text-sm leading-tight">
+                  <span className="truncate text-lg font-bold">{data.info.title}</span>
+                  <span className="text-sidebar-foreground/60 truncate text-xs font-semibold">
+                    {data.info.subtitle}
+                  </span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

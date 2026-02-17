@@ -42,15 +42,17 @@ function SheetOverlay({
 function SheetContent({
   className,
   children,
+  portalContainer,
   side = "right",
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
+  portalContainer?: HTMLElement | null;
 }) {
   return (
-    <SheetPortal>
+    <SheetPortal container={portalContainer ?? undefined}>
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
@@ -125,11 +127,11 @@ function SheetDescription({
 
 export {
   Sheet,
-  SheetTrigger,
   SheetClose,
   SheetContent,
-  SheetHeader,
+  SheetDescription,
   SheetFooter,
+  SheetHeader,
   SheetTitle,
-  SheetDescription
+  SheetTrigger
 };

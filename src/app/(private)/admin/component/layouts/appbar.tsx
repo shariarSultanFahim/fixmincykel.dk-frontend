@@ -20,8 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSubItem,
-  SidebarRail,
-  SidebarTrigger
+  SidebarRail
 } from "@/components/ui/sidebar";
 
 const data = {
@@ -53,19 +52,16 @@ export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sideba
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex items-center justify-center">
-              <SidebarMenuButton size="lg" asChild className="group-data-[collapsible=icon]:hidden">
-                <Link href="/admin">
-                  <div className="grid flex-1 text-sm leading-tight">
-                    <span className="truncate text-lg font-bold">{data.info.title}</span>
-                    <span className="text-sidebar-foreground/60 truncate text-xs font-semibold">
-                      {data.info.subtitle}
-                    </span>
-                  </div>
-                </Link>
-              </SidebarMenuButton>
-              <SidebarTrigger className="flex items-center" />
-            </div>
+            <SidebarMenuButton size="lg" asChild className="group-data-[collapsible=icon]:hidden">
+              <Link href="/admin">
+                <div className="grid flex-1 text-sm leading-tight">
+                  <span className="truncate text-lg font-bold">{data.info.title}</span>
+                  <span className="text-sidebar-foreground/60 truncate text-xs font-semibold">
+                    {data.info.subtitle}
+                  </span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
