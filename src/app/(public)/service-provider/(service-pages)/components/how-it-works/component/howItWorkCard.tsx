@@ -12,7 +12,7 @@ interface HowItWorkCardProps {
 
 export default function HowItWorkCard({ number, image, title, description }: HowItWorkCardProps) {
   return (
-    <div className="flex items-center gap-6 border-b border-secondary pb-8">
+    <div className="flex items-center gap-6 border-b-2 border-secondary pb-8">
       {/* Content Section */}
       <div className="flex-1">
         <div className="flex items-center gap-4">
