@@ -32,18 +32,22 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              className="border-primary/40 bg-primary text-white hover:bg-transparent hover:text-white"
-            >
-              {getMessage(copy, "Footer.ctaPrimary")}
-            </Button>
-            <Button
-              variant="outline"
-              className="border-primary/40 bg-transparent text-white hover:bg-primary hover:text-white"
-            >
-              {getMessage(copy, "Footer.ctaSecondary")}
-            </Button>
+            <Link href="/register">
+              <Button
+                variant="outline"
+                className="border-primary/40 bg-primary text-white hover:bg-transparent hover:text-white"
+              >
+                {getMessage(copy, "Footer.ctaPrimary")}
+              </Button>
+            </Link>
+            <Link href="/service-provider/register">
+              <Button
+                variant="outline"
+                className="border-primary/40 bg-transparent text-white hover:bg-primary hover:text-white"
+              >
+                {getMessage(copy, "Footer.ctaSecondary")}
+              </Button>
+            </Link>
           </div>
 
           <p className="max-w-2xl text-sm text-white/80">
