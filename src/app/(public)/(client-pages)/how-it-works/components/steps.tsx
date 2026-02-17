@@ -32,10 +32,10 @@ export default function Steps() {
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-bold text-navy md:text-xl">
-                  {getMessage(copy, item.titleKey)}
+                  {getMessage(copy, item.titleKey as string)}
                 </h3>
                 <p className="text-sm text-navy/70 md:text-base">
-                  {getMessage(copy, item.descriptionKey)}
+                  {getMessage(copy, item.descriptionKey as string)}
                 </p>
               </article>
             );
