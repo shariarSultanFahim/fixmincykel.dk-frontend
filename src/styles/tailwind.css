@@ -65,8 +65,8 @@
   --color-navy: var(--foreground);
   --color-light-grey: var(--muted);
 
-  --font-sans: "Poppins", "Montserrat", ui-sans-serif;
-
+  --font-sans: var(--font-poppins), var(--font-montserrat), ui-sans-serif;
+  --font-zhi: var(--font-zhi), cursive;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);

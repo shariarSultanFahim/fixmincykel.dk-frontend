@@ -125,12 +125,6 @@ Register these variables in the `@theme` block. Use these names for consistency.
 - Use appropriate aria attributes where necessary.
 - Wrap meaningful images with semantic <figure> elements for proper context and captions.
 
-## Messaging
-
-- No user-facing text should be written directly inside components.
-- All texts must come from locale files under src/messages.
-- Translation keys must be descriptive, consistent, and reusable.
-
 ## Icons
 
 - All icons must be sourced from the lucide-react library.

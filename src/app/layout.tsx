@@ -10,7 +10,7 @@ import "@/tailwind";
 
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Montserrat, Poppins } from "next/font/google";
+import { Montserrat, Poppins, Zhi_Mang_Xing } from "next/font/google";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Toaster } from "sonner";
@@ -31,6 +31,13 @@ const montserrat = Montserrat({
   display: "swap"
 });
 
+const zhiMangXing = Zhi_Mang_Xing({
+  variable: "--font-zhi",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap"
+});
+
 export const metadata: Metadata = seoConfig;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -39,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang={siteConfig.locale} suppressHydrationWarning>
       <body
-        className={`${poppins.variable} ${montserrat.variable} flex min-h-screen w-full flex-col antialiased`}
+        className={`${poppins.variable} ${montserrat.variable} ${zhiMangXing.variable} flex min-h-screen w-full flex-col antialiased`}
       >
         <Providers messages={copy}>
           <main className="flex-1">{children}</main>
