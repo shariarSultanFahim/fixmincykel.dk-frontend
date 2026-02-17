@@ -1,8 +1,19 @@
 import { CalendarCheck, FilePlus2, MessageCircle, Scale, Send, Star } from "lucide-react";
 
-import type { HowItWorksSimpleStep, HowItWorksStat, HowItWorksStep } from "@/types/how-it-works";
+import type {
+  HowItWorksSimpleStep,
+  HowItWorksStat,
+  HowItWorksStep,
+  ServiceHowItWorksStep
+} from "@/types/how-it-works";
 
 import BookingOfferImage from "@/assets/images/bookingOffer.png";
+import ServiceHowItWorkImage1 from "@/assets/images/how_it_works_1.png";
+import ServiceHowItWorkImage2 from "@/assets/images/how_it_works_2.png";
+import ServiceHowItWorkImage3 from "@/assets/images/how_it_works_3.png";
+import ServiceHowItWorkImage4 from "@/assets/images/how_it_works_4.png";
+import ServiceHowItWorkImage5 from "@/assets/images/how_it_works_5.png";
+import ServiceHowItWorkImage6 from "@/assets/images/how_it_works_6.png";
 import ReceivingOffersImage from "@/assets/images/receivingOffers.png";
 import TakingBikePhotoImage from "@/assets/images/takingBikePhoto.png";
 
@@ -72,5 +83,38 @@ export const HOW_IT_WORKS_SIMPLE_STEPS: HowItWorksSimpleStep[] = [
     titleKey: "HowItWorksSimpleProcess.steps.choose.title",
     descriptionKey: "HowItWorksSimpleProcess.steps.choose.description",
     imageAltKey: "HowItWorksSimpleProcess.steps.choose.imageAlt"
+  }
+];
+
+export const SERVICE_PROVIDER_HOW_IT_WORKS_STEPS: ServiceHowItWorksStep[] = [
+  {
+    image: ServiceHowItWorkImage1,
+    title: "Create workshop account",
+    description: "Simple form, quick approval"
+  },
+  {
+    image: ServiceHowItWorkImage2,
+    title: "Set pricing + hours",
+    description: "Templates for faster offers"
+  },
+  {
+    image: ServiceHowItWorkImage3,
+    title: "Receive repair requests",
+    description: "From local cyclists in your area"
+  },
+  {
+    image: ServiceHowItWorkImage4,
+    title: "Send offers",
+    description: "Fixed prices or estimates"
+  },
+  {
+    image: ServiceHowItWorkImage5,
+    title: "Manage bookings",
+    description: "Calendar view, easy scheduling"
+  },
+  {
+    image: ServiceHowItWorkImage6,
+    title: "Complete your new tasks",
+    description: "Complete task and increase your revenue"
   }
 ];

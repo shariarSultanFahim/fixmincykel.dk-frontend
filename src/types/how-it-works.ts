@@ -9,10 +9,19 @@ export interface HowItWorksStat {
 
 export interface HowItWorksStep {
   icon: LucideIcon;
-  titleKey: string;
-  descriptionKey: string;
+  title?: string;
+  description?: string;
+  titleKey?: string;
+  descriptionKey?: string;
 }
 
+export interface ServiceHowItWorksStep {
+  image: StaticImageData;
+  title?: string;
+  description?: string;
+  titleKey?: string;
+  descriptionKey?: string;
+}
 export interface HowItWorksSimpleStep {
   image: StaticImageData;
   titleKey: string;

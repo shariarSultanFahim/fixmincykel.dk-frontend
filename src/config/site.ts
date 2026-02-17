@@ -8,6 +8,7 @@ export const siteConfig: SiteConfig = {
   url: env.NEXT_PUBLIC_SITE_URL,
   author: "FixMinCykel.dk",
   locale: "en",
+  favicon: "/favicon.png",
   themeColor: "#1AD0D6",
   keywords: ["bike repair", "bike maintenance", "bicycle service", "fix my bike", "bike shop"],
   social: {

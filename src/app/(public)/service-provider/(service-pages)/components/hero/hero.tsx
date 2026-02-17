@@ -7,7 +7,7 @@ import { Button } from "@/components/ui";
 
 export default function ServiceHero() {
   return (
-    <section className="py-10">
+    <section className="container py-10">
       <div className="container flex flex-col-reverse justify-between md:flex-row">
         <div className="flex flex-col items-start justify-center gap-4 md:w-1/2">
           <h1
