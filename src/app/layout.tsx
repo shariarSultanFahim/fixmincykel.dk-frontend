@@ -6,7 +6,8 @@ import messages from "@/messages/en.json";
 
 import { Providers } from "@/providers";
 
-import "@/tailwind";
+// import "@/tailwind";
+import "@/styles/globals.css";
 
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
