@@ -10,7 +10,7 @@ export function MessageBubble({ sender, text, timestamp }: MessageBubbleProps) {
   return (
     <div className={`flex gap-2 md:gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-xs rounded-lg px-3 py-2 break-words md:px-4 md:py-2 ${
+        className={`wrap-break-words max-w-xs rounded-lg px-3 py-2 md:px-4 md:py-2 ${
           isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
         }`}
       >
