@@ -1,0 +1,104 @@
+{
+  "stats": [
+    {
+      "id": "new-requests",
+      "label": "New Requests",
+      "value": 4,
+      "icon": "Mail",
+      "iconColor": "bg-blue-50 text-blue-500"
+    },
+    {
+      "id": "pending-offers",
+      "label": "Pending Offers",
+      "value": 3,
+      "icon": "Send",
+      "iconColor": "bg-purple-50 text-purple-500"
+    },
+    {
+      "id": "upcoming-bookings",
+      "label": "Upcoming Bookings",
+      "value": 2,
+      "icon": "Calendar",
+      "iconColor": "bg-green-50 text-green-500"
+    },
+    {
+      "id": "avg-response-time",
+      "label": "Avg. Response Time",
+      "value": "22 min",
+      "badge": "⭐ Excellent",
+      "icon": "Clock",
+      "iconColor": "bg-orange-50 text-orange-500"
+    },
+    {
+      "id": "rating",
+      "label": "Rating",
+      "value": "4.8 ★",
+      "subtitle": "42 reviews",
+      "icon": "Star",
+      "iconColor": "bg-yellow-50 text-yellow-500"
+    },
+    {
+      "id": "revenue",
+      "label": "Revenue This Week",
+      "value": "DKK 8,450",
+      "icon": "DollarSign",
+      "iconColor": "bg-green-50 text-green-600"
+    }
+  ],
+  "recentActivity": [
+    {
+      "id": 1,
+      "type": "new-job",
+      "message": "New job #JOB-2051 (Puncture, 1.2 km)",
+      "timestamp": "Just now",
+      "color": "bg-green-500"
+    },
+    {
+      "id": 2,
+      "type": "offer-sent",
+      "message": "Offer sent for #JOB-2049 (DKK 350)",
+      "timestamp": "30 min ago",
+      "color": "bg-blue-500"
+    },
+    {
+      "id": 3,
+      "type": "offer-accepted",
+      "message": "Maria L. accepted your offer for #JOB-2048",
+      "timestamp": "2 hrs ago",
+      "color": "bg-purple-500"
+    },
+
+    {
+      "id": 4,
+      "type": "job-completed",
+      "message": "Job #JOB-2047 completed",
+      "timestamp": "3 hrs ago",
+      "color": "bg-green-500"
+    },
+
+    {
+      "id": 5,
+      "type": "offer-accepted",
+      "message": "Marie accepted your offer for #JOB-2049",
+      "timestamp": "1 day ago",
+      "color": "bg-purple-500"
+    },
+
+    {
+      "id": 6,
+      "type": "offer-accepted",
+      "message": "Judy accepted your offer for #JOB-2050",
+      "timestamp": "1 day ago",
+      "color": "bg-blue-500"
+    }
+  ],
+  "weeklyJobs": [
+    { "day": "Mon", "jobs": 3 },
+    { "day": "Tue", "jobs": 5 },
+    { "day": "Wed", "jobs": 4 },
+    { "day": "Thu", "jobs": 6 },
+    { "day": "Fri", "jobs": 2 },
+    { "day": "Sat", "jobs": 1 },
+    { "day": "Sun", "jobs": 0 }
+  ]
+}

@@ -33,7 +33,32 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: `/workshop/dashboard`,
+          icon: LayoutDashboard
+        },
+        {
+          title: "Job Inbox",
+          url: `/workshop/job-inbox`,
+          icon: LayoutDashboard
+        },
+        {
+          title: "Calendar",
+          url: `/workshop/calendar`,
+          icon: LayoutDashboard
+        },
+        {
+          title: "Analytics",
+          url: `/workshop/analytics`,
+          icon: LayoutDashboard
+        },
+        {
+          title: "Messages",
+          url: `/workshop/messages`,
+          icon: LayoutDashboard
+        },
+        {
+          title: "Profile",
+          url: `/workshop/profile`,
           icon: LayoutDashboard
         }
       ]
@@ -43,8 +68,6 @@ const data = {
 
 export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-
-  const rootPath = pathname.split("/")[1];
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
@@ -80,8 +103,8 @@ export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      isActive={rootPath === item.url.split("/")[1]}
-                      className="data-[active=true]:bg-white/25 data-[active=true]:text-primary-foreground data-[active=true]:shadow-md data-[active=true]:backdrop-blur-sm"
+                      isActive={pathname === item.url || pathname.startsWith(`${item.url}/`)}
+                      className=""
                     >
                       <Link href={item.url}>
                         <item.icon />
