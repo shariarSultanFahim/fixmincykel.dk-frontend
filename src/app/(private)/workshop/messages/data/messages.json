@@ -1,0 +1,264 @@
+[
+  {
+    "id": "conv-1",
+    "customerId": "cust-001",
+    "customerName": "Maria L.",
+    "jobId": "JOB-2048",
+    "lastMessage": "Can you also check the gears?",
+    "lastMessageTime": "15 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-1",
+        "sender": "customer",
+        "text": "Hi, I need help with my bike brakes.",
+        "timestamp": "10:30 AM"
+      },
+      {
+        "id": "msg-2",
+        "sender": "user",
+        "text": "Hello! I can help you with that. What's the issue?",
+        "timestamp": "10:32 AM"
+      },
+      {
+        "id": "msg-3",
+        "sender": "customer",
+        "text": "Can you also check the gears?",
+        "timestamp": "15 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-2",
+    "customerId": "cust-002",
+    "customerName": "Jens K.",
+    "jobId": "JOB-2051",
+    "lastMessage": "What's the exact price?",
+    "lastMessageTime": "1 hour ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-4",
+        "sender": "customer",
+        "text": "Hi, how much would it cost to fix a broken spoke?",
+        "timestamp": "9:15 AM"
+      },
+      {
+        "id": "msg-5",
+        "sender": "user",
+        "text": "Usually around 150-200 DKK depending on the wheel.",
+        "timestamp": "9:45 AM"
+      },
+      {
+        "id": "msg-6",
+        "sender": "customer",
+        "text": "What's the exact price?",
+        "timestamp": "1 hour ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-3",
+    "customerId": "cust-003",
+    "customerName": "Lars T.",
+    "jobId": "JOB-2049",
+    "lastMessage": "Thank you, see you tomorrow!",
+    "lastMessageTime": "2 hours ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-7",
+        "sender": "customer",
+        "text": "Can you fix my chain?",
+        "timestamp": "8:00 AM"
+      },
+      {
+        "id": "msg-8",
+        "sender": "user",
+        "text": "Sure! I can do that today. Can you drop it off by 4 PM?",
+        "timestamp": "8:30 AM"
+      },
+      {
+        "id": "msg-9",
+        "sender": "customer",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      },
+      {
+        "id": "msg-10",
+        "sender": "user",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      },
+      {
+        "id": "msg-11",
+        "sender": "customer",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      },
+      {
+        "id": "msg-12",
+        "sender": "user",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      },
+      {
+        "id": "msg-13",
+        "sender": "customer",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      },
+      {
+        "id": "msg-14",
+        "sender": "user",
+        "text": "Thank you, see you tomorrow!",
+        "timestamp": "2 hours ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-4",
+    "customerId": "cust-004",
+    "customerName": "Anna S.",
+    "jobId": "JOB-2052",
+    "lastMessage": "Perfect, I'll bring it in tomorrow morning.",
+    "lastMessageTime": "30 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-15",
+        "sender": "customer",
+        "text": "My bike needs a new tire. How long would that take?",
+        "timestamp": "2:00 PM"
+      },
+      {
+        "id": "msg-16",
+        "sender": "user",
+        "text": "About 30 minutes. We have stock available.",
+        "timestamp": "2:15 PM"
+      },
+      {
+        "id": "msg-17",
+        "sender": "customer",
+        "text": "Perfect, I'll bring it in tomorrow morning.",
+        "timestamp": "30 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-5",
+    "customerId": "cust-005",
+    "customerName": "Henrik B.",
+    "jobId": "JOB-2050",
+    "lastMessage": "Sounds good, thanks!",
+    "lastMessageTime": "45 min ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-18",
+        "sender": "customer",
+        "text": "Do you offer brake pad replacement?",
+        "timestamp": "1:30 PM"
+      },
+      {
+        "id": "msg-19",
+        "sender": "user",
+        "text": "Yes, we do! Both organic and metallic pads available.",
+        "timestamp": "1:45 PM"
+      },
+      {
+        "id": "msg-20",
+        "sender": "customer",
+        "text": "Sounds good, thanks!",
+        "timestamp": "45 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-6",
+    "customerId": "cust-006",
+    "customerName": "Sofie M.",
+    "jobId": "JOB-2053",
+    "lastMessage": "I'll pick it up on Friday.",
+    "lastMessageTime": "3 hours ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-21",
+        "sender": "customer",
+        "text": "How much for a full bike tune-up?",
+        "timestamp": "11:00 AM"
+      },
+      {
+        "id": "msg-22",
+        "sender": "user",
+        "text": "That's typically 450 DKK. Takes about an hour.",
+        "timestamp": "11:20 AM"
+      },
+      {
+        "id": "msg-23",
+        "sender": "customer",
+        "text": "I'll pick it up on Friday.",
+        "timestamp": "3 hours ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-7",
+    "customerId": "cust-007",
+    "customerName": "Thomas R.",
+    "jobId": "JOB-2054",
+    "lastMessage": "Will you have it ready by then?",
+    "lastMessageTime": "20 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-24",
+        "sender": "customer",
+        "text": "I have a bent rim. Can you straighten it?",
+        "timestamp": "3:45 PM"
+      },
+      {
+        "id": "msg-25",
+        "sender": "user",
+        "text": "Yes, we can try. Minor bends usually work. When do you need it?",
+        "timestamp": "3:50 PM"
+      },
+      {
+        "id": "msg-26",
+        "sender": "customer",
+        "text": "Will you have it ready by then?",
+        "timestamp": "20 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-8",
+    "customerId": "cust-008",
+    "customerName": "Emma W.",
+    "jobId": "JOB-2055",
+    "lastMessage": "Great, see you soon!",
+    "lastMessageTime": "1 hour ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-27",
+        "sender": "customer",
+        "text": "My derailleur is acting up. Need a replacement?",
+        "timestamp": "12:30 PM"
+      },
+      {
+        "id": "msg-28",
+        "sender": "user",
+        "text": "Could be just a cable adjustment. Bring it in for a free check.",
+        "timestamp": "12:45 PM"
+      },
+      {
+        "id": "msg-29",
+        "sender": "customer",
+        "text": "Great, see you soon!",
+        "timestamp": "1 hour ago"
+      }
+    ]
+  }
+]
