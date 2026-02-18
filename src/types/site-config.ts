@@ -14,5 +14,4 @@ export interface SiteConfig {
   keywords: string[];
   social: SocialLinks;
   ogImage: string;
-  favicon: string;
 }

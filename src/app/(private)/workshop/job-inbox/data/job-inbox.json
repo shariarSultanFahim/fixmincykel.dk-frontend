@@ -1,0 +1,77 @@
+{
+  "filters": {
+    "status": ["All", "New", "Viewed", "Offer Sent", "Booked"],
+    "category": ["All", "Puncture", "Brakes", "Gears", "Chain", "Tune-up"],
+    "sortBy": ["Newest", "Oldest", "Closest", "Highest Value"]
+  },
+  "jobs": [
+    {
+      "id": "JOB-2051",
+      "status": "New",
+      "category": "Puncture",
+      "distance": "0.8 km away",
+      "time": "15 min ago",
+      "user": "Jens K.",
+      "bike": "City Bike",
+      "verified": false,
+      "posted": "15 min ago",
+      "description": "The bike has a flat tire on the front wheel. I am located near Norreport station and need this fixed as soon as possible. The tire seems to have a small puncture.",
+      "actions": [
+        { "label": "View Details", "variant": "outline" },
+        { "label": "Send Offer", "variant": "default" },
+        { "label": "Decline", "variant": "destructive" }
+      ]
+    },
+    {
+      "id": "JOB-2050",
+      "status": "Viewed",
+      "category": "Brakes",
+      "distance": "1.5 km away",
+      "time": "1 hour ago",
+      "user": "Sofia M.",
+      "bike": "E-Bike",
+      "verified": true,
+      "posted": "1 hour ago",
+      "description": "Rear brake pads are worn out and making noise. Needs replacement and adjustment.",
+      "actions": [
+        { "label": "View Details", "variant": "outline" },
+        { "label": "Send Offer", "variant": "default" }
+      ]
+    },
+    {
+      "id": "JOB-2049",
+      "status": "Offer Sent",
+      "category": "Gears",
+      "distance": "1.2 km away",
+      "time": "2 hrs ago",
+      "user": "Lars T.",
+      "bike": "Mountain Bike",
+      "verified": false,
+      "posted": "2 hrs ago",
+      "description": "Gears are skipping under load. Needs tune-up and cable check.",
+      "subtext": "Your offer: DKK 350 - Est. 1 hour - Sent 2 hrs ago",
+      "actions": [
+        { "label": "View Details", "variant": "outline" },
+        { "label": "View Offer", "variant": "secondary" },
+        { "label": "Message User", "variant": "outline" },
+        { "label": "Cancel", "variant": "destructive" }
+      ]
+    },
+    {
+      "id": "JOB-2048",
+      "status": "Booked",
+      "category": "Chain",
+      "distance": "0.5 km away",
+      "time": "3 hrs ago",
+      "user": "Maria L.",
+      "bike": "City Bike",
+      "verified": true,
+      "posted": "3 hrs ago",
+      "description": "Chain is slipping and needs adjustment or replacement.",
+      "actions": [
+        { "label": "View Details", "variant": "outline" },
+        { "label": "View Booking", "variant": "default" }
+      ]
+    }
+  ]
+}
