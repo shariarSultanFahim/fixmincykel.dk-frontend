@@ -4,7 +4,17 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LayoutDashboard, LogOut, ToolCase } from "lucide-react";
+import {
+  CalendarHeartIcon,
+  GitCompare,
+  LayoutDashboard,
+  ListTodo,
+  LogOut,
+  MessageSquareQuote,
+  Star,
+  ToolCase,
+  User
+} from "lucide-react";
 
 import { Separator } from "@/components/ui";
 import {
@@ -23,8 +33,8 @@ import {
 
 const data = {
   info: {
-    title: "BikeRepair",
-    subtitle: ""
+    title: "Copenhagen Bike Repair",
+    subtitle: "Workshop Portal"
   },
   navMain: [
     {
@@ -32,8 +42,38 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: `/user`,
           icon: LayoutDashboard
+        },
+        {
+          title: "My Repairs",
+          url: `/user/reparirs`,
+          icon: ListTodo
+        },
+        {
+          title: "Compare Offers",
+          url: `/user/offers`,
+          icon: GitCompare
+        },
+        {
+          title: "My Bookings",
+          url: `/user/bookings`,
+          icon: CalendarHeartIcon
+        },
+        {
+          title: "Messages",
+          url: `/user/messages`,
+          icon: MessageSquareQuote
+        },
+        {
+          title: "Reviews",
+          url: `/user/reviews`,
+          icon: Star
+        },
+        {
+          title: "Profile",
+          url: `/user/profile`,
+          icon: User
         }
       ]
     }
@@ -42,8 +82,13 @@ const data = {
 
 export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const isItemActive = (itemUrl: string) => {
+    if (itemUrl === "/user") {
+      return pathname === "/user";
+    }
 
-  const rootPath = pathname.split("/")[1];
+    return pathname === itemUrl || pathname.startsWith(`${itemUrl}/`);
+  };
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
@@ -51,7 +96,7 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/workshop">
+              <Link href="/user">
                 <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full">
                   <ToolCase className="size-8 rounded-lg bg-primary text-white" />
                 </div>
@@ -75,11 +120,7 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={rootPath === item.url.split("/")[1]}
-                      className="data-[active=true]:bg-white/25 data-[active=true]:text-primary-foreground data-[active=true]:shadow-md data-[active=true]:backdrop-blur-sm"
-                    >
+                    <SidebarMenuButton asChild isActive={isItemActive(item.url)} className="">
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
@@ -98,7 +139,7 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem className="space-y-5">
             <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
               <Link
-                href="/login"
+                href="/service-provider/login"
                 className="h-10 w-full border border-secondary bg-transparent group-data-[collapsible=icon]:p-0 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:backdrop-blur-sm"
               >
                 <button className="flex w-full items-center justify-center gap-2 border-none">

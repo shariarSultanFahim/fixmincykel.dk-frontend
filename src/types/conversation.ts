@@ -7,8 +7,8 @@ export interface Message {
 
 export interface Conversation {
   id: string;
-  customerId: string;
-  customerName: string;
+  workshopId: string;
+  workshopName: string;
   jobId: string;
   lastMessage: string;
   lastMessageTime: string;
