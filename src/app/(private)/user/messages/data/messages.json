@@ -1,0 +1,198 @@
+[
+  {
+    "id": "conv-1",
+    "workshopId": "ws-001",
+    "workshopName": "Copenhagen Cycle Lab",
+    "jobId": "JOB-3101",
+    "lastMessage": "We can start after lunch.",
+    "lastMessageTime": "10 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-1",
+        "sender": "customer",
+        "text": "Hi! I dropped off my bike this morning. Any update?",
+        "timestamp": "9:15 AM"
+      },
+      {
+        "id": "msg-2",
+        "sender": "user",
+        "text": "Thanks! We have it in the queue. Quick check-up first.",
+        "timestamp": "9:18 AM"
+      },
+      {
+        "id": "msg-3",
+        "sender": "user",
+        "text": "We can start after lunch.",
+        "timestamp": "10 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-2",
+    "workshopId": "ws-002",
+    "workshopName": "Norrebro Bike Care",
+    "jobId": "JOB-3102",
+    "lastMessage": "Estimate is 280-350 DKK.",
+    "lastMessageTime": "45 min ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-4",
+        "sender": "customer",
+        "text": "Can you confirm the spoke replacement cost?",
+        "timestamp": "8:40 AM"
+      },
+      {
+        "id": "msg-5",
+        "sender": "user",
+        "text": "Estimate is 280-350 DKK depending on rim tension.",
+        "timestamp": "45 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-3",
+    "workshopId": "ws-003",
+    "workshopName": "Vesterbro Wheels",
+    "jobId": "JOB-3103",
+    "lastMessage": "Pick-up is ready after 4 PM.",
+    "lastMessageTime": "2 hours ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-6",
+        "sender": "customer",
+        "text": "Any chance the chain service is done today?",
+        "timestamp": "11:10 AM"
+      },
+      {
+        "id": "msg-7",
+        "sender": "user",
+        "text": "Yes, we are finishing it now.",
+        "timestamp": "11:35 AM"
+      },
+      {
+        "id": "msg-8",
+        "sender": "user",
+        "text": "Pick-up is ready after 4 PM.",
+        "timestamp": "2 hours ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-4",
+    "workshopId": "ws-004",
+    "workshopName": "Amager Bike Studio",
+    "jobId": "JOB-3104",
+    "lastMessage": "We can do it in 30 minutes.",
+    "lastMessageTime": "25 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-9",
+        "sender": "customer",
+        "text": "How long does a tire replacement take?",
+        "timestamp": "2:00 PM"
+      },
+      {
+        "id": "msg-10",
+        "sender": "user",
+        "text": "We can do it in 30 minutes.",
+        "timestamp": "25 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-5",
+    "workshopId": "ws-005",
+    "workshopName": "Osterbro Service Hub",
+    "jobId": "JOB-3105",
+    "lastMessage": "Metallic pads are in stock.",
+    "lastMessageTime": "1 hour ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-11",
+        "sender": "customer",
+        "text": "Do you offer brake pad replacement?",
+        "timestamp": "1:30 PM"
+      },
+      {
+        "id": "msg-12",
+        "sender": "user",
+        "text": "Yes! Both organic and metallic pads are in stock.",
+        "timestamp": "1 hour ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-6",
+    "workshopId": "ws-006",
+    "workshopName": "Frederiksberg Fix",
+    "jobId": "JOB-3106",
+    "lastMessage": "Tune-up is 450 DKK and takes one hour.",
+    "lastMessageTime": "3 hours ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-13",
+        "sender": "customer",
+        "text": "How much for a full tune-up?",
+        "timestamp": "11:00 AM"
+      },
+      {
+        "id": "msg-14",
+        "sender": "user",
+        "text": "Tune-up is 450 DKK and takes one hour.",
+        "timestamp": "3 hours ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-7",
+    "workshopId": "ws-007",
+    "workshopName": "Nordic Road Bikes",
+    "jobId": "JOB-3107",
+    "lastMessage": "We can check it today.",
+    "lastMessageTime": "20 min ago",
+    "isUnread": true,
+    "messages": [
+      {
+        "id": "msg-15",
+        "sender": "customer",
+        "text": "I have a bent rim. Can you straighten it?",
+        "timestamp": "3:45 PM"
+      },
+      {
+        "id": "msg-16",
+        "sender": "user",
+        "text": "We can check it today.",
+        "timestamp": "20 min ago"
+      }
+    ]
+  },
+  {
+    "id": "conv-8",
+    "workshopId": "ws-008",
+    "workshopName": "Harbor City Cycles",
+    "jobId": "JOB-3108",
+    "lastMessage": "Free checkup is available this week.",
+    "lastMessageTime": "1 hour ago",
+    "isUnread": false,
+    "messages": [
+      {
+        "id": "msg-17",
+        "sender": "customer",
+        "text": "My derailleur is acting up. Need a replacement?",
+        "timestamp": "12:30 PM"
+      },
+      {
+        "id": "msg-18",
+        "sender": "user",
+        "text": "Could be a cable adjustment. Free checkup is available this week.",
+        "timestamp": "1 hour ago"
+      }
+    ]
+  }
+]

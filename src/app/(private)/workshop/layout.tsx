@@ -5,7 +5,7 @@ import { DashboardThemeProvider } from "@/providers";
 
 import { WorkshopAppBar } from "./component/layouts/appbar";
 
-export default function UserLayout({ children }: { children: React.ReactNode }) {
+export default function WorkshopLayout({ children }: { children: React.ReactNode }) {
   return (
     <DashboardThemeProvider type="workshop">
       <SidebarProvider>
