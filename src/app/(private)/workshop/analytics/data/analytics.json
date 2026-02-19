@@ -1,0 +1,53 @@
+{
+  "stats": [
+    {
+      "id": "total-jobs",
+      "label": "Total Jobs",
+      "value": "147",
+      "color": "text-navy"
+    },
+    {
+      "id": "conversion-rate",
+      "label": "Conversion Rate",
+      "value": "42%",
+      "color": "text-navy"
+    },
+    {
+      "id": "avg-job-value",
+      "label": "Avg. Job Value",
+      "value": "DKK 385",
+      "color": "text-navy"
+    },
+    {
+      "id": "platform-fees",
+      "label": "Platform Fees",
+      "value": "DKK 1,230",
+      "color": "text-destructive"
+    },
+    {
+      "id": "your-revenue",
+      "label": "Your Revenue",
+      "value": "DKK 12,300",
+      "color": "text-emerald-600"
+    }
+  ],
+  "revenueTrend": [
+    { "month": "Jan", "revenue": 8000 },
+    { "month": "Feb", "revenue": 9500 },
+    { "month": "Mar", "revenue": 11000 },
+    { "month": "Apr", "revenue": 12500 },
+    { "month": "May", "revenue": 14500 },
+    { "month": "Jun", "revenue": 12000 }
+  ],
+  "jobsByCategory": [
+    { "category": "Puncture", "percentage": 35, "color": "#00C6CF" },
+    { "category": "Brakes", "percentage": 25, "color": "#002E5D" },
+    { "category": "Gears", "percentage": 20, "color": "#5CB85C" },
+    { "category": "Other", "percentage": 20, "color": "#FFA500" }
+  ],
+  "rating": {
+    "score": 4.8,
+    "reviews": 42,
+    "reportUrl": "/analytics/report"
+  }
+}

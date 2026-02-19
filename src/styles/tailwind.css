@@ -364,3 +364,15 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }
+
+/* Custom Utilities */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
