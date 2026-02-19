@@ -1,0 +1,66 @@
+{
+  "today": "2026-02-19",
+  "currency": "DKK",
+  "bookings": [
+    {
+      "id": "bk-101",
+      "date": "2026-02-19",
+      "startTime": "09:00",
+      "endTime": "10:30",
+      "customerName": "Maria L.",
+      "serviceName": "Brake Repair",
+      "price": 450,
+      "status": "upcoming"
+    },
+    {
+      "id": "bk-102",
+      "date": "2026-02-19",
+      "startTime": "11:00",
+      "endTime": "12:00",
+      "customerName": "Lars T.",
+      "serviceName": "Gear Adjustment",
+      "price": 350,
+      "status": "in-progress"
+    },
+    {
+      "id": "bk-103",
+      "date": "2026-02-19",
+      "startTime": "14:00",
+      "endTime": "15:30",
+      "customerName": "Sofia M.",
+      "serviceName": "Full Service",
+      "price": 650,
+      "status": "upcoming"
+    },
+    {
+      "id": "bk-104",
+      "date": "2026-02-20",
+      "startTime": "09:30",
+      "endTime": "10:15",
+      "customerName": "Nina H.",
+      "serviceName": "Tire Replacement",
+      "price": 280,
+      "status": "completed"
+    },
+    {
+      "id": "bk-105",
+      "date": "2026-02-21",
+      "startTime": "13:30",
+      "endTime": "14:30",
+      "customerName": "Jens P.",
+      "serviceName": "Chain Lubrication",
+      "price": 180,
+      "status": "awaiting-payment"
+    },
+    {
+      "id": "bk-106",
+      "date": "2026-02-22",
+      "startTime": "10:00",
+      "endTime": "11:00",
+      "customerName": "Eline R.",
+      "serviceName": "Brake Tuning",
+      "price": 320,
+      "status": "upcoming"
+    }
+  ]
+}

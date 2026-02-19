@@ -4,7 +4,15 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LayoutDashboard, LogOut } from "lucide-react";
+import {
+  Calendar,
+  FileChartLine,
+  LayoutDashboard,
+  ListTodo,
+  LogOut,
+  MessageSquareQuote,
+  User
+} from "lucide-react";
 
 import { Separator } from "@/components/ui";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -33,33 +41,33 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: `/workshop/dashboard`,
+          url: `/workshop`,
           icon: LayoutDashboard
         },
         {
           title: "Job Inbox",
           url: `/workshop/job-inbox`,
-          icon: LayoutDashboard
+          icon: ListTodo
         },
         {
           title: "Calendar",
           url: `/workshop/calendar`,
-          icon: LayoutDashboard
+          icon: Calendar
         },
         {
           title: "Analytics",
           url: `/workshop/analytics`,
-          icon: LayoutDashboard
+          icon: FileChartLine
         },
         {
           title: "Messages",
           url: `/workshop/messages`,
-          icon: LayoutDashboard
+          icon: MessageSquareQuote
         },
         {
           title: "Profile",
           url: `/workshop/profile`,
-          icon: LayoutDashboard
+          icon: User
         }
       ]
     }
@@ -68,6 +76,13 @@ const data = {
 
 export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const isItemActive = (itemUrl: string) => {
+    if (itemUrl === "/workshop") {
+      return pathname === "/workshop";
+    }
+
+    return pathname === itemUrl || pathname.startsWith(`${itemUrl}/`);
+  };
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
@@ -101,11 +116,7 @@ export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.url || pathname.startsWith(`${item.url}/`)}
-                      className=""
-                    >
+                    <SidebarMenuButton asChild isActive={isItemActive(item.url)} className="">
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>

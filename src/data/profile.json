@@ -1,0 +1,22 @@
+{
+  "profile": {
+    "workshopName": "Copenhagen Bike Repair",
+    "address": "Norrebrogade 45, 2200 Copenhagen N",
+    "cvrNumber": "12345678",
+    "description": "Full-service workshop specializing in fast repairs, tune-ups, and e-bike diagnostics."
+  },
+  "service": {
+    "serviceCategories": ["Puncture", "Brakes", "Chain", "Gears", "Electric", "Full Service"],
+    "openingHours": {
+      "weekdaysStart": "09:00",
+      "weekdaysEnd": "18:00",
+      "saturdayStart": "10:00",
+      "saturdayEnd": "14:00"
+    },
+    "notifications": {
+      "email": true,
+      "sms": false,
+      "inApp": true
+    }
+  }
+}
