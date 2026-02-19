@@ -47,7 +47,7 @@ const data = {
         },
         {
           title: "My Repairs",
-          url: `/user/reparirs`,
+          url: `/user/repairs`,
           icon: ListTodo
         },
         {
