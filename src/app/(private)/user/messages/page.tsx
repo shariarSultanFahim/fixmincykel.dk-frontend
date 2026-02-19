@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 
-import { Conversation } from "@/types/conversation";
+import { UserConversation } from "@/types/conversation";
 
 import {
   ChatWindow,
@@ -15,7 +15,7 @@ import {
 import messagesData from "./data/messages.json";
 
 export default function MessagesPage() {
-  const conversations: Conversation[] = messagesData as Conversation[];
+  const conversations: UserConversation[] = messagesData as UserConversation[];
   const [selectedConversationId, setSelectedConversationId] = useState(conversations[0]?.id || "");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
 

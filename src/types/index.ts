@@ -6,6 +6,18 @@ export type { HowItWorksSimpleStep, HowItWorksStat, HowItWorksStep } from "./how
 export type { PartnerBenefit } from "./partner-benefit";
 export type { User } from "./user";
 export type {
+  BikeCardProps,
+  EditBikeDialogProps,
+  PreferenceToggleProps,
+  UserBike,
+  UserBikeFormValues,
+  UserPreferences,
+  UserProfile,
+  UserProfileData,
+  UserProfileFormProps,
+  UserProfileFormValues
+} from "./user-profile";
+export type {
   WorkshopNotifications,
   WorkshopOpeningHours,
   WorkshopProfileData,

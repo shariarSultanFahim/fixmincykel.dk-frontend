@@ -4,13 +4,13 @@ import { useState } from "react";
 
 import { MessageCircle, Search, X } from "lucide-react";
 
-import { Conversation } from "@/types/conversation";
+import { UserConversation } from "@/types/conversation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 interface ConversationsListProps {
-  conversations: Conversation[];
+  conversations: UserConversation[];
   selectedId?: string;
   onSelect: (id: string) => void;
 }

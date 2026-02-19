@@ -1,7 +1,7 @@
-import { Conversation } from "@/types/conversation";
+import { UserConversation } from "@/types/conversation";
 
 interface MobileAvatarsListProps {
-  conversations: Conversation[];
+  conversations: UserConversation[];
   selectedId?: string;
   onSelect: (id: string) => void;
   searchQuery: string;

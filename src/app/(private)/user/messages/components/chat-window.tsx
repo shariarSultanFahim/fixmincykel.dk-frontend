@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Send } from "lucide-react";
 
-import { Conversation } from "@/types/conversation";
+import { UserConversation } from "@/types/conversation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { MessageBubble } from "./message-bubble";
 
 interface ChatWindowProps {
-  conversation: Conversation;
+  conversation: UserConversation;
 }
 
 export function ChatWindow({ conversation }: ChatWindowProps) {
