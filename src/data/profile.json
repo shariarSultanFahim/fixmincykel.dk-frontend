@@ -18,5 +18,37 @@
       "sms": false,
       "inApp": true
     }
+  },
+  "userProfile": {
+    "fullName": "Shariar Fam",
+    "email": "fam@example.com",
+    "phone": "+45 12 34 56 78",
+    "address": "Norrebrogade 42, 2200 Kobenhavn N",
+    "avatarUrl": "https://api.dicebear.com/9.x/thumbs/svg?seed=fam",
+    "bikes": [
+      {
+        "id": "bike-1",
+        "name": "Canyon Roadlite",
+        "type": "Road Bike",
+        "year": "2023",
+        "color": "Black",
+        "frameSize": "56cm",
+        "isPrimary": true
+      },
+      {
+        "id": "bike-2",
+        "name": "Specialized Turbo Vado",
+        "type": "E-Bike",
+        "year": "2025",
+        "color": "Blue",
+        "frameSize": "60cm",
+        "isPrimary": false
+      }
+    ],
+    "preferences": {
+      "emailNotifications": true,
+      "smsNotifications": true,
+      "marketingEmails": false
+    }
   }
 }
