@@ -64,8 +64,8 @@ export function RepairsList() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-navy">My Repairs</h1>
-          <p className="text-sm text-muted-foreground">View and manage all your repair requests</p>
+          <h1 className="text-3xl font-semibold text-navy">My Repairs</h1>
+          <p className="mt-2 text-muted-foreground">View and manage all your repair requests</p>
         </div>
         <Link href="/user/repairs/new">
           <Button className="gap-2 self-start sm:self-auto">
