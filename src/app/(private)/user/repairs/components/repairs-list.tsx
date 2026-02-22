@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Eye, Plus, Search, SlidersHorizontal } from "lucide-react";
 
+import { currencyFormatter } from "@/constants/currency-formatter";
+
 import { cn } from "@/lib/utils";
 
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
@@ -20,28 +22,28 @@ const repairsData = [
     title: "Brake Squeaking",
     status: "Active",
     createdAt: "Feb 2, 2026",
-    price: "350 DKK"
+    price: "350"
   },
   {
     id: "JOB-2045",
     title: "Flat Tire Repair",
     status: "Completed",
     createdAt: "Jan 28, 2026",
-    price: "150 DKK"
+    price: "150"
   },
   {
     id: "JOB-2042",
     title: "Chain Replacement",
     status: "Completed",
     createdAt: "Jan 20, 2026",
-    price: "250 DKK"
+    price: "250"
   },
   {
     id: "JOB-2038",
     title: "Full Service",
     status: "Completed",
     createdAt: "Jan 10, 2026",
-    price: "600 DKK"
+    price: "600"
   },
   {
     id: "JOB-2035",
@@ -110,7 +112,11 @@ export function RepairsList() {
                   <span>Created: {repair.createdAt}</span>
                 </div>
                 {repair.meta && <p className="text-xs font-medium text-primary">{repair.meta}</p>}
-                {repair.price && <p className="text-sm font-semibold text-navy">{repair.price}</p>}
+                {repair.price && (
+                  <p className="text-sm font-semibold text-navy">
+                    {currencyFormatter.format(Number(repair.price))}
+                  </p>
+                )}
               </div>
               <Button variant="default" size="sm" className="gap-2">
                 <Eye className="size-4" />
