@@ -7,8 +7,8 @@ export default function MyBookingsPage() {
     <div className="space-y-10 pb-12">
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-navy">Upcoming bookings</h2>
-          <p className="text-sm text-muted-foreground">{upcomingBookings.length} scheduled</p>
+          <h2 className="text-3xl font-bold text-navy">Upcoming bookings</h2>
+          <p className="text-muted-foreground">{upcomingBookings.length} scheduled</p>
         </div>
         <div className="space-y-4">
           {upcomingBookings.map((booking) => (

@@ -23,9 +23,9 @@ export function ReviewsView() {
 
   return (
     <div className="">
-      <div className="mx-auto flex w-full flex-col gap-8 px-4 pb-6 sm:px-6">
+      <div className="mx-auto flex w-full flex-col gap-8">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-navy sm:text-4xl">Your workshop reviews</h1>
+          <h1 className="text-3xl font-bold text-navy">Your workshop reviews</h1>
           <p className="max-w-2xl text-sm text-navy/70">
             Track your feedback, see ratings at a glance, and share new reviews after every repair.
           </p>

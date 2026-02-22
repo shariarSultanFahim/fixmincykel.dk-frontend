@@ -24,9 +24,9 @@ export default function MessagesPage() {
   return (
     <>
       {/* Desktop Layout */}
-      <div className="hidden h-[calc(100vh-120px)] flex-col gap-6 p-6 md:flex">
+      <div className="hidden h-[calc(100vh-120px)] flex-col gap-6 md:flex">
         <div>
-          <h1 className="text-2xl font-bold text-navy">Messages</h1>
+          <h1 className="text-3xl font-bold text-navy">Messages</h1>
         </div>
 
         <div className="flex min-h-0 flex-1 gap-6">

@@ -12,7 +12,7 @@ export default function UserProfilePage() {
   return (
     <div className="space-y-6">
       <header className="flex items-center gap-2 text-navy">
-        <h1 className="text-lg font-semibold">User Profile</h1>
+        <h1 className="text-3xl font-bold">User Profile</h1>
       </header>
       <Suspense fallback={<UserProfileSkeleton />}>
         <UserProfileForm initialValues={userProfile} />
