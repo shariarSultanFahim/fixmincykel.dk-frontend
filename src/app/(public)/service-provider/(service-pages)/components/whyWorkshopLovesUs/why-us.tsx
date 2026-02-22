@@ -29,7 +29,7 @@ export default function WhyWorkshopLovesUs() {
   return (
     <section className="bg-[#F9FFFE] py-20">
       <div className="container flex flex-col items-center space-y-10">
-        <h1 className="text-center">
+        <h1 className="text-center text-[32px]">
           Why workshops <span className="text-primary">Love Us</span>
         </h1>
         <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-4">

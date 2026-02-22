@@ -9,7 +9,7 @@ export default function HowItWorks() {
     <div className="container space-y-12 py-16">
       {/* Header */}
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="text-navy">
+        <h1 className="text-[32px] text-navy">
           How It Works in <span className="text-primary">6</span> Simple Steps
         </h1>
       </div>

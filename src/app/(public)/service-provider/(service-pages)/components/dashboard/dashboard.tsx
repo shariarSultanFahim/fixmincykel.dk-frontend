@@ -6,7 +6,7 @@ export default function Dashboard() {
   return (
     <section className="py-20">
       <div className="container flex flex-col items-center space-y-12">
-        <h1 className="text-center">
+        <h1 className="text-center text-[32px]">
           Your All-in-One <span className="text-primary">Dashboard</span>
         </h1>
 
