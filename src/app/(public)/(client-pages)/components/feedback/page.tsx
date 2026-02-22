@@ -45,7 +45,7 @@ export default function Feedback() {
   ];
 
   return (
-    <section className="container bg-[#ECFFFB] py-20">
+    <section className="container py-20">
       <div className="flex flex-col items-center space-y-5">
         <Title title="Builders love FixMinCykel.dk" subtitle="" />
         <FeedbackCarousel feedbacks={feedbacks} />
