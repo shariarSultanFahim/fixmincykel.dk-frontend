@@ -10,6 +10,8 @@ import {
   PhoneIcon
 } from "lucide-react";
 
+import { currencyFormatter } from "@/constants/currency-formatter";
+
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -22,12 +24,6 @@ import { RescheduleForm } from "../reschedule-form";
 interface UpcomingBookingCardProps {
   booking: Booking;
 }
-
-const currencyFormatter = new Intl.NumberFormat("da-DK", {
-  style: "currency",
-  currency: "DKK",
-  maximumFractionDigits: 0
-});
 
 export function UpcomingBookingCard({ booking }: UpcomingBookingCardProps) {
   const [isOpen, setIsOpen] = React.useState(false);
