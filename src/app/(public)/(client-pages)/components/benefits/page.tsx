@@ -38,7 +38,7 @@ export default function Benefits() {
     <div className="flex flex-col items-center space-y-5">
       <Title
         title="Benefits of getting bike repair quotes online"
-        subtitle=" 71% of Danish bike owners have no idea what a bike repair actually costs."
+        subtitle="71% of Danish bike owners have no idea what a bike repair actually costs."
       />
       <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-4">
         {benefits.map((benefit, index) => (

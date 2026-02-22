@@ -11,7 +11,7 @@ export default function Title({ title, subtitle }: { title: string; subtitle: st
         height={20}
         className="w-64 sm:w-80 md:w-96 lg:w-125"
       />
-      <p className="max-w-2xl text-sm text-muted-foreground md:text-base">{subtitle}</p>
+      <p className="max-w-2xl text-center text-sm text-muted-foreground md:text-base">{subtitle}</p>
     </div>
   );
 }

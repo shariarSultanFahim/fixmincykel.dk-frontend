@@ -21,7 +21,7 @@ export default function ClientHome() {
           aria-hidden="true"
           width={1200}
           height={1200}
-          className="pointer-events-none absolute top-2/3 right-1/2 hidden h-auto w-[70%] -translate-y-2/3 md:block"
+          className="pointer-events-none absolute top-1/3 right-1/2 hidden h-auto w-[70%] -translate-y-2/3 md:block"
           priority
         />
         <section className="relative z-10">
@@ -31,9 +31,10 @@ export default function ClientHome() {
               <Hero />
             </div>
           </section>
+          <RepairQuotes />
         </section>
-      </section>{" "}
-      <RepairQuotes />
+      </section>
+
       <section className="relative overflow-hidden">
         <Image
           src="/HeroEllipse.svg"
