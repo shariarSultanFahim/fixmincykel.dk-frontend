@@ -32,10 +32,23 @@ export default function ClientHome() {
             </div>
           </section>
         </section>
-      </section>
+      </section>{" "}
       <RepairQuotes />
-      <Benefits />
-      <Feedback />
+      <section className="relative overflow-hidden">
+        <Image
+          src="/HeroEllipse.svg"
+          alt=""
+          aria-hidden="true"
+          width={1200}
+          height={1200}
+          className="pointer-events-none absolute top-1/2 left-1/2 hidden h-auto w-[70%] -translate-x-1/2 -translate-y-1/2 md:block"
+          priority
+        />
+        <div className="relative z-10">
+          <Benefits />
+          <Feedback />
+        </div>
+      </section>
       <WorkshopLocationMap />
       <NewsTipsMaintenance />
       <Faq />

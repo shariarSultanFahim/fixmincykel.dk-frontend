@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import approve from "@/assets/images/approve.png";
 import freetouse from "@/assets/images/freeuse.png";
 import nosurprise from "@/assets/images/nosurprise.png";
@@ -37,34 +35,23 @@ export default function Benefits() {
   ];
 
   return (
-    <section className="relative container overflow-hidden py-20">
-      <Image
-        src="/benifitsEllipse.svg"
-        alt=""
-        aria-hidden="true"
-        width={1200}
-        height={1200}
-        className="pointer-events-none absolute top-1/2 left-1/2 h-auto w-full -translate-x-1/2 -translate-y-1/2"
-        priority
+    <div className="flex flex-col items-center space-y-5">
+      <Title
+        title="Benefits of getting bike repair quotes online"
+        subtitle=" 71% of Danish bike owners have no idea what a bike repair actually costs."
       />
-      <div className="relative z-10 flex flex-col items-center space-y-5">
-        <Title
-          title="Benefits of getting bike repair quotes online"
-          subtitle=" 71% of Danish bike owners have no idea what a bike repair actually costs."
-        />
-        <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-4">
-          {benefits.map((benefit, index) => (
-            <BenefitsCard
-              key={index}
-              title={benefit.title}
-              description={benefit.description}
-              imageSrc={benefit.imageSrc}
-              imageAlt={benefit.imageAlt}
-              className="max-w-sm lg:w-70"
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-4">
+        {benefits.map((benefit, index) => (
+          <BenefitsCard
+            key={index}
+            title={benefit.title}
+            description={benefit.description}
+            imageSrc={benefit.imageSrc}
+            imageAlt={benefit.imageAlt}
+            className="max-w-sm lg:w-70"
+          />
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
