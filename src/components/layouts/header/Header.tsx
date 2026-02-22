@@ -42,7 +42,7 @@ export const Header = () => {
             <Link href="/about-us" className="hover:text-primary">
               {getMessage(copy, "Header.navAbout")}
             </Link>
-            <Link href="/faq" className="hover:text-primary">
+            <Link href="/contact-us" className="hover:text-primary">
               {getMessage(copy, "Header.navFaq")}
             </Link>
           </nav>

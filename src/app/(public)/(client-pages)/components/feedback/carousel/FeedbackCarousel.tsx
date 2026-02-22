@@ -60,7 +60,7 @@ export function FeedbackCarousel({ feedbacks }: { feedbacks: FeedbackCarouselPro
     >
       <CarouselContent className="-ml-1">
         {feedbacks.map((feedback, index) => (
-          <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
+          <CarouselItem key={index} className="pl-1 md:basis-1/3 lg:basis-1/4">
             <div className="p-1">
               <Card className={`rounded-3xl ${selectedIndex === index ? "bg-secondary" : ""}`}>
                 <CardContent className="flex aspect-square flex-col items-start justify-between p-6">

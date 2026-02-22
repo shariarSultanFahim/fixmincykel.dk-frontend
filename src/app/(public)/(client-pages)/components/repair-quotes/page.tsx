@@ -1,9 +1,8 @@
-import Image from "next/image";
-
 import bookingOffer from "@/assets/images/bookingOffer.png";
 import receivingOffers from "@/assets/images/receivingOffers.png";
 import takingBikePhoto from "@/assets/images/takingBikePhoto.png";
 
+import Title from "../section-title";
 import { RepairQuoteCard } from "./card";
 
 export default function RepairQuotes() {
@@ -30,16 +29,7 @@ export default function RepairQuotes() {
 
   return (
     <div className="container space-y-5 py-20">
-      <h1 className="flex justify-center text-center">It’s that easy to get repair quotes</h1>
-      <div className="flex items-center justify-center">
-        <Image
-          src="/underline.svg"
-          alt="underline"
-          width={400}
-          height={20}
-          className="w-64 sm:w-80 md:w-96 lg:w-125"
-        />
-      </div>
+      <Title title="It’s that easy to get repair quotes" subtitle="" />
       <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-3">
         {repairQuotes.map((quote, index) => (
           <RepairQuoteCard

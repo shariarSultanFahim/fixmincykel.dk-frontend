@@ -8,19 +8,13 @@ import Tools from "@/assets/icons/vaadin_tools.svg";
 import eBike from "@/assets/images/e-bike.png";
 import tireImage from "@/assets/images/tire.png";
 
+import Title from "../section-title";
+
 export default function NewsTipsMaintenance() {
   return (
     <section className="container space-y-10 py-20">
       <div className="flex flex-col items-center gap-3 text-center">
-        <h2 className="text-3xl font-bold text-navy md:text-4xl">News, tips & maintenance</h2>
-        <Image
-          src="/underline.svg"
-          alt=""
-          aria-hidden="true"
-          width={400}
-          height={20}
-          className="w-56 sm:w-72 md:w-96 lg:w-125"
-        />
+        <Title title="News, tips & maintenance" subtitle="" />
         <Link
           href="/news"
           className="inline-flex items-center gap-2 text-sm font-semibold text-navy"
@@ -32,7 +26,7 @@ export default function NewsTipsMaintenance() {
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 lg:grid-rows-2">
         {/* card 1 */}
-        <div className="flex flex-col items-center justify-center rounded-3xl bg-primary p-6">
+        <div className="flex flex-col items-center justify-center rounded-3xl bg-primary p-6 shadow-xl">
           <div className="space-y-4">
             <div className="my-10 flex items-center pb-5">
               <ToolBox
@@ -50,7 +44,7 @@ export default function NewsTipsMaintenance() {
         </div>
 
         {/* card 2 */}
-        <div className="rounded-3xl bg-[#E2E8F0]">
+        <div className="rounded-3xl bg-[#E2E8F0] shadow-xl">
           <div className="bg-light flex h-full flex-col justify-between rounded-lg p-2">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
@@ -65,8 +59,8 @@ export default function NewsTipsMaintenance() {
         </div>
 
         {/* card 3 */}
-        <div className="flex flex-col items-center justify-center rounded-3xl bg-secondary lg:col-span-3">
-          <div className="flex h-full flex-col justify-center gap-10 rounded-lg bg-secondary p-6">
+        <div className="flex flex-col items-center justify-center rounded-3xl bg-secondary shadow-xl lg:col-span-3">
+          <div className="flex h-full flex-col justify-center gap-10 rounded-3xl bg-secondary p-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Wrench
@@ -104,7 +98,7 @@ export default function NewsTipsMaintenance() {
 
         {/* card 5 */}
         <div
-          className="flex flex-col items-center justify-center rounded-3xl lg:col-span-3 lg:row-start-2"
+          className="flex flex-col items-center justify-center rounded-3xl shadow-xl lg:col-span-3 lg:row-start-2"
           style={{
             backgroundImage: `url(/tune-up.png)`,
             backgroundPosition: "center",
@@ -137,7 +131,7 @@ export default function NewsTipsMaintenance() {
         </div>
 
         {/* card 6 */}
-        <div className="flex flex-col items-center justify-center rounded-3xl bg-navy p-6 lg:col-start-5 lg:row-start-2">
+        <div className="flex flex-col items-center justify-center rounded-3xl bg-navy p-6 shadow-xl lg:col-start-5 lg:row-start-2">
           <div className="space-y-4">
             <div className="my-10 flex items-center pb-5">
               <Tools
