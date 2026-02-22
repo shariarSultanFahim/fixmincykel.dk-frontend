@@ -5,6 +5,7 @@ import freetouse from "@/assets/images/freeuse.png";
 import nosurprise from "@/assets/images/nosurprise.png";
 import time from "@/assets/images/time.png";
 
+import Title from "../section-title";
 import { BenefitsCard } from "./card";
 
 export default function Benefits() {
@@ -47,17 +48,10 @@ export default function Benefits() {
         priority
       />
       <div className="relative z-10 flex flex-col items-center space-y-5">
-        <h1 className="text-center">Benefits of getting bike repair quotes online</h1>
-        <Image
-          src="/underline.svg"
-          alt="underline"
-          width={400}
-          height={20}
-          className="w-64 sm:w-80 md:w-96 lg:w-125"
+        <Title
+          title="Benefits of getting bike repair quotes online"
+          subtitle=" 71% of Danish bike owners have no idea what a bike repair actually costs."
         />
-        <p className="text-center text-muted-foreground">
-          71% of Danish bike owners have no idea what a bike repair actually costs.
-        </p>
         <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-4">
           {benefits.map((benefit, index) => (
             <BenefitsCard

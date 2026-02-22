@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import Title from "../section-title";
 import { FeedbackCarousel } from "./carousel";
 
 export default function Feedback() {
@@ -48,14 +47,7 @@ export default function Feedback() {
   return (
     <section className="container bg-[#ECFFFB] py-20">
       <div className="flex flex-col items-center space-y-5">
-        <h1 className="text-center">Builders love FixMinCykel.dk</h1>
-        <Image
-          src="/underline.svg"
-          alt="underline"
-          width={400}
-          height={20}
-          className="w-64 sm:w-80 md:w-96 lg:w-125"
-        />
+        <Title title="Builders love FixMinCykel.dk" subtitle="" />
         <FeedbackCarousel feedbacks={feedbacks} />
       </div>
     </section>

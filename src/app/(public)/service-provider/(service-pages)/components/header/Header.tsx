@@ -42,9 +42,6 @@ export const ServiceHeader = () => {
             <Link href="/service-provider/contact-us" className="hover:text-primary">
               Contact Us
             </Link>
-            <Link href="/service-provider/faq" className="hover:text-primary">
-              FAQ
-            </Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -67,16 +64,13 @@ export const ServiceHeader = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/how-it-works">{getMessage(copy, "Header.navHow")}</Link>
+                  <Link href="/service-provider/register">Register</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/explore">{getMessage(copy, "Header.navExplore")}</Link>
+                  <Link href="/service-provider/explore">Explore</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/about-us">{getMessage(copy, "Header.navAbout")}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/client-home/faq">{getMessage(copy, "Header.navFaq")}</Link>
+                  <Link href="/service-provider/contact-us">Contact Us</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
