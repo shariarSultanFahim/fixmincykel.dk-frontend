@@ -11,7 +11,7 @@ export default function WorkshopLayout({ children }: { children: React.ReactNode
       <SidebarProvider>
         <WorkshopAppBar />
         <SidebarInset>
-          <header className="mt-2 flex h-16 shrink-0 items-center gap-2 bg-white px-4">
+          <header className="my-1 flex h-16 shrink-0 items-center gap-2 bg-white px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"

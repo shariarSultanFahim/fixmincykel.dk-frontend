@@ -4,7 +4,17 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { LayoutDashboard } from "lucide-react";
+import {
+  Bolt,
+  BriefcaseBusiness,
+  ClipboardList,
+  CreditCard,
+  Folder,
+  LayoutDashboard,
+  MessageSquareCode,
+  ToolCase,
+  User
+} from "lucide-react";
 
 import { Separator } from "@/components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,8 +44,48 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: "/admin",
           icon: LayoutDashboard
+        },
+        {
+          title: "User Management",
+          url: "/admin/users",
+          icon: User
+        },
+        {
+          title: "Workshop Management",
+          url: "/admin/workshops",
+          icon: ToolCase
+        },
+        {
+          title: "Job Management",
+          url: "/admin/jobs",
+          icon: BriefcaseBusiness
+        },
+        {
+          title: "Booking Management",
+          url: "/admin/bookings",
+          icon: Folder
+        },
+        {
+          title: "Payments & Fees",
+          url: "/admin/payments",
+          icon: CreditCard
+        },
+        {
+          title: "Review Moderation",
+          url: "/admin/reviews",
+          icon: MessageSquareCode
+        },
+        {
+          title: "System Settings",
+          url: "/admin/settings",
+          icon: Bolt
+        },
+        {
+          title: "Invoices & Payouts",
+          url: "/admin/invoices",
+          icon: ClipboardList
         }
       ]
     }
@@ -45,7 +95,13 @@ const data = {
 export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
-  const rootPath = pathname.split("/")[1];
+  const isItemActive = (itemUrl: string) => {
+    if (itemUrl === "/admin") {
+      return pathname === "/admin";
+    }
+
+    return pathname === itemUrl || pathname.startsWith(`${itemUrl}/`);
+  };
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
@@ -68,17 +124,13 @@ export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sideba
       <Separator className="bg-[#003D75]" />
       <SidebarContent>
         {data.navMain.map((group) => (
-          <SidebarGroup key={group.title}>
+          <SidebarGroup key={group.title} className="m-0 p-0">
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={rootPath === item.url.split("/")[1]}
-                      className="data-[active=true]:bg-white/25 data-[active=true]:text-primary-foreground data-[active=true]:shadow-md data-[active=true]:backdrop-blur-sm"
-                    >
+                    <SidebarMenuButton asChild isActive={isItemActive(item.url)} className="py-6">
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
