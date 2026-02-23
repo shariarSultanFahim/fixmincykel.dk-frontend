@@ -105,10 +105,10 @@ export default function UserTable({ initialUsers }: UserTableProps) {
               <TableHead className="rounded-tl-xl">Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead className="text-center">Jobs Created</TableHead>
-              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="">Jobs Created</TableHead>
+              <TableHead className="">Status</TableHead>
               <TableHead>Registered</TableHead>
-              <TableHead className="rounded-tr-xl text-center">Actions</TableHead>
+              <TableHead className="rounded-tr-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -118,12 +118,12 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone}</TableCell>
-                  <TableCell className="text-center">{user.jobsCreated}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">{user.jobsCreated}</TableCell>
+                  <TableCell className="">
                     <StatusBadge status={user.status} />
                   </TableCell>
                   <TableCell>{user.registered}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">
                     <UserActions
                       userId={user.id}
                       userStatus={user.status}

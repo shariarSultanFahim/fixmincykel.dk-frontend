@@ -1,8 +1,16 @@
+import { Suspense } from "react";
+
+import Header from "../component/layouts/header";
+import { WorkshopTable } from "./components";
+import { jobData } from "./data/workshop";
+
 export default function JobsManagementPage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Jobs Management</h1>
-      {/* Jobs management content goes here */}
+    <div className="space-y-6">
+      <Header title="Jobs Management" subtitle="Monitor and manage all platform job requests" />
+      <Suspense fallback={<div className="py-8 text-center">Loading...</div>}>
+        <WorkshopTable initialJobs={jobData} />
+      </Suspense>
     </div>
   );
 }

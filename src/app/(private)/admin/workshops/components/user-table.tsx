@@ -114,10 +114,10 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
               <TableHead className="rounded-tl-xl">Name</TableHead>
               <TableHead>Owner</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead className="text-center">Rating</TableHead>
-              <TableHead className="text-center">Jobs</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="rounded-tr-xl text-center">Actions</TableHead>
+              <TableHead className="">Rating</TableHead>
+              <TableHead className="">Jobs</TableHead>
+              <TableHead className="">Status</TableHead>
+              <TableHead className="rounded-tr-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -127,12 +127,12 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
                   <TableCell className="font-medium">{workshop.name}</TableCell>
                   <TableCell>{workshop.owner}</TableCell>
                   <TableCell>{workshop.email}</TableCell>
-                  <TableCell className="text-center">⭐ {workshop.rating}</TableCell>
-                  <TableCell className="text-center">{workshop.jobs}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">⭐ {workshop.rating}</TableCell>
+                  <TableCell className="">{workshop.jobs}</TableCell>
+                  <TableCell className="">
                     <StatusBadge status={workshop.status} />
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">
                     <WorkshopActions
                       workshopId={workshop.id}
                       workshopStatus={workshop.status}
