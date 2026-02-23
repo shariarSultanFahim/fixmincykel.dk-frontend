@@ -12,7 +12,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-import type { Category, Job, Status } from "../data/workshop";
+import type { Category, Job, Status } from "../data/jobs";
 import JobActions from "./job-actions";
 import ExportCSVButton from "./job-export-csv-button";
 import FilterButton from "./job-filter-button";

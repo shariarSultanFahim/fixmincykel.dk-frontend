@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import Header from "../component/layouts/header";
 import { WorkshopTable } from "./components";
-import { jobData } from "./data/workshop";
+import { jobData } from "./data/jobs";
 
 export default function JobsManagementPage() {
   return (

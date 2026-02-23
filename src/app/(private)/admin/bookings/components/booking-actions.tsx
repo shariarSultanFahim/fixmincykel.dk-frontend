@@ -1,24 +1,22 @@
-import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { Status } from "../data/jobs";
+import type { Status } from "../data/bookings";
 
-interface JobActionsProps {
-  jobId: string;
-  jobStatus: Status;
+interface BookingActionsProps {
+  bookingId: string;
+  status: Status;
   onView?: (id: string) => void;
-  onDelete?: (id: string) => void;
 }
 
-export default function JobActions({ jobId, onView, onDelete }: JobActionsProps) {
+export default function BookingActions({ bookingId, onView }: BookingActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,19 +27,11 @@ export default function JobActions({ jobId, onView, onDelete }: JobActionsProps)
       <DropdownMenuContent align="end" className="w-48">
         {onView && (
           <>
-            <DropdownMenuItem onClick={() => onView(jobId)}>
+            <DropdownMenuItem onClick={() => onView(bookingId)}>
               <Eye className="mr-2 h-4 w-4" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </>
-        )}
-
-        {onDelete && (
-          <DropdownMenuItem onClick={() => onDelete(jobId)} className="text-red-600">
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

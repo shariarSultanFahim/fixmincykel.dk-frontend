@@ -11,39 +11,37 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { Category, Status } from "../data/jobs";
+import type { Payment, Status } from "../data/bookings";
 
 interface FilterButtonProps {
   selectedStatuses: Status[];
-  selectedCategories: Category[];
+  selectedPayments: Payment[];
   onStatusChange: (status: Status, checked: boolean) => void;
-  onCategoryChange: (category: Category, checked: boolean) => void;
+  onPaymentChange: (payment: Payment, checked: boolean) => void;
 }
 
-const statuses: Status[] = ["pending", "booked", "completed"];
+const statuses: Status[] = ["booked", "completed", "cancle"];
 const statusLabels: Record<Status, string> = {
-  pending: "Pending",
   booked: "Booked",
-  completed: "Completed"
+  completed: "Completed",
+  cancle: "Canceled"
 };
 
-const categories: Category[] = ["brakes", "puncture", "chain", "general-tune-up", "e-bike-service"];
-const categoryLabels: Record<Category, string> = {
-  brakes: "Brakes",
-  puncture: "Puncture",
-  chain: "Chain",
-  "general-tune-up": "General Tune-up",
-  "e-bike-service": "E-Bike Service"
+const payments: Payment[] = ["paid", "unpaid", "refunded"];
+const paymentLabels: Record<Payment, string> = {
+  paid: "Paid",
+  unpaid: "Unpaid",
+  refunded: "Refunded"
 };
 
 export default function FilterButton({
   selectedStatuses,
-  selectedCategories,
+  selectedPayments,
   onStatusChange,
-  onCategoryChange
+  onPaymentChange
 }: FilterButtonProps) {
-  const activeFilters = selectedStatuses.length + selectedCategories.length;
-  const allFilters = statuses.length + categories.length;
+  const activeFilters = selectedStatuses.length + selectedPayments.length;
+  const allFilters = statuses.length + payments.length;
 
   return (
     <DropdownMenu>
@@ -67,25 +65,25 @@ export default function FilterButton({
         ))}
 
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+        <DropdownMenuLabel>Filter by Payment</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {categories.map((category) => (
+        {payments.map((payment) => (
           <DropdownMenuCheckboxItem
-            key={category}
-            checked={selectedCategories.includes(category)}
-            onCheckedChange={(checked) => onCategoryChange(category, checked)}
+            key={payment}
+            checked={selectedPayments.includes(payment)}
+            onCheckedChange={(checked) => onPaymentChange(payment, checked)}
           >
-            {categoryLabels[category]}
+            {paymentLabels[payment]}
           </DropdownMenuCheckboxItem>
         ))}
 
-        {(selectedStatuses.length > 0 || selectedCategories.length > 0) && (
+        {(selectedStatuses.length > 0 || selectedPayments.length > 0) && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                selectedStatuses.forEach((s) => onStatusChange(s, false));
-                selectedCategories.forEach((c) => onCategoryChange(c, false));
+                selectedStatuses.forEach((status) => onStatusChange(status, false));
+                selectedPayments.forEach((payment) => onPaymentChange(payment, false));
               }}
             >
               Clear all filters

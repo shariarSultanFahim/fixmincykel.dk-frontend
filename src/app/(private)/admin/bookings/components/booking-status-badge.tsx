@@ -1,30 +1,30 @@
 import { Badge } from "@/components/ui/badge";
 
-import type { Status } from "../data/jobs";
+import type { Status } from "../data/bookings";
 
-interface JobStatusBadgeProps {
+interface StatusBadgeProps {
   status: Status;
 }
 
 const statusConfig = {
-  pending: {
-    variant: "secondary" as const,
-    label: "Pending",
-    icon: "⏳"
-  },
   booked: {
-    variant: "default" as const,
+    variant: "secondary" as const,
     label: "Booked",
     icon: "✓"
   },
   completed: {
-    variant: "outline" as const,
+    variant: "default" as const,
     label: "Completed",
     icon: "✓✓"
+  },
+  cancle: {
+    variant: "destructive" as const,
+    label: "Canceled",
+    icon: "x"
   }
 };
 
-export default function JobStatusBadge({ status }: JobStatusBadgeProps) {
+export default function StatusBadge({ status }: StatusBadgeProps) {
   const config = statusConfig[status];
 
   return (
