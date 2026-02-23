@@ -1,8 +1,19 @@
+import { Suspense } from "react";
+
+import Header from "../component/layouts/header";
+import { SettingsContent } from "./components";
+import { SettingsSkeleton } from "./components/skeletons";
+
 export default function SettingsPage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Settings </h1>
-      {/* Settings  content goes here */}
+    <div className="space-y-6">
+      <Header
+        title="System Settings"
+        subtitle="Configure global platform settings and preferences"
+      />
+      <Suspense fallback={<SettingsSkeleton />}>
+        <SettingsContent />
+      </Suspense>
     </div>
   );
 }

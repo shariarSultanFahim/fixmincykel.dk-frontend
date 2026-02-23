@@ -23,7 +23,7 @@ export const bookingData: Booking[] = [
   },
   {
     bookingID: "BK-2041",
-    user: "Jens P..",
+    user: "Jens P.",
     workshop: "City Cycle Fix",
     status: "completed",
     date: 1678972800000,

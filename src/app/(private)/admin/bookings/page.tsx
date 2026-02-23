@@ -7,7 +7,7 @@ import { bookingData } from "./data/bookings";
 
 export default function BookingsManagementPage() {
   return (
-    <div>
+    <div className="space-y-6">
       <Header title="Bookings Management" subtitle="Monitor all scheduled and completed bookings" />
       <Suspense fallback={<BookingTableSkeleton />}>
         <BookingTable initialBookings={bookingData} />
