@@ -16,7 +16,7 @@ export const settingsSchema = z.object({
       })
     )
     .min(1, "Add at least one service category"),
-  newCategory: z.string().optional()
+  newCategory: z.string().max(20, "Category name must be 20 characters or less").optional()
 });
 
 export type SettingsFormValues = z.infer<typeof settingsSchema>;

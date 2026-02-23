@@ -31,6 +31,7 @@ import { settingsDefaults } from "../../data/settings";
 import { settingsSchema, type SettingsFormValues } from "../schemas/settings-schema";
 
 export default function SettingsForm() {
+  const maxCategoryLength = 20;
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: settingsDefaults
@@ -48,6 +49,14 @@ export default function SettingsForm() {
       return;
     }
 
+    if (newCategory.length > maxCategoryLength) {
+      form.setError("newCategory", {
+        type: "manual",
+        message: `Category name must be ${maxCategoryLength} characters or less`
+      });
+      return;
+    }
+
     const exists = fields.some((field) => field.name.toLowerCase() === newCategory.toLowerCase());
 
     if (exists) {
@@ -57,10 +66,11 @@ export default function SettingsForm() {
 
     append({ name: newCategory });
     form.setValue("newCategory", "");
-  }, [append, fields, form]);
+    form.clearErrors("newCategory");
+  }, [append, fields, form, maxCategoryLength]);
 
   const handleSubmit = (values: SettingsFormValues) => {
-    console.log("Form submitted with values:", values);
+    void values;
   };
 
   return (
@@ -170,7 +180,14 @@ export default function SettingsForm() {
                     <Input
                       {...field}
                       placeholder="Add new category..."
+                      maxLength={maxCategoryLength}
                       className="border border-border"
+                      onChange={(event) => {
+                        field.onChange(event.target.value);
+                        if (form.formState.errors.newCategory) {
+                          form.clearErrors("newCategory");
+                        }
+                      }}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           event.preventDefault();
