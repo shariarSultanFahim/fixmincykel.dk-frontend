@@ -1,11 +1,13 @@
-import { Button } from "@/components/ui";
+import Header from "./component/layouts/header";
 
 export default function AdminPage() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <Button>Admin Button</Button>
-      <Button variant="secondary">Admin Button</Button>
+    <div>
+      <Header
+        title="Admin Dashboard Overview"
+        subtitle="System-wide performance and activity monitoring"
+        icon={null}
+      />
     </div>
   );
 }

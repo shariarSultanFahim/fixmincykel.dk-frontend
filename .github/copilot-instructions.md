@@ -114,10 +114,10 @@ Register these variables in the `@theme` block. Use these names for consistency.
 
 ## Styling & Design
 
-- Tailwind CSS must be used exclusively.
+- Tailwind CSS and ShadCN must be used exclusively.
 - Inline styles are forbidden.
 - Prefer soft and pastel tones in the design.
-- Layout, spacing, and alignment must be handled with Tailwind utility classes.
+- Layout, spacing, and alignment must be handled with ShadCN.
 
 ## Accessibility (a11y)
 
@@ -141,3 +141,46 @@ Register these variables in the `@theme` block. Use these names for consistency.
 ## Precedence
 
 - In case of any rule conflicts, repository-specific rules take precedence over global rules.
+
+---
+
+name: 'Admin Dashboard Route Guidelines'
+description: 'Specific coding standards for the Admin Dashboard.'
+applyTo:
+
+- 'src/app/(private)/admin/\*\*'
+
+---
+
+# Admin Dashboard Instructions
+
+- Use the Header component for the main title, subtitle and icon of the dashboard.
+- The Header component should be placed at the top of the page, followed by the main content.
+
+## Styling & Design
+
+- Tailwind CSS and ShadCN must be used exclusively.
+- Inline styles are forbidden.
+- Prefer soft and pastel tones in the design.
+- Layout, spacing, and alignment must be handled with ShadCN.
+
+## Components & Structure
+
+- All file and folder names must be kebab-case (e.g., locale-switcher, query-client.ts).
+- Component files (widgets, layouts) must be PascalCase (e.g., UserList.tsx).
+- UI components must be kebab-case (e.g., button.tsx).
+- Shadcn/UI components under components/ui must be kept as-is; do not modify them.
+- Remove unnecessary imports and console.log statements before commits.
+- Every page should use componnets from the components directory (/{route}/components) for layout and UI elements. Avoid hardcoding styles or elements directly in the page file.
+- Forms should be made in a modular way, using shadcn/ui form components and custom form components from the components directory. Avoid inline styles or hardcoded form elements in the page file.
+- Always use Suspense and Skaleton Fallback for pages that will use data fetching with TanStack Query. The fallback should be a simple skeleton loader that matches the layout of the page content. Avoid hardcoding loading states or spinners directly in the page file. And keep the skeletok under the routes components/skeletons directory for better organization and reusability.
+- Use skeleton even if it is using a Json data for now, as API will be integrated later. This will ensure a smoother transition when the API is ready and will provide a better user experience during loading states.
+
+## Form Logis
+
+- Form state management should be handled with React Hook Form and Zod for validation. Avoid using useState for form state or custom validation logic in the page file.
+- Keep all forms under the routes components/forms directory and Zod schemas under the routes components/schemas directory for better organization and reusability.
+
+## Data Fetching
+
+- Make a data folder under the route (e.g., src/app/(private)/admin/users/data) to keep all data json for now as API will be integrated later.
