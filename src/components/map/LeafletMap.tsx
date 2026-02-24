@@ -34,18 +34,14 @@ interface MapProps {
 }
 
 export default function LeafletMap({ onLocationSelect }: MapProps) {
-  // Default position (e.g., London, or user's saved location)
   const [position, setPosition] = useState<[number, number]>([51.505, -0.09]);
   const [loading, setLoading] = useState(false);
 
-  // Ref for the marker to access its current position
   const markerRef = useRef<L.Marker>(null);
 
-  // 1. Handle "Locate Me" (GPS)
   const handleLocateMe = () => {
     setLoading(true);
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
       setLoading(false);
       return;
     }
@@ -56,17 +52,33 @@ export default function LeafletMap({ onLocationSelect }: MapProps) {
         const newPos: [number, number] = [latitude, longitude];
         setPosition(newPos);
         setLoading(false);
-        // Inform parent component
         if (onLocationSelect) onLocationSelect(latitude, longitude);
       },
       () => {
-        alert("Unable to retrieve your location");
         setLoading(false);
       }
     );
   };
 
-  // 2. Handle Marker Drag
+  // Automatically get user location on mount
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const newPos: [number, number] = [latitude, longitude];
+        setPosition(newPos);
+        if (onLocationSelect) onLocationSelect(latitude, longitude);
+      },
+      () => {
+        // Error handler - silently fail on mount
+      }
+    );
+  }, [onLocationSelect]);
+
   const eventHandlers = useMemo(
     () => ({
       dragend() {
