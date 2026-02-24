@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import type { MessageDictionary } from "@/types/messages";
 
@@ -26,7 +27,9 @@ export default function Hero() {
           >
             {getMessage(copy, "Hero.subtitle")}
           </p>
-          <Button>{getMessage(copy, "Hero.ctaPrimary")}</Button>
+          <Link href="/repair-request">
+            <Button>{getMessage(copy, "Hero.ctaPrimary")}</Button>
+          </Link>
         </div>
         <div className="flex items-center justify-end md:w-1/2">
           <Image
