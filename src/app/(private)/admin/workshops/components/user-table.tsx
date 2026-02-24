@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,6 +25,7 @@ interface WorkshopTableProps {
 }
 
 export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<WorkshopStatus[]>([
     "approved",
@@ -54,8 +56,11 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
   };
 
   const handleView = (id: string) => {
-    console.log("View workshop:", id);
-    // TODO: Implement view workshop details
+    router.push(`/admin/workshops/${id}`);
+  };
+
+  const handleRowClick = (id: string) => {
+    router.push(`/admin/workshops/${id}`);
   };
 
   const handleEdit = (id: string) => {
@@ -123,7 +128,11 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
           <TableBody>
             {filteredWorkshops.length > 0 ? (
               filteredWorkshops.map((workshop) => (
-                <TableRow key={workshop.id} className="border-border">
+                <TableRow
+                  key={workshop.id}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => handleRowClick(workshop.id)}
+                >
                   <TableCell className="font-medium">{workshop.name}</TableCell>
                   <TableCell>{workshop.owner}</TableCell>
                   <TableCell>{workshop.email}</TableCell>
@@ -133,18 +142,20 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
                     <StatusBadge status={workshop.status} />
                   </TableCell>
                   <TableCell className="">
-                    <WorkshopActions
-                      workshopId={workshop.id}
-                      workshopStatus={workshop.status}
-                      onView={handleView}
-                      onEdit={handleEdit}
-                      onSuspend={handleSuspend}
-                      onReactivate={handleReactivate}
-                      onReview={handleReview}
-                      onApprove={handleApprove}
-                      onReject={handleReject}
-                      onDelete={handleDelete}
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <WorkshopActions
+                        workshopId={workshop.id}
+                        workshopStatus={workshop.status}
+                        onView={handleView}
+                        onEdit={handleEdit}
+                        onSuspend={handleSuspend}
+                        onReactivate={handleReactivate}
+                        onReview={handleReview}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                        onDelete={handleDelete}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

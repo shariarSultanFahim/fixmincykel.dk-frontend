@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,6 +25,7 @@ interface UserTableProps {
 }
 
 export default function UserTable({ initialUsers }: UserTableProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<UserStatus[]>([
     "active",
@@ -55,8 +57,11 @@ export default function UserTable({ initialUsers }: UserTableProps) {
   };
 
   const handleView = (id: string) => {
-    console.log("View user:", id);
-    // TODO: Implement view user details
+    router.push(`/admin/users/${id}`);
+  };
+
+  const handleRowClick = (id: string) => {
+    router.push(`/admin/users/${id}`);
   };
 
   const handleBan = (id: string) => {
@@ -114,7 +119,11 @@ export default function UserTable({ initialUsers }: UserTableProps) {
           <TableBody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
-                <TableRow key={user.id} className="border-border">
+                <TableRow
+                  key={user.id}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => handleRowClick(user.id)}
+                >
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone}</TableCell>
@@ -124,16 +133,18 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   </TableCell>
                   <TableCell>{user.registered}</TableCell>
                   <TableCell className="">
-                    <UserActions
-                      userId={user.id}
-                      userStatus={user.status}
-                      onView={handleView}
-                      onBan={handleBan}
-                      onApprove={handleApprove}
-                      onReject={handleReject}
-                      onUnban={handleUnban}
-                      onDelete={handleDelete}
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <UserActions
+                        userId={user.id}
+                        userStatus={user.status}
+                        onView={handleView}
+                        onBan={handleBan}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                        onUnban={handleUnban}
+                        onDelete={handleDelete}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
