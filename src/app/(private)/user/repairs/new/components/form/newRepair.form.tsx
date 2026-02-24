@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Resolver, useForm } from "react-hook-form";
@@ -17,6 +18,13 @@ import { InformationForm } from "./information.form";
 import { PhotoForm } from "./photo.form";
 import { PreferencesForm } from "./preferences.form";
 
+// 1. Dynamically import the map with SSR disabled
+const LocationPicker = dynamic(() => import("@/components/map/LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-100 w-full animate-pulse rounded bg-gray-100">Loading Map...</div>
+  )
+});
 export function NewRepairForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +55,10 @@ export function NewRepairForm() {
         preferredLocation: "",
         maximumDistance: "",
         receiveSmsNotifications: false
+      },
+      location: {
+        latitude: 0,
+        longitude: 0
       }
     }
   });
@@ -76,6 +88,11 @@ export function NewRepairForm() {
     }
   }
 
+  const handleLocationSelect = (lat: number, lng: number) => {
+    console.log("Parent received location:", lat, lng);
+    form.setValue("location", { latitude: lat, longitude: lng });
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -93,6 +110,8 @@ export function NewRepairForm() {
 
         {/* Preferences Section */}
         <PreferencesForm form={form} />
+
+        <LocationPicker onLocationSelect={handleLocationSelect} />
 
         {/* Submit Buttons */}
         <div className="flex gap-3">

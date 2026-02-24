@@ -11,7 +11,11 @@ export const newRepairSchema = z.object({
   information: informationSchema,
   photos: photoSchema,
   dateTime: dateTimeSchema,
-  preferences: preferencesSchema
+  preferences: preferencesSchema,
+  location: z.object({
+    latitude: z.number(),
+    longitude: z.number()
+  })
 });
 
 export type NewRepair = z.infer<typeof newRepairSchema>;
