@@ -39,7 +39,7 @@ export function NewRepairForm() {
         photos: []
       },
       dateTime: {
-        preferredDate: undefined,
+        preferredDate: undefined as unknown as Date,
         preferredTime: "",
         customTime: ""
       },

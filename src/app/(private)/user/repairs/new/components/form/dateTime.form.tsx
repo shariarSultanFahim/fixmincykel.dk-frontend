@@ -97,6 +97,8 @@ export function DateTimeForm({ form }: DateTimeFormProps) {
                                 type="button"
                                 onClick={() => {
                                   field.onChange(time);
+                                  // Clear custom time when a slot is selected
+                                  form.setValue("dateTime.customTime", "");
                                 }}
                                 className={`w-full rounded-lg border-2 px-3 py-2 text-sm font-medium transition ${
                                   field.value === time
@@ -132,11 +134,13 @@ export function DateTimeForm({ form }: DateTimeFormProps) {
                           onChange={(e) => {
                             field.onChange(e);
                             if (e.target.value) {
-                              form.setValue("dateTime.preferredTime", "custom");
+                              // Clear preferred time slot when custom time is entered
+                              form.setValue("dateTime.preferredTime", "");
                             }
                           }}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
