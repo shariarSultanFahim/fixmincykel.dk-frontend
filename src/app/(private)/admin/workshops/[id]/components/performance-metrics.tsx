@@ -1,5 +1,7 @@
 import { Building2, DollarSign, Star, TrendingUp, User } from "lucide-react";
 
+import { currencyFormatter } from "@/constants/currency-formatter";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import type { PerformanceMetrics } from "../../data/workshop";
@@ -61,7 +63,7 @@ export default function PerformanceMetrics({ metrics }: PerformanceMetricsProps)
         <MetricCard
           icon={User}
           label="Platform Fee Paid"
-          value={`DKK ${metrics.platformFeePaid.toLocaleString()}`}
+          value={currencyFormatter.format(metrics.platformFeePaid)}
         />
 
         <MetricCard

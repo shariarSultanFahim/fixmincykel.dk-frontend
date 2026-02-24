@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,6 +25,7 @@ interface WorkshopTableProps {
 }
 
 export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
     "pending",
@@ -67,8 +69,11 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
   };
 
   const handleView = (id: string) => {
-    console.log("View job:", id);
-    // TODO: Implement view job details
+    router.push(`/admin/jobs/${id}`);
+  };
+
+  const handleRowClick = (id: string) => {
+    router.push(`/admin/jobs/${id}`);
   };
 
   const handleDelete = (id: string) => {
@@ -115,7 +120,11 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
           <TableBody>
             {filteredJobs.length > 0 ? (
               filteredJobs.map((job) => (
-                <TableRow key={job.jobId} className="border-border">
+                <TableRow
+                  key={job.jobId}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => handleRowClick(job.jobId)}
+                >
                   <TableCell className="font-medium">{job.jobId}</TableCell>
                   <TableCell>{job.user}</TableCell>
                   <TableCell className="">
@@ -129,12 +138,14 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
                   </TableCell>
                   <TableCell>{new Date(job.createdAt).toLocaleDateString("da-DK")}</TableCell>
                   <TableCell className="">
-                    <JobActions
-                      jobId={job.jobId}
-                      jobStatus={job.status}
-                      onView={handleView}
-                      onDelete={handleDelete}
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <JobActions
+                        jobId={job.jobId}
+                        jobStatus={job.status}
+                        onView={handleView}
+                        onDelete={handleDelete}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

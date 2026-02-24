@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -30,6 +31,7 @@ const currencyFormatter = new Intl.NumberFormat("da-DK", {
 });
 
 export default function BookingTable({ initialBookings }: BookingTableProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
     "booked",
@@ -71,7 +73,7 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
   };
 
   const handleView = (id: string) => {
-    void id;
+    router.push(`/admin/bookings/${id}`);
   };
 
   return (
@@ -108,7 +110,11 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
           <TableBody>
             {filteredBookings.length > 0 ? (
               filteredBookings.map((booking) => (
-                <TableRow key={booking.bookingID} className="border-border">
+                <TableRow
+                  key={booking.bookingID}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => handleView(booking.bookingID)}
+                >
                   <TableCell className="font-medium">{booking.bookingID}</TableCell>
                   <TableCell>{booking.user}</TableCell>
                   <TableCell>{booking.workshop}</TableCell>
@@ -121,11 +127,13 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
                   <TableCell>{new Date(booking.date).toLocaleDateString("da-DK")}</TableCell>
                   <TableCell className="">{currencyFormatter.format(booking.amount)}</TableCell>
                   <TableCell className="">
-                    <BookingActions
-                      bookingId={booking.bookingID}
-                      status={booking.status}
-                      onView={handleView}
-                    />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <BookingActions
+                        bookingId={booking.bookingID}
+                        status={booking.status}
+                        onView={handleView}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
