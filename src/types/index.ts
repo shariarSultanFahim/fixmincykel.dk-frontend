@@ -27,6 +27,7 @@ export type {
   ReviewSummaryBarProps,
   ReviewSummaryStats
 } from "./review";
+export type { ReviewModerationItem, ReviewModerationStatus } from "./review-moderation";
 export type { User } from "./user";
 export type {
   BikeCardProps,
