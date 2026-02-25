@@ -99,14 +99,17 @@ export function FormLogin() {
                   />
                   {tLogin("rememberMe")}
                 </label>
-                <Link href="/forgot-password" className="text-primary hover:underline">
+                <Link href="/reset-password" className="text-primary hover:underline">
                   {tLogin("forgotPassword")}
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full">
-                {tLogin("submit")}
-              </Button>
+              {/* NOTE: This is for example.  */}
+              <Link href="/user">
+                <Button type="submit" className="w-full">
+                  Log In to Dashboard
+                </Button>
+              </Link>
             </form>
           </Form>
 

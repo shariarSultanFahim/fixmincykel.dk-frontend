@@ -94,14 +94,16 @@ export function FormLogin() {
                   />
                   Remember me
                 </label>
-                <Link href="/forgot-password" className="text-navy hover:underline">
+                <Link href="/service-provider/reset-password" className="text-navy hover:underline">
                   Forgot password?
                 </Link>
               </div>
-
-              <Button type="submit" className="w-full bg-navy">
-                Log In to Dashboard
-              </Button>
+              {/* NOTE: This is for example.  */}
+              <Link href="/workshop">
+                <Button type="submit" className="w-full bg-navy">
+                  Log In to Dashboard
+                </Button>
+              </Link>
             </form>
           </Form>
 
