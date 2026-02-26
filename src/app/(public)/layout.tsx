@@ -37,9 +37,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                   className={cn(
                     "relative flex h-10 items-center justify-center px-8 text-sm font-bold transition-all duration-200",
 
-                    isActive
-                      ? "z-10 rounded-t-2xl bg-white text-navy"
-                      : "bg-primary text-navy hover:bg-white/10"
+                    isActive ? "z-10 rounded-t-2xl bg-white text-navy" : "bg-primary text-navy"
                   )}
                 >
                   {t(item.labelKey)}
