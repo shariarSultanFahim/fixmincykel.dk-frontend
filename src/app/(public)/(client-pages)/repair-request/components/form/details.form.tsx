@@ -14,7 +14,6 @@ import {
   ComboboxList
 } from "@/components/ui/combobox";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 
 import { REPAIR_CATEGORIES } from "../constants";
 import { type NewRepair } from "../schema/newRepair.schema";
@@ -83,26 +82,6 @@ export function DetailsForm({ form }: DetailsFormProps) {
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="details.description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium text-navy">
-                Description <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe the problem in detail. When did it start? How often does it happen? Any unusual sounds or behaviors?"
-                  {...field}
-                  className="mt-1 min-h-32 rounded-lg border border-gray-200 bg-white px-3 py-2 text-navy placeholder-gray-400 shadow-sm transition focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                />
               </FormControl>
               <FormMessage />
             </FormItem>

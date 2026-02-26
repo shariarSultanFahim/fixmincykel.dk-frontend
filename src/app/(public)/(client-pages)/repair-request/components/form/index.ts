@@ -1,6 +1,9 @@
+export { BikeDetailsForm } from "./bikeDetails.form";
 export { DateTimeForm } from "./dateTime.form";
 export { DetailsForm } from "./details.form";
 export { InformationForm } from "./information.form";
+export { LocationForm } from "./location.form";
+export { LoginForm } from "./login.form";
 export { NewRepairForm } from "./newRepair.form";
 export { PhotoForm } from "./photo.form";
-export { PreferencesForm } from "./preferences.form";
+export { ReviewSubmitForm } from "./reviewSubmit.form";

@@ -30,7 +30,8 @@ export const dateTimeSchema = z
   .object({
     preferredDate: z.date({ message: "Please select a date" }),
     preferredTime: z.string().optional(),
-    customTime: z.string().optional()
+    customTime: z.string().optional(),
+    additionalNotes: z.string().optional()
   })
   .refine(
     (data) => {

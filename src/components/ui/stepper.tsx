@@ -1,7 +1,5 @@
 "use client";
 
-import { Check } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
 export interface Step {
@@ -17,64 +15,44 @@ interface StepperProps {
 }
 
 export function Stepper({ steps, currentStep, className }: StepperProps) {
+  const progressPercentage = (currentStep / steps.length) * 100;
+
   return (
-    <nav aria-label="Progress" className={cn("w-full", className)}>
-      <ol className="flex items-center justify-between">
+    <nav aria-label="Progress" className={cn("w-full space-y-4", className)}>
+      {/* Step Labels */}
+      <div className="flex items-center justify-between">
         {steps.map((step, index) => {
           const stepNumber = index + 1;
-          const isCompleted = stepNumber < currentStep;
           const isCurrent = stepNumber === currentStep;
 
           return (
-            <li
+            <div
               key={step.id}
               className={cn(
-                "relative flex flex-1 flex-col items-center",
-                index !== steps.length - 1 &&
-                  "after:absolute after:top-5 after:left-[50%] after:h-0.5 after:w-full after:bg-gray-200"
+                "flex-1 text-center text-sm font-medium transition-colors",
+                isCurrent ? "text-primary" : "text-gray-400"
               )}
             >
-              {/* Step Circle */}
-              <div
-                className={cn(
-                  "relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white text-sm font-semibold transition-all",
-                  isCompleted && "border-primary bg-primary text-white",
-                  isCurrent && "border-primary text-primary",
-                  !isCompleted && !isCurrent && "border-gray-300 text-gray-500"
-                )}
-              >
-                {isCompleted ? <Check className="h-5 w-5" /> : <span>{stepNumber}</span>}
-              </div>
-
-              {/* Step Title */}
-              <div className="mt-2 text-center">
-                <p
-                  className={cn(
-                    "text-sm font-medium",
-                    (isCompleted || isCurrent) && "text-navy",
-                    !isCompleted && !isCurrent && "text-gray-500"
-                  )}
-                >
-                  {step.title}
-                </p>
-                {step.description && (
-                  <p className="mt-1 hidden text-xs text-gray-500 sm:block">{step.description}</p>
-                )}
-              </div>
-
-              {/* Connecting Line */}
-              {index !== steps.length - 1 && (
-                <div
-                  className={cn(
-                    "absolute top-5 left-[50%] -z-10 h-0.5 w-full transition-all",
-                    isCompleted ? "bg-primary" : "bg-gray-200"
-                  )}
-                />
-              )}
-            </li>
+              {step.title}
+            </div>
           );
         })}
-      </ol>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="relative">
+        <div className="h-1 w-full overflow-hidden rounded-full bg-gray-200">
+          <div
+            className="h-full bg-primary transition-all duration-300 ease-in-out"
+            style={{ width: `${progressPercentage}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Step Counter */}
+      <div className="text-center text-sm text-gray-600">
+        Step {currentStep} of {steps.length}
+      </div>
     </nav>
   );
 }

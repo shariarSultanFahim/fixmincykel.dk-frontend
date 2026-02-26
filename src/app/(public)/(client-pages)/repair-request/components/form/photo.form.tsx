@@ -10,8 +10,6 @@ import { post } from "@/lib/api";
 
 import { useToast } from "@/hooks";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 import { type NewRepair } from "../schema/newRepair.schema";
@@ -109,61 +107,52 @@ export function PhotoForm({ form }: PhotoFormProps) {
   };
 
   return (
-    <Card className="border-0 bg-white p-6 shadow-sm">
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-semibold text-navy">Photos</h3>
-          <p className="mt-1 text-sm text-gray-600">
-            Add photos to help workshops better understand the issue
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold text-navy">Upload photos of the issue</h3>
+        <p className="mt-1 text-sm text-gray-600">
+          Add 1-4 photos showing the problem. Clear photos help workshops give accurate quotes.
+        </p>
+      </div>
 
-        <FormField
-          control={form.control}
-          name="photos.photos"
-          render={() => (
-            <FormItem>
-              <FormControl>
-                <div className="space-y-4">
-                  {/* Upload Area */}
-                  <div
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                    className={`rounded-lg border-2 border-dashed p-8 text-center transition ${
-                      dragActive ? "border-primary bg-primary/10" : "border-gray-300 bg-gray-50"
-                    }`}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleFileSelect}
-                      className="hidden"
-                    />
+      <FormField
+        control={form.control}
+        name="photos.photos"
+        render={() => (
+          <FormItem>
+            <FormControl>
+              <div className="space-y-4">
+                {/* Upload Area */}
+                <div
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`flex min-h-80 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition ${
+                    dragActive
+                      ? "border-primary bg-primary/10"
+                      : "border-gray-300 bg-gray-50 hover:border-gray-400"
+                  }`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
 
-                    <Upload className="mx-auto h-10 w-10 text-gray-400" />
-                    <p className="mt-2 font-medium text-navy">Drag and drop photos here</p>
-                    <p className="text-sm text-gray-600">or</p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isLoading}
-                      className="mt-3 border-gray-200 text-navy hover:bg-gray-100"
-                    >
-                      {isLoading ? "Uploading..." : "Browse Files"}
-                    </Button>
-                  </div>
-
-                  {/* Photo Gallery */}
-                  {photos.length > 0 && (
-                    <div>
-                      <p className="mb-3 text-sm font-medium text-navy">
-                        Uploaded Photos ({photos.length})
-                      </p>
+                  {photos.length === 0 ? (
+                    <>
+                      <div className="rounded-full bg-primary/10 p-6">
+                        <Upload className="h-12 w-12 text-primary" />
+                      </div>
+                      <p className="mt-4 text-base font-medium text-primary">Add photos</p>
+                    </>
+                  ) : (
+                    <div className="w-full p-6">
                       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                         {photos.map((photo: string, index: number) => (
                           <div
@@ -179,7 +168,10 @@ export function PhotoForm({ form }: PhotoFormProps) {
                             />
                             <button
                               type="button"
-                              onClick={() => removePhoto(photo)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removePhoto(photo);
+                              }}
                               className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition group-hover:opacity-100"
                             >
                               <X className="h-5 w-5 text-white" />
@@ -190,12 +182,17 @@ export function PhotoForm({ form }: PhotoFormProps) {
                     </div>
                   )}
                 </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-    </Card>
+
+                {/* Photo Counter */}
+                <p className="text-center text-sm text-gray-600">
+                  {photos.length} of 5 photos uploaded (minimum 1 required)
+                </p>
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
   );
 }

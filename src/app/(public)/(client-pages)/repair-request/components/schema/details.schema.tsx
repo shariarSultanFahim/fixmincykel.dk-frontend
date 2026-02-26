@@ -1,10 +1,9 @@
 import { z } from "zod";
 
 export const detailsSchema = z.object({
-  repairIssue: z.string().min(1, "Please select what needs to be repaired"),
+  repairIssue: z.string().optional(),
   category: z.string().min(1, "Please select a category"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  urgency: z.enum(["Low", "Medium", "High"])
+  urgency: z.enum(["Low", "Medium", "High"]).default("Medium")
 });
 
 export type Details = z.infer<typeof detailsSchema>;
