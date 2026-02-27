@@ -89,7 +89,7 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {REPAIR_CATEGORIES_WITH_ICONS.map((category) => (
                     <button
                       key={category.value}
