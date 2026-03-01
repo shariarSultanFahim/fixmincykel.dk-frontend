@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import type { ActivityItem } from "@/types/dashboard";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,17 +16,14 @@ export default function ActivityFeedCard({ items }: ActivityFeedCardProps) {
         <div className="space-y-3">
           {items.map((item) => (
             <div key={item.id} className="flex items-start gap-4 border-b border-border pb-3">
-              <span className="min-w-[80px] text-xs text-muted-foreground">{item.time}</span>
+              <span className="min-w-20 text-xs text-muted-foreground">{item.time}</span>
               <p className="text-sm text-foreground">{item.message}</p>
             </div>
           ))}
         </div>
-        <Link
-          href="/admin/audit-log"
-          className="text-sm font-medium text-[color:var(--color-primary)]"
-        >
+        {/* <Link href="/admin/audit-log" className="text-sm font-medium text-primary">
           View Full Activity Log →
-        </Link>
+        </Link> */}
       </CardContent>
     </Card>
   );

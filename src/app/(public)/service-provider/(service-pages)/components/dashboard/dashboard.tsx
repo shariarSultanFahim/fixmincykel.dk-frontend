@@ -10,7 +10,7 @@ export default function Dashboard() {
           Your All-in-One <span className="text-primary">Dashboard</span>
         </h1>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {/* Job Inbox Card */}
           <article className="flex flex-col items-center gap-4 rounded-3xl border border-border bg-white p-6 text-center shadow-lg">
             <div className="flex size-16 items-center justify-center rounded-full bg-secondary">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 
 import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
@@ -32,7 +32,7 @@ export default function Article() {
   const { t } = useCopy("AboutArticle");
   const articles = articleData as ArticleItem[];
   const [api, setApi] = useState<CarouselApi | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Article() {
     if (!api) return;
 
     const handleSelect = () => {
-      setCurrentIndex(api.selectedScrollSnap());
+      // setCurrentIndex(api.selectedScrollSnap());
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
     };
@@ -55,19 +55,19 @@ export default function Article() {
     };
   }, [api]);
 
-  const { previousArticle, nextArticle } = useMemo(() => {
-    return {
-      previousArticle: currentIndex > 0 ? articles[currentIndex - 1] : null,
-      nextArticle: currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null
-    };
-  }, [articles, currentIndex]);
+  // const { previousArticle, nextArticle } = useMemo(() => {
+  //   return {
+  //     previousArticle: currentIndex > 0 ? articles[currentIndex - 1] : null,
+  //     nextArticle: currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null
+  //   };
+  // }, [articles, currentIndex]);
 
   return (
     <section className="container py-10">
       <input
         type="text"
         placeholder="Search articles..."
-        className="mb-5 flex-1 rounded-md border border-primary bg-white px-4 py-2 focus:ring focus:ring-primary/50"
+        className="mb-5 w-full flex-1 rounded-md border border-primary bg-white px-4 py-2 focus:ring focus:ring-primary/50 md:w-auto"
       />
       <Carousel setApi={setApi} opts={{ align: "start" }}>
         <CarouselContent>
@@ -124,7 +124,7 @@ export default function Article() {
                       ))}
                     </div>
 
-                    <div className="mt-8 flex flex-col gap-4 border-t border-navy/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-8 flex flex-row items-center justify-between gap-4 border-t border-navy/10 pt-6">
                       <Button
                         type="button"
                         variant="ghost"
@@ -135,14 +135,14 @@ export default function Article() {
                       >
                         <div className="flex items-center gap-3">
                           <ArrowLeft className="h-4 w-4 text-primary" aria-hidden="true" />
-                          <div>
+                          {/* <div>
                             <p className="text-xs font-semibold text-primary">
                               {t("nav.previous")}
                             </p>
                             <p className="text-sm font-semibold text-navy">
                               {previousArticle ? t(previousArticle.titleKey) : ""}
                             </p>
-                          </div>
+                          </div> */}
                         </div>
                       </Button>
 
@@ -155,12 +155,12 @@ export default function Article() {
                         aria-label={t("nav.nextAria")}
                       >
                         <div className="flex items-center gap-3">
-                          <div>
+                          {/* <div>
                             <p className="text-xs font-semibold text-primary">{t("nav.next")}</p>
                             <p className="text-sm font-semibold text-navy">
                               {nextArticle ? t(nextArticle.titleKey) : ""}
                             </p>
-                          </div>
+                          </div> */}
                           <ArrowRight className="h-4 w-4 text-primary" aria-hidden="true" />
                         </div>
                       </Button>

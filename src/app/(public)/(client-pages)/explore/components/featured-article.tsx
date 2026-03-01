@@ -15,7 +15,7 @@ import { Button } from "@/components/ui";
 export default function FeaturedArticle() {
   const { t } = useCopy("Explore");
   return (
-    <div className="mx-auto flex w-full flex-col gap-10 px-4">
+    <div className="mx-auto flex w-full flex-col gap-10">
       <header className="flex flex-col items-center gap-3 text-center">
         <h1 className="text-3xl font-bold text-navy md:text-4xl">{t("title")}</h1>
         <Underline className="w-56 sm:w-64 md:w-72" aria-hidden="true" />

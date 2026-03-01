@@ -25,7 +25,7 @@ async function StatsSection() {
   const data = await getAnalyticsData();
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
       {data.stats.map((stat) => (
         <StatCard key={stat.id} label={stat.label} value={stat.value} color={stat.color} />
       ))}
@@ -58,7 +58,7 @@ async function RatingSection() {
 
 export default function AnalyticsPage() {
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-navy">Analytics</h1>
         <Button variant="ghost" className="border border-secondary hover:border-primary">

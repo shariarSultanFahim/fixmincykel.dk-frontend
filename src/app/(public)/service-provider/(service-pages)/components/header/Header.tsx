@@ -26,7 +26,9 @@ export const ServiceHeader = () => {
         <div className="flex items-center justify-between gap-6 py-6">
           <Link href="/service-provider" className="flex flex-col items-center gap-3">
             <Image src={logo} alt="FixMinCykel Logo" width={72} height={72} />
-            <p className="text-sm font-semibold text-navy">{getMessage(copy, "Header.brand")}</p>
+            <p className="hidden text-sm font-semibold text-navy md:block">
+              {getMessage(copy, "Header.brand")}
+            </p>
           </Link>
 
           <nav

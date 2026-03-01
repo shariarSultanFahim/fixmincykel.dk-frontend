@@ -41,7 +41,7 @@ export default function PerformanceMetrics({ metrics }: PerformanceMetricsProps)
       <CardHeader>
         <CardTitle className="text-primary">Performance Metrics</CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-4 sm:grid-cols-5">
+      <CardContent className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <MetricCard
           icon={Building2}
           label="Jobs Received"

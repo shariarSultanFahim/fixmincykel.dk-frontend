@@ -26,7 +26,9 @@ export const Header = () => {
         <div className="flex items-center justify-between gap-6 py-6">
           <Link href="/" className="flex flex-col items-center gap-3">
             <Image src={logo} alt="FixMinCykel Logo" width={72} height={72} />
-            <p className="text-sm font-semibold text-navy">{getMessage(copy, "Header.brand")}</p>
+            <p className="hidden text-sm font-semibold text-navy md:block">
+              {getMessage(copy, "Header.brand")}
+            </p>
           </Link>
 
           <nav
@@ -67,16 +69,16 @@ export const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/how-it-works">{getMessage(copy, "Header.navHow")}</Link>
+                  <Link href="/how-it-works">{getMessage(copy, "Header.navHow")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/explore">{getMessage(copy, "Header.navExplore")}</Link>
+                  <Link href="/explore">{getMessage(copy, "Header.navExplore")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/about-us">{getMessage(copy, "Header.navAbout")}</Link>
+                  <Link href="/about-us">{getMessage(copy, "Header.navAbout")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/client-home/faq">{getMessage(copy, "Header.navFaq")}</Link>
+                  <Link href="/contact-us">{getMessage(copy, "Header.navFaq")}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

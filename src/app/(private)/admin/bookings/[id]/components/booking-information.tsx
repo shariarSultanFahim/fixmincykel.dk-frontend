@@ -57,7 +57,7 @@ export default function BookingInformation({ booking }: BookingInformationProps)
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
             <Calendar className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>

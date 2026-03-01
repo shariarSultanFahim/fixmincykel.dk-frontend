@@ -12,7 +12,7 @@ export default function JobsBreakdownCard({ stats }: JobsBreakdownCardProps) {
       <CardHeader>
         <CardTitle className="text-base font-semibold">Jobs Created Breakdown</CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-6 sm:grid-cols-3">
+      <CardContent className="grid grid-cols-3 gap-6">
         {stats.map((stat) => (
           <div key={stat.id} className="text-center">
             <p className="text-xs text-muted-foreground">{stat.label}</p>

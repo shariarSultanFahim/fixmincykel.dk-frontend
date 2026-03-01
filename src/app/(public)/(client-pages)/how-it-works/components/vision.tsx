@@ -36,7 +36,7 @@ export default function Vision() {
             <h2 className="text-2xl font-bold text-navy md:text-4xl">{t("title")}</h2>
             <p className="text-base leading-relaxed text-navy/80 md:text-lg">{t("body")}</p>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <div className="i mt-4 grid grid-cols-3 justify-items-center gap-4">
               {HOW_IT_WORKS_STATS.map((item) => (
                 <div
                   key={item.valueKey}

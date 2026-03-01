@@ -32,15 +32,15 @@ export default function HowItWorksHero() {
             <div className="flex flex-wrap items-center gap-3">
               <Button
                 asChild
-                size="lg"
-                className="border-primary/40 bg-primary text-white hover:border hover:border-white hover:bg-transparent hover:text-white"
+                size="sm"
+                className="border border-primary/40 bg-primary text-[12px] text-white hover:border hover:border-white hover:bg-transparent hover:text-white md:text-[15px]"
               >
-                <Link href="/client-home">{getMessage(copy, "HowItWorksHero.ctaPrimary")}</Link>
+                <Link href="/repair-request">{getMessage(copy, "HowItWorksHero.ctaPrimary")}</Link>
               </Button>
               <Button
                 asChild
-                size="lg"
-                className="border border-white bg-transparent text-white hover:border-primary/40 hover:bg-primary hover:text-white"
+                size="sm"
+                className="border border-white bg-transparent text-[12px] text-white hover:border-primary/40 hover:bg-primary hover:text-white md:text-[15px]"
               >
                 <Link href="/service-home">{getMessage(copy, "HowItWorksHero.ctaSecondary")}</Link>
               </Button>

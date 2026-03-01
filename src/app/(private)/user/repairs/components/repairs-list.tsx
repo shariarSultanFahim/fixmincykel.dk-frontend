@@ -76,7 +76,7 @@ export function RepairsList() {
       </div>
 
       <Card className="rounded-3xl border-none shadow-sm">
-        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <CardContent className="flex flex-row items-center justify-between gap-3">
           <div className="w-full">
             <InputGroup className="bg-muted/60">
               <InputGroupAddon>
@@ -85,7 +85,7 @@ export function RepairsList() {
               <InputGroupInput placeholder="Search repairs..." />
             </InputGroup>
           </div>
-          <Button variant="outline" className="gap-2 self-start sm:self-auto">
+          <Button variant="outline" className="border-none">
             <SlidersHorizontal className="size-4" />
             Filter
           </Button>

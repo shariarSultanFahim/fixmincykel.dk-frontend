@@ -104,11 +104,11 @@ export default function ReviewTable({ reviews }: ReviewTableProps) {
   return (
     <>
       <div className="space-y-4">
-        <Card className="flex flex-col gap-3 border-none sm:flex-row sm:items-center sm:justify-between">
-          <CardContent className="flex-1">
+        <Card className="flex flex-row items-center justify-between gap-3 border-none px-4">
+          <CardContent className="w-full flex-1 px-0">
             <SearchBar value={searchQuery} onSearch={setSearchQuery} />
           </CardContent>
-          <CardContent className="flex gap-2">
+          <CardContent className="border-none px-0">
             <FilterButton selectedStatuses={selectedStatuses} onStatusChange={handleStatusChange} />
           </CardContent>
         </Card>

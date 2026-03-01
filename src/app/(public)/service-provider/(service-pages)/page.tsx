@@ -16,7 +16,7 @@ export default function ServiceHome() {
       <HowItWorks />
       <Dashboard />
       <section className="relative container flex min-h-105 items-center justify-center overflow-hidden py-0 md:py-10 lg:py-72">
-        <div className="relative z-10 flex flex-col items-center space-y-6 text-center">
+        <div className="relative z-10 flex flex-col items-center space-y-6 text-center lg:py-20">
           <h1>Join 100+ Workshops Already Growing Their Business</h1>
           <Link href="/service-provider/register" className="w-72">
             <Button variant="default" className="w-full">

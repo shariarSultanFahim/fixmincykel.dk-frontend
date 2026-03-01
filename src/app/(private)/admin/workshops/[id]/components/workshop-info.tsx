@@ -31,10 +31,10 @@ function getServiceCategoryColor(category: ServiceCategory): string {
     "brake-service": "bg-primary text-white",
     "chain-replacement": "bg-primary text-white",
     "general-tune-up": "bg-primary text-white",
-    "wheel-repair": "bg-secondary text-gray-900",
-    "drivetrain-service": "bg-secondary text-gray-900",
-    "suspension-service": "bg-secondary text-gray-900",
-    "custom-builds": "bg-secondary text-gray-900"
+    "wheel-repair": "bg-secondary text-white",
+    "drivetrain-service": "bg-secondary text-white",
+    "suspension-service": "bg-secondary text-white",
+    "custom-builds": "bg-secondary text-white"
   };
   return colors[category];
 }

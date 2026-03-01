@@ -20,11 +20,11 @@ export default function KpiCard({ stat }: KpiCardProps) {
         </div>
         <div
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-xl",
+            "flex h-6 w-6 items-center justify-center rounded-xl md:h-10 md:w-10",
             stat.iconWrapperClassName
           )}
         >
-          <Icon className={cn("h-5 w-5", stat.iconClassName)} />
+          <Icon className={cn("h-5 w-5 p-1 md:p-0", stat.iconClassName)} />
         </div>
       </CardContent>
     </Card>

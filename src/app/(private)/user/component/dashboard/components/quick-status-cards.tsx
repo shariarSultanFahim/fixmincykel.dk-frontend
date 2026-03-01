@@ -35,7 +35,7 @@ export function QuickStatusCards() {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {cards.map((card, idx) => (
         <div key={idx} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="mb-4 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">

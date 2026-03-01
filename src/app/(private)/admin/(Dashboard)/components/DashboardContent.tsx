@@ -4,7 +4,7 @@ import { ActivityFeedCard, JobsBreakdownCard, KpiCard, QuickActionsCard } from "
 export default function DashboardContent() {
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         {kpiStats.map((stat) => (
           <KpiCard key={stat.id} stat={stat} />
         ))}

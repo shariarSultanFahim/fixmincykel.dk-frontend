@@ -60,7 +60,7 @@ export default function FullUserSubmission({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* User Info Grid */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <div className="flex items-start gap-3">
             <User className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>

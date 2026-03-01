@@ -30,7 +30,7 @@ async function StatsGrid() {
   const stats = await getStats();
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {stats.map((stat) => (
         <StatsCard
           key={stat.id}
@@ -67,7 +67,7 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       {/* Welcome Header */}
       <div className="rounded-xl bg-primary p-8 shadow-md">
         <h1 className="text-2xl font-bold text-white">Welcome back, Copenhagen Bike Repair!</h1>

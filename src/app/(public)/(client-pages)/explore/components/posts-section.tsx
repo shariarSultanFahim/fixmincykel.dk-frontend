@@ -87,7 +87,7 @@ export default function PostsSection() {
   );
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-8 px-4">
+    <div className="mx-auto flex w-full flex-col gap-8">
       <Tabs defaultValue={TAB_ITEMS[0].id} className="w-full">
         <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-b border-navy/10 bg-transparent p-0">
           {TAB_ITEMS.map((tab) => (

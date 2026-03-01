@@ -52,6 +52,14 @@
       {
         "titleKey": "cards.winterMaintenance.sections.tirePressure.title",
         "bodyKey": "cards.winterMaintenance.sections.tirePressure.body"
+      },
+      {
+        "titleKey": "cards.winterMaintenance.sections.tirePressure2.title",
+        "bodyKey": "cards.winterMaintenance.sections.tirePressure2.body"
+      },
+      {
+        "titleKey": "cards.winterMaintenance.sections.tirePressure3.title",
+        "bodyKey": "cards.winterMaintenance.sections.tirePressure3.body"
       }
     ]
   },
@@ -76,6 +84,14 @@
       {
         "titleKey": "cards.chainLube.sections.wipeDown.title",
         "bodyKey": "cards.chainLube.sections.wipeDown.body"
+      },
+      {
+        "titleKey": "cards.chainLube.sections.wipeDown2.title",
+        "bodyKey": "cards.chainLube.sections.wipeDown2.body"
+      },
+      {
+        "titleKey": "cards.chainLube.sections.wipeDown3.title",
+        "bodyKey": "cards.chainLube.sections.wipeDown3.body"
       }
     ]
   }

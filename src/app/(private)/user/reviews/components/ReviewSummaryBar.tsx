@@ -21,11 +21,11 @@ export function ReviewSummaryBar({ stats }: ReviewSummaryBarProps) {
 
   return (
     <Card className="border-0 shadow-sm">
-      <CardContent className="grid gap-6 py-6 md:grid-cols-4 md:gap-0">
+      <CardContent className="grid grid-cols-2 gap-6 py-6 lg:grid-cols-4 lg:gap-0">
         {summaryItems.map((item, index) => (
           <div
             key={item.label}
-            className={cn("flex flex-col gap-1 px-2", index !== 0 && "md:border-l md:border-muted")}
+            className={cn("flex flex-col gap-1 px-2", index !== 0 && "lg:border-l lg:border-muted")}
           >
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               {item.icon}
@@ -33,7 +33,7 @@ export function ReviewSummaryBar({ stats }: ReviewSummaryBarProps) {
             </div>
             <div className="text-2xl font-semibold text-navy">{item.value}</div>
             <div className="text-xs text-muted-foreground">{item.helper}</div>
-            {index !== summaryItems.length - 1 && <Separator className="mt-4 md:hidden" />}
+            {index !== summaryItems.length - 1 && <Separator className="mt-4 lg:hidden" />}
           </div>
         ))}
       </CardContent>
