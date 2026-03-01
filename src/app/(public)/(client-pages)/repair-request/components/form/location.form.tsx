@@ -1,31 +1,35 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import dynamic from "next/dynamic";
+
 import { UseFormReturn } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { type NewRepair } from "../schema/newRepair.schema";
 
+// 1. Dynamically import the map with SSR disabled
+const LocationPicker = dynamic(() => import("@/components/map/LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-start">
+        <Button>Locating...</Button>
+      </div>{" "}
+    </div>
+  )
+});
 interface LocationFormProps {
   form: UseFormReturn<NewRepair>;
 }
 
 export function LocationForm({ form }: LocationFormProps) {
-  const handleUseCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          form.setValue("location.latitude", position.coords.latitude);
-          form.setValue("location.longitude", position.coords.longitude);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    }
+  const handleLocationSelect = (lat: number, lng: number) => {
+    console.log("Parent received location:", lat, lng);
+    form.setValue("location.latitude", lat);
+    form.setValue("location.longitude", lng);
   };
 
   return (
@@ -35,18 +39,11 @@ export function LocationForm({ form }: LocationFormProps) {
         <h3 className="text-lg font-semibold text-navy">Where are you located?</h3>
 
         <div className="flex items-center gap-3 rounded-lg bg-secondary-mint/30 p-4">
-          <MapPin className="h-5 w-5 text-primary" />
           <div className="flex-1">
             <p className="font-medium text-navy">Use your current location</p>
             <p className="text-sm text-gray-600">We&apos;ll find workshops nearby</p>
           </div>
-          <Button
-            type="button"
-            onClick={handleUseCurrentLocation}
-            className="bg-primary text-white hover:bg-primary/90"
-          >
-            Use GPS
-          </Button>
+          <LocationPicker showMap={false} onLocationSelect={handleLocationSelect} />
         </div>
 
         <div className="flex items-center gap-4">

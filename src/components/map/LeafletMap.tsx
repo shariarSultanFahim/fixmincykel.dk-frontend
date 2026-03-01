@@ -30,10 +30,11 @@ function Recenter({ lat, lng }: { lat: number; lng: number }) {
 }
 
 interface MapProps {
+  showMap?: boolean;
   onLocationSelect?: (lat: number, lng: number) => void;
 }
 
-export default function LeafletMap({ onLocationSelect }: MapProps) {
+export default function LeafletMap({ showMap = true, onLocationSelect }: MapProps) {
   const [position, setPosition] = useState<[number, number]>([51.505, -0.09]);
   const [loading, setLoading] = useState(false);
 
@@ -95,38 +96,36 @@ export default function LeafletMap({ onLocationSelect }: MapProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">
-          Selected: {position[0].toFixed(5)}, {position[1].toFixed(5)}
-        </p>
+      <div className="flex justify-start">
         <Button onClick={handleLocateMe} disabled={loading}>
           {loading ? "Locating..." : "📍 Use My GPS"}
         </Button>
       </div>
-
-      <div className="relative z-0 h-100 w-full overflow-hidden rounded-lg border border-gray-300">
-        <MapContainer
-          center={position}
-          zoom={13}
-          scrollWheelZoom={true}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker
-            draggable={true}
-            eventHandlers={eventHandlers}
-            position={position}
-            ref={markerRef}
-            icon={icon}
+      {showMap && (
+        <div className="relative z-0 h-100 w-full overflow-hidden rounded-lg border border-gray-300">
+          <MapContainer
+            center={position}
+            zoom={13}
+            scrollWheelZoom={true}
+            style={{ height: "100%", width: "100%" }}
           >
-            <Popup>Drag me to adjust location!</Popup>
-          </Marker>
-          <Recenter lat={position[0]} lng={position[1]} />
-        </MapContainer>
-      </div>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              draggable={true}
+              eventHandlers={eventHandlers}
+              position={position}
+              ref={markerRef}
+              icon={icon}
+            >
+              <Popup>Drag me to adjust location!</Popup>
+            </Marker>
+            <Recenter lat={position[0]} lng={position[1]} />
+          </MapContainer>
+        </div>
+      )}
     </div>
   );
 }

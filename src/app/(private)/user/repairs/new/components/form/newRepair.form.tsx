@@ -111,14 +111,14 @@ export function NewRepairForm() {
         {/* Preferences Section */}
         <PreferencesForm form={form} />
 
-        <LocationPicker onLocationSelect={handleLocationSelect} />
+        <LocationPicker showMap={true} onLocationSelect={handleLocationSelect} />
 
         {/* Submit Buttons */}
         <div className="flex gap-3">
           <Button type="button" variant="outline" className="flex-1">
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting} className="g flex-1">
+          <Button type="submit" disabled={isSubmitting} className="flex-1">
             {isSubmitting ? "Submitting..." : "Submit Repair Request"}
           </Button>
         </div>
