@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -68,6 +69,22 @@ export default function ServiceGetInTouchPage() {
   const { t, rich } = useCopy("GetInTouch");
   const { t: tClientFaq } = useCopy("ClientFaq");
 
+  const [sucessModalOpen, setSuccessModalOpen] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    console.log("Form submitted", {
+      companyName: formData.get("company_name"),
+      fullName: formData.get("full_name"),
+      phone: formData.get("phone"),
+      additionalInfo: formData.get("additional_info")
+    });
+    setSuccessModalOpen(true);
+
+    e.currentTarget.reset();
+  };
+
   return (
     <section className="bg-white py-12 md:py-16">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4">
@@ -94,7 +111,7 @@ export default function ServiceGetInTouchPage() {
         </header>
 
         <section className="grid gap-8 rounded-[14px] border border-navy/10 bg-white p-6 shadow-lg md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:p-8">
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             {FORM_FIELDS.map((field) => (
               <div key={field.id} className="flex flex-col gap-2">
                 <label htmlFor={field.id} className="text-sm font-semibold text-navy">
@@ -102,6 +119,7 @@ export default function ServiceGetInTouchPage() {
                 </label>
                 <Input
                   id={field.id}
+                  name={field.id}
                   placeholder={field.placeholderKey}
                   className="h-10 rounded-md border border-navy/10 bg-white text-sm text-navy shadow-xs placeholder:text-navy/40"
                 />
@@ -187,6 +205,17 @@ export default function ServiceGetInTouchPage() {
           </section>
         </div>
       </section>
+      {sucessModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="rounded-lg bg-white p-6 text-center">
+            <h2 className="mb-4 text-lg font-semibold text-navy">
+              We&apos;ve received your message, and we will reply within 48 hours.
+            </h2>
+            <p className="mb-6 text-sm text-navy/70"></p>
+            <Button onClick={() => setSuccessModalOpen(false)}>Close</Button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
