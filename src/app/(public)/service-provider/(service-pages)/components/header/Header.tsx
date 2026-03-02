@@ -9,13 +9,8 @@ import logo from "@/assets/icons/logo.png";
 import { getMessage } from "@/helpers/messages";
 import messages from "@/messages/en.json";
 
-import {
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui";
+import { Button } from "@/components/ui";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const ServiceHeader = () => {
   const copy = messages as MessageDictionary;
@@ -47,35 +42,39 @@ export const ServiceHeader = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button asChild className="">
+            <Button asChild className="hidden md:flex">
               <Link href="/service-provider/login" className="px-6">
                 {getMessage(copy, "Header.login")}
               </Link>
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Sheet>
+              <SheetTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
                   className="md:hidden"
                   aria-label={getMessage(copy, "Header.menuLabel")}
                 >
-                  <span className="sr-only">{getMessage(copy, "Header.menuLabel")}</span>
                   <Menu className="size-5 text-navy" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link href="/service-provider/register">Register</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/service-provider/explore">Explore</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/service-provider/contact-us">Contact Us</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </SheetTrigger>
+              <SheetContent>
+                <nav className="mt-8 flex flex-col gap-4 p-4">
+                  <Button asChild className="w-full">
+                    <Link href="/service-provider/register">Register</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/service-provider/explore">Explore</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/service-provider/contact-us">Contact Us</Link>
+                  </Button>
+                  <Button asChild className="w-full" variant={"outline"}>
+                    <Link href="/service-provider/login">{getMessage(copy, "Header.login")}</Link>
+                  </Button>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>

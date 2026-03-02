@@ -39,7 +39,7 @@ export default function Hero() {
           />
         </div>
       </div>
-      <div className="border-[#E2E8F0 ] mt-12 mb-4 grid grid-cols-2 gap-8 border-b md:justify-between md:gap-4 lg:grid-cols-4">
+      <div className="border-[#E2E8F0 ] mt-12 mb-4 hidden grid-cols-2 gap-8 border-b md:grid md:justify-between md:gap-4 lg:grid-cols-4">
         <div className="flex items-center gap-3 p-6">
           <Image
             src="/jobsCompleted.svg"

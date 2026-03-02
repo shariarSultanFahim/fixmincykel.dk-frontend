@@ -7,13 +7,14 @@ import { usePathname } from "next/navigation";
 import {
   CalendarHeartIcon,
   GitCompare,
+  Home,
   LayoutDashboard,
   ListTodo,
   LogOut,
   MessageSquareQuote,
   Star,
-  ToolCase,
-  User
+  User,
+  User2
 } from "lucide-react";
 
 import { Separator } from "@/components/ui";
@@ -33,8 +34,8 @@ import {
 
 const data = {
   info: {
-    title: "Copenhagen Bike Repair",
-    subtitle: "Workshop Portal"
+    title: "User Dashboard",
+    subtitle: ""
   },
   navMain: [
     {
@@ -98,7 +99,7 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/user">
                 <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full">
-                  <ToolCase className="size-8 rounded-lg bg-primary text-white" />
+                  <User2 className="size-8 rounded-lg bg-primary text-white" />
                 </div>
                 <div className="grid flex-1 text-sm leading-tight">
                   <span className="truncate text-lg font-bold">{data.info.title}</span>
@@ -137,6 +138,17 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem className="space-y-5">
+            <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
+              <Link
+                href="/"
+                className="h-10 w-full border border-secondary bg-transparent group-data-[collapsible=icon]:p-0 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:backdrop-blur-sm"
+              >
+                <button className="flex w-full items-center justify-center gap-2 border-none">
+                  <Home className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
+                  <span className="group-data-[collapsible=icon]:hidden">Home</span>
+                </button>
+              </Link>
+            </SidebarMenuButton>
             <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
               <Link
                 href="/login"

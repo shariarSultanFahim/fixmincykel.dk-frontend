@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   Calendar,
   FileChartLine,
+  Home,
   LayoutDashboard,
   ListTodo,
   LogOut,
@@ -133,6 +134,17 @@ export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem className="space-y-5">
+            <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
+              <Link
+                href="/"
+                className="h-10 w-full border border-secondary bg-transparent group-data-[collapsible=icon]:p-0 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:backdrop-blur-sm"
+              >
+                <button className="flex w-full items-center justify-center gap-2 border-none">
+                  <Home className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
+                  <span className="group-data-[collapsible=icon]:hidden">Home</span>
+                </button>
+              </Link>
+            </SidebarMenuButton>
             <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
               <Link
                 href="/service-provider/login"

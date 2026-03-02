@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 
 import { BadgeDollarSign, CreditCard, Mail, Package, Tag, Truck } from "lucide-react";
@@ -64,6 +65,21 @@ export default function GetInTouchPage() {
   const { t, rich } = useCopy("GetInTouch");
   const { t: tClientFaq } = useCopy("ClientFaq");
 
+  const [sucessModalOpen, setSuccessModalOpen] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    console.log("Form submitted", {
+      fullName: formData.get("full-name"),
+      address: formData.get("address"),
+      email: formData.get("email"),
+      phone: formData.get("phone")
+    });
+    setSuccessModalOpen(true);
+
+    e.currentTarget.reset();
+  };
   return (
     <section className="space-y-10 bg-white py-10 md:space-y-20">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4">
@@ -87,7 +103,7 @@ export default function GetInTouchPage() {
         </header>
 
         <section className="grid gap-8 rounded-[14px] border border-navy/10 bg-white p-6 shadow-lg md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:p-8">
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             {FORM_FIELDS.map((field) => (
               <div key={field.id} className="flex flex-col gap-2">
                 <label htmlFor={field.id} className="text-sm font-semibold text-navy">
@@ -95,6 +111,7 @@ export default function GetInTouchPage() {
                 </label>
                 <Input
                   id={field.id}
+                  name={field.id}
                   placeholder={field.placeholderKey}
                   className="h-10 rounded-md border border-navy/10 bg-white text-sm text-navy shadow-xs placeholder:text-navy/40"
                 />
@@ -106,6 +123,7 @@ export default function GetInTouchPage() {
               </label>
               <textarea
                 id="message"
+                name="message"
                 placeholder="I would like to know more about your services..."
                 className={cn(
                   "min-h-40 rounded-md border border-navy/10 bg-white px-3 py-2 text-sm text-navy shadow-xs",
@@ -185,6 +203,17 @@ export default function GetInTouchPage() {
           </Link>
         </section> */}
       </div>
+      {sucessModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="rounded-lg bg-white p-6 text-center">
+            <h2 className="mb-4 text-lg font-semibold text-navy">
+              We&apos;ve received your message, and we will reply within 48 hours.
+            </h2>
+            <p className="mb-6 text-sm text-navy/70"></p>
+            <Button onClick={() => setSuccessModalOpen(false)}>Close</Button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

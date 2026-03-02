@@ -1,4 +1,5 @@
 export type { ArticleItem, ArticleSection } from "./article";
+export type { Blog, BlogSection } from "./blog";
 export type { Booking, BookingWorkshop } from "./booking";
 export type { BookingStatus, CalendarBooking, CalendarData } from "./calendar";
 export type { DataTableProps } from "./data-table";

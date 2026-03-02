@@ -34,6 +34,7 @@ export function NewRepairForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const form = useForm<NewRepair>({
     resolver: zodResolver(newRepairSchema) as unknown as Resolver<NewRepair>,
@@ -70,16 +71,9 @@ export function NewRepairForm() {
     setIsSubmitting(true);
 
     try {
+      console.log("Submitting repair request:", data);
       // Save repair request data to localStorage
       localStorage.setItem("pendingRepairRequest", JSON.stringify(data));
-
-      toast({
-        title: "Success",
-        description: "Repair request saved successfully!"
-      });
-
-      // Navigate to dashboard or home
-      router.push("/user");
     } catch (error) {
       console.error("Submission error:", error);
       toast({
@@ -89,6 +83,7 @@ export function NewRepairForm() {
       });
     } finally {
       setIsSubmitting(false);
+      setShowSuccessModal(true);
     }
   }
 
@@ -221,6 +216,37 @@ export function NewRepairForm() {
             >
               Cancel
             </Button>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-lg">
+            <h2 className="mb-4 text-2xl font-semibold">Success!</h2>
+            <p className="mb-6">Your repair request has been submitted successfully.</p>
+            <div className="flex flex-row items-center justify-center gap-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  router.push("/user");
+                }}
+                className="bg-primary text-white hover:bg-primary/90"
+              >
+                Go to Dashboard
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  router.push("/");
+                }}
+                className="bg-primary text-white hover:bg-primary/90"
+              >
+                Go to Home
+              </Button>
+            </div>
           </div>
         </div>
       )}

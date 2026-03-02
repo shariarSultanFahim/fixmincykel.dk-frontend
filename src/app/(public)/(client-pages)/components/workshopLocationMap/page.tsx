@@ -1,7 +1,7 @@
 export default function WorkshopLocationMap() {
   return (
     <section
-      className="relative container flex min-h-[50vh] w-full items-center justify-center py-20 md:min-h-screen"
+      className="relative container hidden min-h-[50vh] w-full items-center justify-center py-20 md:flex md:min-h-screen"
       style={{
         backgroundImage: `url(/bgEllipse.svg)`,
         backgroundPosition: "center",

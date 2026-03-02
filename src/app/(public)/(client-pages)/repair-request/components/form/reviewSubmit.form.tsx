@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
-import { format } from "date-fns";
 import { UseFormReturn } from "react-hook-form";
 
-import { Calendar, Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
-import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui";
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -43,7 +39,7 @@ const TIME_SLOTS = {
 };
 
 export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
-  const [openDatePicker, setOpenDatePicker] = useState(false);
+  // const [openDatePicker, setOpenDatePicker] = useState(false);
 
   const formData = form.getValues();
 
@@ -86,7 +82,15 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
             name="dateTime.preferredDate"
             render={({ field }) => (
               <FormItem>
-                <Popover open={openDatePicker} onOpenChange={setOpenDatePicker}>
+                <Calendar
+                  selected={field.value}
+                  onSelect={(date: Date) => {
+                    field.onChange(date);
+                    // setOpenDatePicker(false);
+                  }}
+                  disabled={(date: Date) => date < new Date()}
+                />
+                {/* <Popover open={openDatePicker} onOpenChange={setOpenDatePicker}>
                   <PopoverTrigger asChild>
                     <Button
                       type="button"
@@ -106,7 +110,7 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
                       disabled={(date: Date) => date < new Date()}
                     />
                   </PopoverContent>
-                </Popover>
+                </Popover> */}
                 <FormMessage />
               </FormItem>
             )}
