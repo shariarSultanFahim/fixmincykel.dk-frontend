@@ -41,7 +41,7 @@ export function NewRepairForm() {
     defaultValues: {
       details: {
         repairIssue: "",
-        category: "",
+        categories: [],
         urgency: "Medium"
       },
       information: {
