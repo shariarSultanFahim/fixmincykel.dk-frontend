@@ -5,17 +5,8 @@ import { UseFormReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
 import { Card } from "@/components/ui/card";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList
-} from "@/components/ui/combobox";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-import { REPAIR_CATEGORIES } from "../constants";
 import { type NewRepair } from "../schema/newRepair.schema";
 
 interface DetailsFormProps {
@@ -50,38 +41,6 @@ export function DetailsForm({ form }: DetailsFormProps) {
                   {...field}
                   className="mt-1 block w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-navy placeholder-gray-400 shadow-sm transition focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="details.category"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel className="text-sm font-medium text-navy">
-                Category <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Combobox value={field.value} onValueChange={field.onChange}>
-                  <ComboboxInput
-                    placeholder="Select category..."
-                    className="mt-1 w-full"
-                    showClear
-                  />
-                  <ComboboxContent>
-                    <ComboboxList>
-                      {REPAIR_CATEGORIES.map((category: string) => (
-                        <ComboboxItem key={category} value={category}>
-                          {category}
-                        </ComboboxItem>
-                      ))}
-                      <ComboboxEmpty>No category found.</ComboboxEmpty>
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
               </FormControl>
               <FormMessage />
             </FormItem>

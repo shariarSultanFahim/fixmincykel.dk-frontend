@@ -59,7 +59,7 @@ export function DetailsForm({ form }: DetailsFormProps) {
 
         <FormField
           control={form.control}
-          name="details.category"
+          name="details.categories.0.category"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel className="text-sm font-medium text-navy">
@@ -91,7 +91,7 @@ export function DetailsForm({ form }: DetailsFormProps) {
 
         <FormField
           control={form.control}
-          name="details.description"
+          name="details.categories.0.description"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-sm font-medium text-navy">

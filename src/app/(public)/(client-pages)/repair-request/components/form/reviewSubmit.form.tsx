@@ -54,7 +54,9 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
           <div className="space-y-3 text-sm">
             <div>
               <span className="font-semibold text-navy">Category:</span>{" "}
-              <span className="text-gray-700">{formData.details.category || "Not selected"}</span>
+              <span className="text-gray-700">
+                {formData.details.categories?.[0]?.category || "Not selected"}
+              </span>
             </div>
             <div>
               <span className="font-semibold text-navy">Photos:</span>{" "}

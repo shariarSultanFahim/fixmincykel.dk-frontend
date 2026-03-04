@@ -35,6 +35,7 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
   const isCategorySelected = (categoryValue: string) => {
     return fields.some((field) => field.category === categoryValue);
   };
+
   return (
     <div className="space-y-6">
       {/* Bike Information */}

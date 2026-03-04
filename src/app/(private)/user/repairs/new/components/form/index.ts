@@ -1,3 +1,4 @@
+export { BikeDetailsForm } from "./bikeDetails.form";
 export { DateTimeForm } from "./dateTime.form";
 export { DetailsForm } from "./details.form";
 export { InformationForm } from "./information.form";
