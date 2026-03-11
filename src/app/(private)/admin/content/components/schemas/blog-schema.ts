@@ -16,9 +16,7 @@ export const blogFormSchema = z.object({
     { message: "Please upload a cover image" }
   ),
   imageAlt: z.string().min(1, "Image alt text is required"),
-  category: z.enum(["for-cyclists", "for-workshop", "tech-tips"], {
-    required_error: "Please select a category"
-  }),
+  category: z.enum(["for-cyclists", "for-workshop", "tech-tips"], "Please select a category"),
   sections: z.array(blogSectionSchema).min(1, "Add at least one section")
 });
 
