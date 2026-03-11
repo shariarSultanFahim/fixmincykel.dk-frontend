@@ -61,7 +61,6 @@ export function NewRepairForm() {
       location: {
         latitude: undefined,
         longitude: undefined,
-        city: "",
         address: ""
       }
     }

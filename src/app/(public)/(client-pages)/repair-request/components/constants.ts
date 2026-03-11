@@ -1,6 +1,6 @@
 export const REPAIR_CATEGORIES = [
   "Break Issue",
-  "Puncture / Flat tire",
+  "Flat tire",
   "Chain Problem",
   "Electric Bike Issue",
   "Gear Problem",
@@ -12,7 +12,7 @@ export const REPAIR_CATEGORIES = [
 
 export const REPAIR_CATEGORIES_WITH_ICONS = [
   { value: "Brake issue", label: "Brake issue", icon: "🚲" },
-  { value: "Puncture / Flat tire", label: "Puncture / Flat tire", icon: "🚲" },
+  { value: "Flat tire", label: "Flat tire", icon: "🚲" },
   { value: "Chain problem", label: "Chain problem", icon: "🚲" },
   { value: "General service", label: "General service", icon: "🚲" },
   { value: "Electric bike issue", label: "Electric bike issue", icon: "🚲" },

@@ -32,9 +32,6 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
     }
   };
 
-  const isCategorySelected = (categoryValue: string) => {
-    return fields.some((field) => field.category === categoryValue);
-  };
   return (
     <div className="space-y-6">
       {/* Bike Information */}
@@ -105,58 +102,56 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {REPAIR_CATEGORIES_WITH_ICONS.map((category) => (
-              <button
-                key={category.value}
-                type="button"
-                onClick={() => handleCategorySelect(category.value)}
-                className={cn(
-                  "flex flex-col items-center justify-center rounded-lg border-2 bg-secondary-mint/30 p-4 transition hover:border-primary",
-                  isCategorySelected(category.value)
-                    ? "border-primary bg-primary/10"
-                    : "border-gray-200"
-                )}
-              >
-                <div className="mb-2 text-4xl">{category.icon}</div>
-                <span className="text-center text-sm font-medium text-navy">{category.label}</span>
-              </button>
-            ))}
+            {REPAIR_CATEGORIES_WITH_ICONS.map((category) => {
+              const fieldIndex = fields.findIndex((field) => field.category === category.value);
+              const isSelected = fieldIndex !== -1;
+
+              return (
+                <div key={category.value} className="">
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySelect(category.value)}
+                    className={cn(
+                      "flex w-full flex-col items-center justify-center rounded-lg border-2 bg-secondary-mint/30 p-4 transition hover:border-primary",
+                      isSelected ? "border-primary bg-primary/10" : "border-gray-200"
+                    )}
+                  >
+                    <div className="mb-2 text-4xl">{category.icon}</div>
+                    <span className="text-center text-sm font-medium text-navy">
+                      {category.label}
+                    </span>
+                  </button>
+                  {/* Description inputs for selected categories */}
+                  {isSelected && (
+                    <FormField
+                      control={form.control}
+                      name={`details.categories.${fieldIndex}.description`}
+                      render={({ field: descField }) => (
+                        <FormItem className="mt-4">
+                          <FormLabel className="text-base font-semibold text-navy">
+                            Describe the problem
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Tell us what's wrong with your bike be as detailed as possible."
+                              {...descField}
+                              className="border-gray-200 bg-white text-navy placeholder-gray-400"
+                            />
+                          </FormControl>
+                          <div className="text-xs text-gray-500">
+                            {descField.value?.length || 0}/500 - Minimum 10 characters
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
           <FormMessage>{form.formState.errors.details?.categories?.message}</FormMessage>
         </div>
-
-        {/* Description inputs for selected categories */}
-        {fields.length > 0 && (
-          <div className="space-y-4 rounded-lg bg-muted/50 p-4">
-            {fields.map((field, index) => (
-              <FormField
-                key={field.id}
-                control={form.control}
-                name={`details.categories.${index}.description`}
-                render={({ field: descField }) => (
-                  <FormItem>
-                    <FormLabel className="text-base font-semibold text-navy">
-                      Describe the{" "}
-                      {REPAIR_CATEGORIES_WITH_ICONS.find((c) => c.value === fields[index].category)
-                        ?.label || "problem"}
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe the problem"
-                        {...descField}
-                        className="border-gray-200 bg-white text-navy placeholder-gray-400"
-                      />
-                    </FormControl>
-                    <div className="text-xs text-gray-500">
-                      {descField.value?.length || 0}/500 - Minimum 10 characters
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

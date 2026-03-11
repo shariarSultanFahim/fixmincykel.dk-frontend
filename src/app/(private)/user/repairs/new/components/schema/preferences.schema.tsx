@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const preferencesSchema = z.object({
-  preferredLocation: z.string().optional(),
+  address: z.string().min(1, "Please enter your address"),
   maximumDistance: z.string().optional(),
   receiveSmsNotifications: z.boolean().default(false)
 });

@@ -62,7 +62,7 @@ export function NewRepairForm() {
         customTime: ""
       },
       preferences: {
-        preferredLocation: "",
+        address: "",
         maximumDistance: "",
         receiveSmsNotifications: false
       },
