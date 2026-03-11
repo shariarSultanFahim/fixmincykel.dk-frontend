@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   Bolt,
   BriefcaseBusiness,
+  CircleFadingPlus,
   ClipboardList,
   CreditCard,
   Folder,
@@ -86,6 +87,11 @@ const data = {
           title: "Invoices & Payouts",
           url: "/admin/invoices",
           icon: ClipboardList
+        },
+        {
+          title: "Content Management",
+          url: "/admin/content",
+          icon: CircleFadingPlus
         }
       ]
     }
