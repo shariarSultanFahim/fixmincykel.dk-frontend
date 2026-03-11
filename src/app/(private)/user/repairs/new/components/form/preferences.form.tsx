@@ -2,6 +2,7 @@
 
 import { UseFormReturn } from "react-hook-form";
 
+import DenmarkAddressInput from "@/components/map/DenmarkAddressInput";
 import { Checkbox } from "@/components/ui";
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -14,6 +15,9 @@ interface PreferencesFormProps {
 }
 
 export function PreferencesForm({ form }: PreferencesFormProps) {
+  const handleAddressSelect = ({ address }: { address: string }) => {
+    form.setValue("preferences.address", address, { shouldValidate: true });
+  };
   return (
     <Card className="border-0 bg-white p-6 shadow-sm">
       <div className="space-y-6">
@@ -23,17 +27,21 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
 
         <FormField
           control={form.control}
-          name="preferences.preferredLocation"
+          name="preferences.address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium text-navy">Preferred Location</FormLabel>
+              <FormLabel className="text-sm font-medium text-navy">Address</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="e.g., København N, or leave blank for all locations"
-                  {...field}
-                  className="mt-1 border-gray-200 bg-white text-navy placeholder-gray-400 shadow-sm"
+                <DenmarkAddressInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  onSelect={handleAddressSelect}
+                  placeholder="Nørrebrogade 45, 2200 København N"
                 />
               </FormControl>
+              <p className="text-sm text-gray-600">
+                Search and select your address to help us find nearby workshops.
+              </p>
               <FormMessage />
             </FormItem>
           )}

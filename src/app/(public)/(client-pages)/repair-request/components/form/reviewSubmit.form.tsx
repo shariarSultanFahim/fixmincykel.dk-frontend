@@ -64,7 +64,7 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
             </div>
             <div>
               <span className="font-semibold text-navy">Location:</span>{" "}
-              <span className="text-gray-700">{`${formData.location.city}, ${formData.location.address}`}</span>
+              <span className="text-gray-700">{formData.location.address || "Not provided"}</span>
             </div>
           </div>
         </Card>
