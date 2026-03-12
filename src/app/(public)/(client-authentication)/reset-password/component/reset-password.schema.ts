@@ -1,17 +1,5 @@
 import { z } from "zod";
 
-export function createResetEmailSchema() {
-  return z.object({
-    email: z.email("Enter a valid email.")
-  });
-}
-
-export function createResetOtpSchema() {
-  return z.object({
-    otp: z.string().regex(/^\d{6}$/, "Enter the 6-digit code.")
-  });
-}
-
 export function createResetPasswordSchema() {
   return z
     .object({
@@ -24,6 +12,4 @@ export function createResetPasswordSchema() {
     });
 }
 
-export type ResetEmailFormValues = z.infer<ReturnType<typeof createResetEmailSchema>>;
-export type ResetOtpFormValues = z.infer<ReturnType<typeof createResetOtpSchema>>;
 export type ResetPasswordFormValues = z.infer<ReturnType<typeof createResetPasswordSchema>>;

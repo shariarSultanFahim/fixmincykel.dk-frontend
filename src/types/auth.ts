@@ -34,3 +34,27 @@ export interface LoginErrorResponse {
   errorMessages?: LoginErrorMessage[];
   stack?: string;
 }
+
+export interface ForgetPasswordRequest {
+  email: string;
+}
+
+export interface ForgetPasswordResponseData {
+  status: string;
+}
+
+export interface ForgetPasswordResponse {
+  success: boolean;
+  message: string;
+  data?: ForgetPasswordResponseData;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}

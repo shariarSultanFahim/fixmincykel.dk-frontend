@@ -121,7 +121,10 @@ export function FormLogin() {
                   />
                   Remember me
                 </label>
-                <Link href="/service-provider/reset-password" className="text-navy hover:underline">
+                <Link
+                  href="/service-provider/forget-password"
+                  className="text-navy hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>

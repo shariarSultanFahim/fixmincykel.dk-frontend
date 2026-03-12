@@ -122,7 +122,7 @@ export function FormLogin() {
                   />
                   {tLogin("rememberMe")}
                 </label>
-                <Link href="/reset-password" className="text-primary hover:underline">
+                <Link href="/forget-password" className="text-primary hover:underline">
                   {tLogin("forgotPassword")}
                 </Link>
               </div>
