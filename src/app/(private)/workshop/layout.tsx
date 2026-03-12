@@ -1,3 +1,5 @@
+import { withPrivateRoute } from "@/lib/hoc/with-route-guard";
+
 import { Separator } from "@/components/ui";
 import { DynamicBreadcrumb } from "@/components/ui/dynamic-breadcrumb";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -5,7 +7,7 @@ import { DashboardThemeProvider } from "@/providers";
 
 import { WorkshopAppBar } from "./component/layouts/appbar";
 
-export default function WorkshopLayout({ children }: { children: React.ReactNode }) {
+function WorkshopLayout({ children }: { children: React.ReactNode }) {
   return (
     <DashboardThemeProvider type="workshop">
       <SidebarProvider>
@@ -27,3 +29,5 @@ export default function WorkshopLayout({ children }: { children: React.ReactNode
     </DashboardThemeProvider>
   );
 }
+
+export default withPrivateRoute(WorkshopLayout, { allowedRoles: ["workshop"] });
