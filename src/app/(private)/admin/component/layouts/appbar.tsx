@@ -12,13 +12,15 @@ import {
   CreditCard,
   Folder,
   LayoutDashboard,
+  LogOut,
   MessageSquareCode,
   ToolCase,
   User
 } from "lucide-react";
 
-import { Separator } from "@/components/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLogout } from "@/hooks/use-logout";
+
+import { Button, Separator } from "@/components/ui";
 import {
   Sidebar,
   SidebarContent,
@@ -30,7 +32,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubItem,
   SidebarRail
 } from "@/components/ui/sidebar";
 
@@ -100,7 +101,7 @@ const data = {
 
 export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-
+  const { logout } = useLogout();
   const isItemActive = (itemUrl: string) => {
     if (itemUrl === "/admin") {
       return pathname === "/admin";
@@ -115,7 +116,7 @@ export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sideba
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="group-data-[collapsible=icon]:hidden">
-              <Link href="/admin">
+              <Link href="/">
                 <div className="grid flex-1 text-sm leading-tight">
                   <span className="truncate text-lg font-bold">{data.info.title}</span>
                   <span className="text-sidebar-foreground/60 truncate text-xs font-semibold">
@@ -152,7 +153,7 @@ export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sideba
       <Separator className="bg-[#003D75]" />
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuSubItem>
+          {/* <SidebarMenuSubItem>
             <div className="hidden flex-col gap-4 group-data-[collapsible=icon]:flex">
               <Avatar size="lg" className="h-8 w-8">
                 <AvatarImage src="https://github.com/shadcn.png" />
@@ -171,7 +172,14 @@ export function AdminAppSidebar({ ...props }: React.ComponentProps<typeof Sideba
                 </div>
               </div>
             </div>
-          </SidebarMenuSubItem>
+          </SidebarMenuSubItem> */}
+          <Button
+            onClick={() => logout()}
+            className="flex h-10 w-full items-center justify-center gap-2 border-none"
+          >
+            <LogOut className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
+            <span className="group-data-[collapsible=icon]:hidden">Sign Out</span>
+          </Button>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />

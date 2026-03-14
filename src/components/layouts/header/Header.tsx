@@ -1,19 +1,69 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Menu } from "lucide-react";
 
+import type { AuthRole } from "@/types/auth-role";
 import type { MessageDictionary } from "@/types/messages";
+import { AUTH_SESSION_COOKIE } from "@/constants/auth";
 
 import logo from "@/assets/icons/logo.png";
+import { cookie } from "@/lib/cookie-client";
 import { getMessage } from "@/helpers/messages";
 import messages from "@/messages/en.json";
+
+import { useLogout } from "@/hooks/use-logout";
 
 import { Button } from "@/components/ui";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+const getAuthRoleFromSession = (): AuthRole | null => {
+  const rawSession = cookie.get(AUTH_SESSION_COOKIE);
+
+  if (!rawSession) {
+    return null;
+  }
+
+  try {
+    const parsedSession = JSON.parse(rawSession) as { role?: string };
+    const role = parsedSession.role;
+
+    if (role === "admin" || role === "user" || role === "workshop") {
+      return role;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+const getDashboardPathByRole = (role: AuthRole) => {
+  if (role === "user") {
+    return "/user";
+  }
+
+  if (role === "workshop") {
+    return "/workshop";
+  }
+
+  return "/admin";
+};
+
 export const Header = () => {
   const copy = messages as MessageDictionary;
+  const [authRole, setAuthRole] = useState<AuthRole | null>(getAuthRoleFromSession);
+  const isAuthenticated = authRole !== null;
+  const dashboardPath = authRole ? getDashboardPathByRole(authRole) : "/login";
+  const { logout } = useLogout();
+
+  const handleLogout = () => {
+    logout();
+    setAuthRole(null);
+  };
 
   return (
     <header className="bg-transparent">
@@ -45,11 +95,22 @@ export const Header = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button asChild className="hidden md:flex">
-              <Link href="/login" className="px-6">
-                {getMessage(copy, "Header.login")}
-              </Link>
-            </Button>
+            {isAuthenticated ? (
+              <div className="flex items-center">
+                <Button className="hidden px-6 md:flex" onClick={handleLogout}>
+                  {getMessage(copy, "Header.logout")}
+                </Button>
+                <Link href={dashboardPath} className="hidden px-6 md:flex">
+                  <Button variant="outline">Dashboard</Button>
+                </Link>
+              </div>
+            ) : (
+              <Button asChild className="hidden md:flex">
+                <Link href="/login" className="px-6">
+                  {getMessage(copy, "Header.login")}
+                </Link>
+              </Button>
+            )}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -58,7 +119,6 @@ export const Header = () => {
                   className="md:hidden"
                   aria-label={getMessage(copy, "Header.menuLabel")}
                 >
-                  {/* <span className="sr-only">{getMessage(copy, "Header.menuLabel")}</span> */}
                   <Menu className="size-5 text-navy" />
                 </Button>
               </SheetTrigger>
@@ -79,9 +139,22 @@ export const Header = () => {
                       {getMessage(copy, "Header.navFaq")}
                     </Link>
                   </Button>
-                  <Button asChild className="w-full" variant={"outline"}>
-                    <Link href="/login">{getMessage(copy, "Header.login")}</Link>
-                  </Button>
+                  {isAuthenticated ? (
+                    <>
+                      <Button asChild className="w-full">
+                        <Link href={dashboardPath} className="text-navy hover:text-primary">
+                          Dashboard
+                        </Link>
+                      </Button>
+                      <Button className="w-full" variant="outline" onClick={handleLogout}>
+                        {getMessage(copy, "Header.logout")}
+                      </Button>
+                    </>
+                  ) : (
+                    <Button asChild className="w-full" variant="outline">
+                      <Link href="/login">{getMessage(copy, "Header.login")}</Link>
+                    </Button>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
