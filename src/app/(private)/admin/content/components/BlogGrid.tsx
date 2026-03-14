@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 import { Plus, Search } from "lucide-react";
 
-import type { Blog } from "@/types/blog";
+import { useGetBlogs } from "@/lib/actions/blogs/get.blogs";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,31 +14,18 @@ import BlogCard from "./BlogCard";
 
 const BLOGS_PER_PAGE = 9;
 
-interface BlogGridProps {
-  blogs: Blog[];
-}
-
-export default function BlogGrid({ blogs }: BlogGridProps) {
+export default function BlogGrid() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filtered = useMemo(() => {
-    const query = searchQuery.toLowerCase();
-    if (!query) return blogs;
-    return blogs.filter(
-      (b) =>
-        b.title.toLowerCase().includes(query) ||
-        b.tag.toLowerCase().includes(query) ||
-        b.description.toLowerCase().includes(query)
-    );
-  }, [blogs, searchQuery]);
+  const { data, isLoading } = useGetBlogs({
+    page: currentPage,
+    limit: BLOGS_PER_PAGE,
+    searchTerm: searchQuery || undefined
+  });
 
-  const totalPages = Math.ceil(filtered.length / BLOGS_PER_PAGE);
-
-  const paginated = useMemo(() => {
-    const start = (currentPage - 1) * BLOGS_PER_PAGE;
-    return filtered.slice(start, start + BLOGS_PER_PAGE);
-  }, [filtered, currentPage]);
+  const blogs = data?.data.data ?? [];
+  const totalPages = data?.data.meta.totalPage ?? 1;
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
@@ -65,7 +52,11 @@ export default function BlogGrid({ blogs }: BlogGridProps) {
         </Link>
       </div>
 
-      {paginated.length === 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-lg font-medium text-navy">Loading blogs...</p>
+        </div>
+      ) : blogs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="text-lg font-medium text-navy">No blogs found</p>
           <p className="mt-1 text-sm text-gray-500">
@@ -74,7 +65,7 @@ export default function BlogGrid({ blogs }: BlogGridProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {paginated.map((blog) => (
+          {blogs.map((blog) => (
             <BlogCard key={blog.id} blog={blog} />
           ))}
         </div>

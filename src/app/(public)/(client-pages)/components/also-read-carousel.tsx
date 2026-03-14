@@ -6,6 +6,8 @@ import Link from "next/link";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+import type { AdminBlog } from "@/types/blog-manage";
+
 import { useCopy } from "@/hooks/use-copy";
 
 import { Button } from "@/components/ui";
@@ -16,9 +18,11 @@ import {
   type CarouselApi
 } from "@/components/ui/carousel";
 
-import { blogsData } from "../explore/data/blogs";
+interface AlsoReadCarouselProps {
+  blogs: AdminBlog[];
+}
 
-export default function AlsoReadCarousel() {
+export default function AlsoReadCarousel({ blogs }: AlsoReadCarouselProps) {
   const { t } = useCopy("Explore");
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -78,20 +82,30 @@ export default function AlsoReadCarousel() {
 
       <Carousel setApi={setApi} opts={{ align: "start" }} className="w-full">
         <CarouselContent>
-          {blogsData.map((blog) => (
-            <CarouselItem key={blog.id} className="md:basis-1/2 lg:basis-1/3">
-              <Link href={`/explore/${blog.slug}`}>
-                <article className="overflow-hidden rounded-[14px] border border-navy/10 bg-white shadow-sm transition-all duration-300 hover:border-primary hover:shadow-md">
-                  <div className="relative h-36 w-full sm:h-40">
-                    <Image src={blog.image} alt={blog.imageAlt} fill className="object-cover" />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm font-semibold text-navy md:text-base">{blog.title}</h3>
-                  </div>
-                </article>
-              </Link>
-            </CarouselItem>
-          ))}
+          {blogs.map((blog) => {
+            const imageUrl = blog.images[0] ?? "/black-cycle.jpg";
+
+            return (
+              <CarouselItem key={blog.id} className="md:basis-1/2 lg:basis-1/3">
+                <Link href={`/explore/${blog.slug}`}>
+                  <article className="overflow-hidden rounded-[14px] border border-navy/10 bg-white shadow-sm transition-all duration-300 hover:border-primary hover:shadow-md">
+                    <div className="relative h-36 w-full sm:h-40">
+                      <Image
+                        src={imageUrl}
+                        alt={blog.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm font-semibold text-navy md:text-base">{blog.title}</h3>
+                    </div>
+                  </article>
+                </Link>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
       </Carousel>
     </div>

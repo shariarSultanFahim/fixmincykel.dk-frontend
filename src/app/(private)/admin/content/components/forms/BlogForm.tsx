@@ -4,6 +4,8 @@ import { Plus, Trash2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 
+import type { BlogCategory } from "@/types/blog-manage";
+
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -22,15 +24,10 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUploader from "../ImageUploader";
 import type { BlogFormValues } from "../schemas/blog-schema";
 
-const CATEGORIES = [
-  { value: "for-cyclists", label: "For Cyclists" },
-  { value: "for-workshop", label: "For Workshop" },
-  { value: "tech-tips", label: "Tech Tips" }
-] as const;
-
 interface BlogFormProps {
   form: UseFormReturn<BlogFormValues>;
   onSubmit: (data: BlogFormValues) => void;
+  categories: BlogCategory[];
   isSubmitting?: boolean;
   submitLabel?: string;
   onCancel?: () => void;
@@ -39,6 +36,7 @@ interface BlogFormProps {
 export default function BlogForm({
   form,
   onSubmit,
+  categories,
   isSubmitting,
   submitLabel = "Save Blog",
   onCancel
@@ -76,13 +74,13 @@ export default function BlogForm({
 
             <FormField
               control={form.control}
-              name="description"
+              name="subTitle"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Subtitle</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="A short summary of the blog post..."
+                      placeholder="A short subtitle for the blog post..."
                       className="min-h-20 resize-none"
                       {...field}
                     />
@@ -92,48 +90,9 @@ export default function BlogForm({
               )}
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="tag"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tag</FormLabel>
-                    <FormControl>
-                      <Input placeholder="E.g. Tools & Maintenance" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="readTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Read Time</FormLabel>
-                    <FormControl>
-                      <Input placeholder="E.g. 5 min read" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="rounded-lg border border-border bg-muted/40 p-3 text-sm text-gray-600">
+              Author and publish time are automatically set from the current logged-in session.
             </div>
-
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Input placeholder="E.g. March 1, 2026" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}
@@ -152,20 +111,6 @@ export default function BlogForm({
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="imageAlt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image Alt Text</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Describe the image for accessibility" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </CardContent>
         </Card>
 
@@ -177,23 +122,23 @@ export default function BlogForm({
           <CardContent>
             <FormField
               control={form.control}
-              name="category"
+              name="categoryId"
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-3 gap-3">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                       <button
-                        key={cat.value}
+                        key={cat.id}
                         type="button"
-                        onClick={() => field.onChange(cat.value)}
+                        onClick={() => field.onChange(cat.id)}
                         className={cn(
                           "rounded-lg border-2 px-4 py-3 text-sm font-medium transition hover:border-primary",
-                          field.value === cat.value
+                          field.value === cat.id
                             ? "border-primary bg-primary/10 text-navy"
                             : "border-gray-200 bg-white text-gray-600"
                         )}
                       >
-                        {cat.label}
+                        {cat.name}
                       </button>
                     ))}
                   </div>
@@ -212,7 +157,7 @@ export default function BlogForm({
               type="button"
               size="sm"
               variant="outline"
-              onClick={() => append({ title: "", content: "" })}
+              onClick={() => append({ heading: "", details: "" })}
               className="border-primary text-primary hover:bg-primary/10"
             >
               <Plus className="mr-1 h-4 w-4" />
@@ -245,10 +190,10 @@ export default function BlogForm({
 
                 <FormField
                   control={form.control}
-                  name={`sections.${index}.title`}
+                  name={`sections.${index}.heading`}
                   render={({ field: sectionField }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Section Title</FormLabel>
+                      <FormLabel className="text-sm">Section Heading</FormLabel>
                       <FormControl>
                         <Input placeholder="E.g. Introduction" {...sectionField} />
                       </FormControl>
@@ -259,10 +204,10 @@ export default function BlogForm({
 
                 <FormField
                   control={form.control}
-                  name={`sections.${index}.content`}
+                  name={`sections.${index}.details`}
                   render={({ field: sectionField }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Content</FormLabel>
+                      <FormLabel className="text-sm">Details</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Write the section content..."

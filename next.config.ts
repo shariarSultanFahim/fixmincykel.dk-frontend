@@ -30,6 +30,12 @@ const nextConfig: NextConfig = {
         hostname: "api.dicebear.com",
         port: "",
         pathname: "/**"
+      },
+      {
+        protocol: "http",
+        hostname: "10.10.7.111",
+        port: "4000",
+        pathname: "/**"
       }
     ]
   },
