@@ -1,4 +1,6 @@
-import { CheckCircle, Edit, Eye, MoreHorizontal, Pause, Trash2, XCircle } from "lucide-react";
+import { CheckCircle, Eye, MoreHorizontal, Pause, XCircle } from "lucide-react";
+
+import type { WorkshopApprovalStatus } from "@/types/workshop-manage";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,32 +11,24 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { WorkshopStatus } from "../data/workshop";
-
 interface WorkshopActionsProps {
   workshopId: string;
-  workshopStatus: WorkshopStatus;
+  workshopStatus: WorkshopApprovalStatus;
   onView?: (id: string) => void;
-  onEdit?: (id: string) => void;
   onSuspend?: (id: string) => void;
-  onReactivate?: (id: string) => void;
-  onReview?: (id: string) => void;
+  onUnsuspend?: (id: string) => void;
   onApprove?: (id: string) => void;
   onReject?: (id: string) => void;
-  onDelete?: (id: string) => void;
 }
 
 export default function WorkshopActions({
   workshopId,
   workshopStatus,
   onView,
-  onEdit,
   onSuspend,
-  onReactivate,
-  onReview,
+  onUnsuspend,
   onApprove,
-  onReject,
-  onDelete
+  onReject
 }: WorkshopActionsProps) {
   return (
     <DropdownMenu>
@@ -51,34 +45,18 @@ export default function WorkshopActions({
           </DropdownMenuItem>
         )}
 
-        {workshopStatus === "approved" && (
+        {workshopStatus === "APPROVED" && onSuspend && (
           <>
-            {onEdit && (
-              <DropdownMenuItem onClick={() => onEdit(workshopId)}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-            )}
-            {onSuspend && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => onSuspend(workshopId)} className="text-orange-600">
-                  <Pause className="mr-2 h-4 w-4" />
-                  Suspend
-                </DropdownMenuItem>
-              </>
-            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => onSuspend(workshopId)} className="text-orange-600">
+              <Pause className="mr-2 h-4 w-4" />
+              Suspend
+            </DropdownMenuItem>
           </>
         )}
 
-        {workshopStatus === "pending" && (
+        {workshopStatus === "PENDING" && (
           <>
-            {onReview && (
-              <DropdownMenuItem onClick={() => onReview(workshopId)}>
-                <Eye className="mr-2 h-4 w-4" />
-                Review
-              </DropdownMenuItem>
-            )}
             {onApprove && (
               <DropdownMenuItem onClick={() => onApprove(workshopId)}>
                 <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
@@ -94,22 +72,12 @@ export default function WorkshopActions({
           </>
         )}
 
-        {workshopStatus === "suspended" && onReactivate && (
+        {workshopStatus === "SUSPENDED" && onUnsuspend && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onReactivate(workshopId)}>
+            <DropdownMenuItem onClick={() => onUnsuspend(workshopId)}>
               <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-              Reactivate
-            </DropdownMenuItem>
-          </>
-        )}
-
-        {(workshopStatus === "suspended" || workshopStatus === "rejected") && onDelete && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onDelete(workshopId)} className="text-red-600">
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              Unsuspend
             </DropdownMenuItem>
           </>
         )}

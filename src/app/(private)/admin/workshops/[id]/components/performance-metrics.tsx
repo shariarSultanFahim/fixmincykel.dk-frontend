@@ -1,13 +1,11 @@
-import { Building2, DollarSign, Star, TrendingUp, User } from "lucide-react";
+import { Bookmark, DollarSign, Star, TrendingUp, Wrench } from "lucide-react";
 
-import { currencyFormatter } from "@/constants/currency-formatter";
+import type { AdminWorkshop } from "@/types/workshop-manage";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { PerformanceMetrics } from "../../data/workshop";
-
 interface PerformanceMetricsProps {
-  metrics?: PerformanceMetrics;
+  workshop: AdminWorkshop;
 }
 
 function MetricCard({
@@ -31,10 +29,8 @@ function MetricCard({
   );
 }
 
-export default function PerformanceMetrics({ metrics }: PerformanceMetricsProps) {
-  if (!metrics) {
-    return null;
-  }
+export default function PerformanceMetrics({ workshop }: PerformanceMetricsProps) {
+  const totalRevenue = workshop.invoices.reduce((sum, inv) => sum + inv.totalAmount, 0);
 
   return (
     <Card className="border-primary bg-linear-to-br from-primary/5 to-secondary/5">
@@ -42,34 +38,27 @@ export default function PerformanceMetrics({ metrics }: PerformanceMetricsProps)
         <CardTitle className="text-primary">Performance Metrics</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
+        <MetricCard icon={Wrench} label="Total Jobs" value={workshop._count.jobs.toString()} />
+
+        <MetricCard icon={Bookmark} label="Bookings" value={workshop._count.bookings.toString()} />
+
         <MetricCard
-          icon={Building2}
-          label="Jobs Received"
-          value={metrics.jobsReceived.toString()}
+          icon={DollarSign}
+          label="Invoice Revenue"
+          value={`DKK ${totalRevenue.toLocaleString()}`}
         />
 
         <MetricCard
           icon={TrendingUp}
-          label="Conversion Rate"
-          value={`${metrics.conversionRate}%`}
-        />
-
-        <MetricCard
-          icon={DollarSign}
-          label="Monthly Revenue"
-          value={`DKK ${(metrics.monthlyRevenue / 1000).toFixed(1)}K`}
-        />
-
-        <MetricCard
-          icon={User}
-          label="Platform Fee Paid"
-          value={currencyFormatter.format(metrics.platformFeePaid)}
+          label="Invoices"
+          value={workshop._count.invoices.toString()}
         />
 
         <MetricCard
           icon={Star}
-          label="Avg. Review Score"
-          value={metrics.averageReviewScore.toFixed(1)}
+          label="Avg. Rating"
+          value={workshop.avgRating.toFixed(1)}
+          subvalue={`${workshop.reviewsCount} reviews`}
         />
       </CardContent>
     </Card>

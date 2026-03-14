@@ -1,7 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
+
+import type { WorkshopApprovalStatus } from "@/types/workshop-manage";
+
+import { useApproveWorkshop } from "@/lib/actions/workshops/approve.workshop";
+import { useGetWorkshops } from "@/lib/actions/workshops/get.workshops";
+import { useRejectWorkshop } from "@/lib/actions/workshops/reject.workshop";
+import { useSuspendWorkshop } from "@/lib/actions/workshops/suspend.workshop";
+import { useUnsuspendWorkshop } from "@/lib/actions/workshops/unsuspend.workshop";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,55 +26,39 @@ import {
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/widgets";
 
-import { WorkshopStatus, type Workshop } from "../data/workshop";
 import ExportCSVButton from "./export-csv-button";
 import FilterButton from "./filter-button";
 import SearchBar from "./search-bar";
 import StatusBadge from "./status-badge";
 import WorkshopActions from "./workshop-actions";
 
-interface WorkshopTableProps {
-  initialWorkshops: Workshop[];
-}
+const PAGE_SIZE = 10;
 
-const PAGE_SIZE = 5;
-
-export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) {
+export default function WorkshopTable() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [selectedStatuses, setSelectedStatuses] = useState<WorkshopStatus[]>([
-    "approved",
-    "pending"
-  ]);
+  const [statusFilter, setStatusFilter] = useState<WorkshopApprovalStatus | undefined>(undefined);
 
-  const filteredWorkshops = useMemo(() => {
-    return initialWorkshops.filter((workshop) => {
-      // Filter by status
-      if (!selectedStatuses.includes(workshop.status)) return false;
+  const { data, isLoading } = useGetWorkshops({
+    page,
+    limit: PAGE_SIZE,
+    searchTerm: searchQuery || undefined,
+    approvalStatus: statusFilter
+  });
 
-      // Filter by search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        return (
-          workshop.name.toLowerCase().includes(query) ||
-          workshop.owner.toLowerCase().includes(query) ||
-          workshop.email.toLowerCase().includes(query)
-        );
-      }
+  const workshops = data?.data.data ?? [];
+  const meta = data?.data.meta;
+  const totalPages = meta?.totalPage ?? 1;
 
-      return true;
-    });
-  }, [initialWorkshops, searchQuery, selectedStatuses]);
+  const approveMutation = useApproveWorkshop();
+  const rejectMutation = useRejectWorkshop();
+  const suspendMutation = useSuspendWorkshop();
+  const unsuspendMutation = useUnsuspendWorkshop();
 
-  const totalPages = Math.max(1, Math.ceil(filteredWorkshops.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const paginatedWorkshops = filteredWorkshops.slice(startIndex, startIndex + PAGE_SIZE);
-
-  const handleStatusChange = (status: WorkshopStatus, checked: boolean) => {
-    setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
-    setPage(1);
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["workshops-manage"] });
   };
 
   const handleSearchChange = (value: string) => {
@@ -70,47 +66,60 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
     setPage(1);
   };
 
-  const handleView = (id: string) => {
-    router.push(`/admin/workshops/${id}`);
+  const handleStatusFilterChange = (status: WorkshopApprovalStatus | undefined) => {
+    setStatusFilter(status);
+    setPage(1);
   };
 
-  const handleRowClick = (id: string) => {
-    router.push(`/admin/workshops/${id}`);
+  const handleView = (id: string) => router.push(`/admin/workshops/${id}`);
+  const handleRowClick = (id: string) => router.push(`/admin/workshops/${id}`);
+
+  const handleSuspend = async (id: string) => {
+    try {
+      const res = await suspendMutation.mutateAsync(id);
+      toast.success(res.message || "Workshop suspended.");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to suspend workshop."
+      );
+    }
   };
 
-  const handleEdit = (id: string) => {
-    console.log("Edit workshop:", id);
-    // TODO: Implement edit workshop
+  const handleUnsuspend = async (id: string) => {
+    try {
+      const res = await unsuspendMutation.mutateAsync(id);
+      toast.success(res.message || "Workshop unsuspended.");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to unsuspend workshop."
+      );
+    }
   };
 
-  const handleSuspend = (id: string) => {
-    console.log("Suspend workshop:", id);
-    // TODO: Implement suspend workshop
+  const handleApprove = async (id: string) => {
+    try {
+      const res = await approveMutation.mutateAsync(id);
+      toast.success(res.message || "Workshop approved.");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to approve workshop."
+      );
+    }
   };
 
-  const handleReactivate = (id: string) => {
-    console.log("Reactivate workshop:", id);
-    // TODO: Implement reactivate workshop
-  };
-
-  const handleReview = (id: string) => {
-    console.log("Review workshop:", id);
-    // TODO: Implement review workshop
-  };
-
-  const handleApprove = (id: string) => {
-    console.log("Approve workshop:", id);
-    // TODO: Implement approve workshop
-  };
-
-  const handleReject = (id: string) => {
-    console.log("Reject workshop:", id);
-    // TODO: Implement reject workshop
-  };
-
-  const handleDelete = (id: string) => {
-    console.log("Delete workshop:", id);
-    // TODO: Implement delete workshop
+  const handleReject = async (id: string) => {
+    try {
+      const res = await rejectMutation.mutateAsync(id);
+      toast.success(res.message || "Workshop rejected.");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to reject workshop."
+      );
+    }
   };
 
   return (
@@ -121,8 +130,8 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
           <SearchBar value={searchQuery} onSearch={handleSearchChange} />
         </CardContent>
         <CardContent className="flex gap-2">
-          <FilterButton selectedStatuses={selectedStatuses} onStatusChange={handleStatusChange} />
-          <ExportCSVButton workshops={filteredWorkshops} />
+          <FilterButton selectedStatus={statusFilter} onStatusChange={handleStatusFilterChange} />
+          <ExportCSVButton />
         </CardContent>
       </Card>
 
@@ -134,41 +143,44 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
               <TableHead className="rounded-tl-xl">Name</TableHead>
               <TableHead>Owner</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead className="">Rating</TableHead>
-              <TableHead className="">Jobs</TableHead>
-              <TableHead className="">Status</TableHead>
+              <TableHead>City</TableHead>
+              <TableHead>Jobs</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead className="rounded-tr-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedWorkshops.length > 0 ? (
-              paginatedWorkshops.map((workshop) => (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={7} className="py-8 text-center text-gray-500">
+                  Loading workshops...
+                </TableCell>
+              </TableRow>
+            ) : workshops.length > 0 ? (
+              workshops.map((workshop) => (
                 <TableRow
                   key={workshop.id}
                   className="cursor-pointer border-border hover:bg-gray-50"
                   onClick={() => handleRowClick(workshop.id)}
                 >
-                  <TableCell className="font-medium">{workshop.name}</TableCell>
-                  <TableCell>{workshop.owner}</TableCell>
+                  <TableCell className="font-medium">{workshop.workshopName}</TableCell>
+                  <TableCell>{workshop.ownerName}</TableCell>
                   <TableCell>{workshop.email}</TableCell>
-                  <TableCell className="">⭐ {workshop.rating}</TableCell>
-                  <TableCell className="">{workshop.jobs}</TableCell>
-                  <TableCell className="">
-                    <StatusBadge status={workshop.status} />
+                  <TableCell>{workshop.city}</TableCell>
+                  <TableCell>{workshop._count.jobs}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={workshop.approvalStatus} />
                   </TableCell>
-                  <TableCell className="">
+                  <TableCell>
                     <div onClick={(e) => e.stopPropagation()}>
                       <WorkshopActions
                         workshopId={workshop.id}
-                        workshopStatus={workshop.status}
+                        workshopStatus={workshop.approvalStatus}
                         onView={handleView}
-                        onEdit={handleEdit}
                         onSuspend={handleSuspend}
-                        onReactivate={handleReactivate}
-                        onReview={handleReview}
+                        onUnsuspend={handleUnsuspend}
                         onApprove={handleApprove}
                         onReject={handleReject}
-                        onDelete={handleDelete}
                       />
                     </div>
                   </TableCell>
@@ -188,9 +200,9 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
       {/* Results Summary */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">
-          Showing {paginatedWorkshops.length} of {filteredWorkshops.length} workshops
+          {meta ? `Showing ${workshops.length} of ${meta.total} workshops` : ""}
         </p>
-        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+        <TablePagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

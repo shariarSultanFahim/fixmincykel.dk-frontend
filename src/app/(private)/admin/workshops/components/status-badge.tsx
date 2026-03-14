@@ -1,32 +1,19 @@
+import type { WorkshopApprovalStatus } from "@/types/workshop-manage";
+
 import { Badge } from "@/components/ui/badge";
 
-import type { WorkshopStatus } from "../data/workshop";
-
 interface StatusBadgeProps {
-  status: WorkshopStatus;
+  status: WorkshopApprovalStatus;
 }
 
-const statusConfig = {
-  approved: {
-    variant: "default" as const,
-    label: "Approved",
-    icon: "✓"
-  },
-  pending: {
-    variant: "secondary" as const,
-    label: "Pending",
-    icon: "⚠"
-  },
-  suspended: {
-    variant: "destructive" as const,
-    label: "Suspended",
-    icon: "⏸"
-  },
-  rejected: {
-    variant: "destructive" as const,
-    label: "Rejected",
-    icon: "✗"
-  }
+const statusConfig: Record<
+  WorkshopApprovalStatus,
+  { variant: "default" | "secondary" | "destructive" | "outline"; label: string; icon: string }
+> = {
+  APPROVED: { variant: "default", label: "Approved", icon: "✓" },
+  PENDING: { variant: "secondary", label: "Pending", icon: "⚠" },
+  SUSPENDED: { variant: "destructive", label: "Suspended", icon: "⏸" },
+  REJECTED: { variant: "destructive", label: "Rejected", icon: "✗" }
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {

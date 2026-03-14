@@ -1,48 +1,115 @@
 "use client";
 
+import { useState } from "react";
+
+import { useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
+
+import type { WorkshopApprovalStatus } from "@/types/workshop-manage";
+
+import { useApproveWorkshop } from "@/lib/actions/workshops/approve.workshop";
+import { useRejectWorkshop } from "@/lib/actions/workshops/reject.workshop";
+import { useSuspendWorkshop } from "@/lib/actions/workshops/suspend.workshop";
+import { useUnsuspendWorkshop } from "@/lib/actions/workshops/unsuspend.workshop";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { WorkshopStatus } from "../../data/workshop";
-
 interface AdminControlsProps {
   workshopId: string;
-  status: WorkshopStatus;
+  status: WorkshopApprovalStatus;
 }
 
-function getStatusBadgeVariant(
-  status: WorkshopStatus
-): "default" | "secondary" | "destructive" | "outline" {
-  switch (status) {
-    case "approved":
-      return "default";
-    case "pending":
-      return "secondary";
-    case "suspended":
-      return "destructive";
-    case "rejected":
-      return "destructive";
-    default:
-      return "outline";
-  }
-}
+const statusVariantMap: Record<
+  WorkshopApprovalStatus,
+  "default" | "secondary" | "destructive" | "outline"
+> = {
+  APPROVED: "default",
+  PENDING: "secondary",
+  SUSPENDED: "destructive",
+  REJECTED: "destructive"
+};
 
-function getStatusDisplay(status: WorkshopStatus): string {
-  return status.charAt(0).toUpperCase() + status.slice(1);
-}
+const statusDisplayMap: Record<WorkshopApprovalStatus, string> = {
+  APPROVED: "Approved",
+  PENDING: "Pending",
+  SUSPENDED: "Suspended",
+  REJECTED: "Rejected"
+};
 
 export default function AdminControls({ workshopId, status }: AdminControlsProps) {
-  const handleApprove = () => {
-    // TODO: Implement approve workshop
-    console.log("Approve workshop:", workshopId);
+  const queryClient = useQueryClient();
+  const [currentStatus, setCurrentStatus] = useState<WorkshopApprovalStatus>(status);
+
+  const approveMutation = useApproveWorkshop();
+  const rejectMutation = useRejectWorkshop();
+  const suspendMutation = useSuspendWorkshop();
+  const unsuspendMutation = useUnsuspendWorkshop();
+
+  const isPending =
+    approveMutation.isPending ||
+    rejectMutation.isPending ||
+    suspendMutation.isPending ||
+    unsuspendMutation.isPending;
+
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["workshop-details", workshopId] });
+    queryClient.invalidateQueries({ queryKey: ["workshops-manage"] });
   };
 
-  const handleReject = () => {
-    // TODO: Implement reject workshop with notes
-    console.log("Reject workshop:", workshopId);
+  const handleApprove = async () => {
+    try {
+      const res = await approveMutation.mutateAsync(workshopId);
+      toast.success(res.message || "Workshop approved.");
+      setCurrentStatus("APPROVED");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to approve workshop."
+      );
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const res = await rejectMutation.mutateAsync(workshopId);
+      toast.success(res.message || "Workshop rejected.");
+      setCurrentStatus("REJECTED");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to reject workshop."
+      );
+    }
+  };
+
+  const handleSuspend = async () => {
+    try {
+      const res = await suspendMutation.mutateAsync(workshopId);
+      toast.success(res.message || "Workshop suspended.");
+      setCurrentStatus("SUSPENDED");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to suspend workshop."
+      );
+    }
+  };
+
+  const handleUnsuspend = async () => {
+    try {
+      const res = await unsuspendMutation.mutateAsync(workshopId);
+      toast.success(res.message || "Workshop unsuspended.");
+      setCurrentStatus("APPROVED");
+      invalidate();
+    } catch (error) {
+      toast.error(
+        isAxiosError(error) ? error.response?.data?.message : "Failed to unsuspend workshop."
+      );
+    }
   };
 
   return (
@@ -51,59 +118,80 @@ export default function AdminControls({ workshopId, status }: AdminControlsProps
         <CardTitle>Administrative Controls</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Current Status */}
         <div className="space-y-2">
           <p className="text-sm font-semibold text-gray-900">Current Status</p>
-          <Badge variant={getStatusBadgeVariant(status)} className="w-fit gap-1">
-            {status === "approved" && <CheckCircle className="h-3 w-3" />}
-            {status === "pending" && <AlertCircle className="h-3 w-3" />}
-            {(status === "suspended" || status === "rejected") && <XCircle className="h-3 w-3" />}
-            {getStatusDisplay(status)}
+          <Badge variant={statusVariantMap[currentStatus]} className="w-fit gap-1">
+            {currentStatus === "APPROVED" && <CheckCircle className="h-3 w-3" />}
+            {currentStatus === "PENDING" && <AlertCircle className="h-3 w-3" />}
+            {(currentStatus === "SUSPENDED" || currentStatus === "REJECTED") && (
+              <XCircle className="h-3 w-3" />
+            )}
+            {statusDisplayMap[currentStatus]}
           </Badge>
         </div>
 
-        {/* Actions */}
         <div className="flex flex-wrap gap-2">
-          {status === "pending" && (
+          {currentStatus === "PENDING" && (
             <>
-              <Button variant="default" size="sm" className="gap-2" onClick={handleApprove}>
+              <Button
+                variant="default"
+                size="sm"
+                className="gap-2"
+                disabled={isPending}
+                onClick={handleApprove}
+              >
                 <CheckCircle className="h-4 w-4" />
                 Approve
               </Button>
-              <Button variant="destructive" size="sm" className="gap-2" onClick={handleReject}>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="gap-2"
+                disabled={isPending}
+                onClick={handleReject}
+              >
                 <XCircle className="h-4 w-4" />
-                Reject (with notes)
+                Reject
               </Button>
             </>
           )}
 
-          {status === "approved" && (
+          {currentStatus === "APPROVED" && (
             <Button
               variant="outline"
               size="sm"
               className="gap-2 border-orange-200 text-orange-600 hover:bg-orange-50"
-              onClick={() => {
-                // TODO: Implement suspend
-                console.log("Suspend workshop:", workshopId);
-              }}
+              disabled={isPending}
+              onClick={handleSuspend}
             >
               <AlertCircle className="h-4 w-4" />
               Suspend
             </Button>
           )}
 
-          {(status === "suspended" || status === "rejected") && (
+          {currentStatus === "SUSPENDED" && (
             <Button
               variant="outline"
               size="sm"
               className="gap-2"
-              onClick={() => {
-                // TODO: Implement reactivate
-                console.log("Reactivate workshop:", workshopId);
-              }}
+              disabled={isPending}
+              onClick={handleUnsuspend}
             >
               <CheckCircle className="h-4 w-4" />
-              Reactivate
+              Unsuspend
+            </Button>
+          )}
+
+          {currentStatus === "REJECTED" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              disabled={isPending}
+              onClick={handleApprove}
+            >
+              <CheckCircle className="h-4 w-4" />
+              Approve
             </Button>
           )}
         </div>

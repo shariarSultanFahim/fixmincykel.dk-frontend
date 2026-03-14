@@ -1,9 +1,10 @@
 import { Filter } from "lucide-react";
 
+import type { WorkshopApprovalStatus } from "@/types/workshop-manage";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -11,52 +12,42 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { WorkshopStatus } from "../data/workshop";
-
 interface FilterButtonProps {
-  selectedStatuses: WorkshopStatus[];
-  onStatusChange: (status: WorkshopStatus, checked: boolean) => void;
+  selectedStatus: WorkshopApprovalStatus | undefined;
+  onStatusChange: (status: WorkshopApprovalStatus | undefined) => void;
 }
 
-const statuses: WorkshopStatus[] = ["approved", "pending", "suspended", "rejected"];
-const statusLabels: Record<WorkshopStatus, string> = {
-  approved: "Approved",
-  pending: "Pending",
-  suspended: "Suspended",
-  rejected: "Rejected"
+const statuses: WorkshopApprovalStatus[] = ["APPROVED", "PENDING", "SUSPENDED", "REJECTED"];
+const statusLabels: Record<WorkshopApprovalStatus, string> = {
+  APPROVED: "Approved",
+  PENDING: "Pending",
+  SUSPENDED: "Suspended",
+  REJECTED: "Rejected"
 };
 
-export default function FilterButton({ selectedStatuses, onStatusChange }: FilterButtonProps) {
+export default function FilterButton({ selectedStatus, onStatusChange }: FilterButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="border-border">
           <Filter className="mr-2 h-4 w-4" />
-          Filter
+          {selectedStatus ? statusLabels[selectedStatus] : "Filter"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-48">
         <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => onStatusChange(undefined)}>All</DropdownMenuItem>
+        <DropdownMenuSeparator />
         {statuses.map((status) => (
-          <DropdownMenuCheckboxItem
+          <DropdownMenuItem
             key={status}
-            checked={selectedStatuses.includes(status)}
-            onCheckedChange={(checked) => onStatusChange(status, checked)}
+            onSelect={() => onStatusChange(status)}
+            className={selectedStatus === status ? "bg-accent" : ""}
           >
             {statusLabels[status]}
-          </DropdownMenuCheckboxItem>
+          </DropdownMenuItem>
         ))}
-        {selectedStatuses.length > 0 && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => selectedStatuses.forEach((s) => onStatusChange(s, false))}
-            >
-              Clear filters
-            </DropdownMenuItem>
-          </>
-        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
