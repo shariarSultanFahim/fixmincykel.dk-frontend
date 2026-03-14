@@ -1,53 +1,37 @@
 import Image from "next/image";
 
-import { Calendar, FileText, User } from "lucide-react";
+import { Bike, Calendar, MapPin, User } from "lucide-react";
 
-import { Avatar } from "@/components/ui/avatar";
+import type { AdminJobDetails, JobStatus } from "@/types/jobs-manage";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { Category, JobDetails, Status } from "../../data/jobs";
-
 interface FullUserSubmissionProps {
-  user: string;
-  category: Category;
-  status: Status;
-  createdAt: number;
-  details?: JobDetails;
+  job: AdminJobDetails;
 }
 
-function getCategoryLabel(category: Category): string {
-  const labels: Record<Category, string> = {
-    brakes: "Brakes",
-    puncture: "Puncture",
-    chain: "Chain",
-    "general-tune-up": "General Tune-up",
-    "e-bike-service": "E-Bike Service"
-  };
-  return labels[category];
-}
-
-function getStatusColor(status: Status): "default" | "secondary" | "destructive" | "outline" {
+function getStatusColor(status: JobStatus): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return "default";
-    case "booked":
+    case "IN_PROGRESS":
       return "secondary";
-    case "pending":
+    case "PENDING":
+      return "secondary";
+    case "OPEN":
       return "outline";
+    case "EXPIRED":
+      return "destructive";
+    case "CANCELLED":
+      return "destructive";
     default:
       return "outline";
   }
 }
 
-export default function FullUserSubmission({
-  user,
-  category,
-  status,
-  createdAt,
-  details
-}: FullUserSubmissionProps) {
-  const formattedDate = new Date(createdAt).toLocaleDateString("da-DK", {
+export default function FullUserSubmission({ job }: FullUserSubmissionProps) {
+  const formattedDate = new Date(job.createdAt).toLocaleDateString("da-DK", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
@@ -64,17 +48,17 @@ export default function FullUserSubmission({
           <div className="flex items-start gap-3">
             <User className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm text-gray-600">User</p>
-              <p className="font-medium text-gray-900">{details?.userFullName || user}</p>
+              <p className="text-sm text-gray-600">User ID</p>
+              <p className="font-medium text-gray-900">{job.userId}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
-            <FileText className="mt-1 h-5 w-5 shrink-0 text-primary" />
+            <Bike className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm text-gray-600">Category</p>
+              <p className="text-sm text-gray-600">Bike</p>
               <Badge variant="outline" className="mt-1">
-                {getCategoryLabel(category)}
+                {`${job.bikeBrand} ${job.bikeName} (${job.bikeType})`}
               </Badge>
             </div>
           </div>
@@ -85,8 +69,8 @@ export default function FullUserSubmission({
             </div>
             <div>
               <p className="text-sm text-gray-600">Status</p>
-              <Badge variant={getStatusColor(status)} className="mt-1">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+              <Badge variant={getStatusColor(job.status)} className="mt-1">
+                {job.status.replaceAll("_", " ")}
               </Badge>
             </div>
           </div>
@@ -98,36 +82,42 @@ export default function FullUserSubmission({
               <p className="font-medium text-gray-900">{formattedDate}</p>
             </div>
           </div>
+
+          <div className="col-span-2 flex items-start gap-3">
+            <MapPin className="mt-1 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <p className="text-sm text-gray-600">Address</p>
+              <p className="font-medium text-gray-900">{`${job.address}, ${job.postalCode} ${job.city}`}</p>
+            </div>
+          </div>
         </div>
 
         {/* Description */}
-        {details?.description && (
+        {job.description && (
           <div>
             <p className="mb-2 text-sm font-semibold text-gray-900">Description</p>
             <div className="rounded-lg bg-gray-50 p-4">
-              <p className="text-sm text-gray-700">{details.description}</p>
+              <p className="text-sm text-gray-700">{job.description}</p>
             </div>
           </div>
         )}
 
         {/* Photos */}
-        {details?.photos && details.photos.length > 0 && (
+        {job.photos.length > 0 && (
           <div>
-            <p className="mb-3 text-sm font-semibold text-gray-900">
-              Photos ({details.photos.length})
-            </p>
+            <p className="mb-3 text-sm font-semibold text-gray-900">Photos ({job.photos.length})</p>
             <div className="flex flex-wrap gap-4">
-              {details.photos.map((photo) => (
-                <Avatar key={photo.id} className="h-24 w-24 rounded-lg">
+              {job.photos.map((photo, index) => (
+                <figure key={photo} className="h-24 w-24 overflow-hidden rounded-lg">
                   <Image
-                    src={photo.url}
-                    alt={`Photo ${photo.id}`}
+                    src={photo}
+                    alt={`Job photo ${index + 1}`}
                     width={96}
                     height={96}
-                    className="rounded-lg"
+                    className="h-full w-full rounded-lg object-cover"
                     unoptimized
                   />
-                </Avatar>
+                </figure>
               ))}
             </div>
           </div>

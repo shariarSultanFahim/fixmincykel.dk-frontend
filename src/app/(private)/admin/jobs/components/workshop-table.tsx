@@ -1,7 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import type { JobStatus } from "@/types/jobs-manage";
+
+import { useGetJobs } from "@/lib/actions/jobs/get.jobs";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,73 +18,38 @@ import {
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/widgets";
 
-import type { Category, Job, Status } from "../data/jobs";
 import JobActions from "./job-actions";
 import ExportCSVButton from "./job-export-csv-button";
-import FilterButton from "./job-filter-button";
+import JobFilterButton from "./job-filter-button";
 import JobStatusBadge from "./job-status-badge";
 import SearchBar from "./search-bar";
 
-interface WorkshopTableProps {
-  initialJobs: Job[];
-}
+const PAGE_SIZE = 10;
 
-const PAGE_SIZE = 5;
-
-export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
+export default function WorkshopTable() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
-    "pending",
-    "booked",
-    "completed"
-  ]);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([
-    "brakes",
-    "puncture",
-    "chain",
-    "general-tune-up",
-    "e-bike-service"
-  ]);
+  const [statusFilter, setStatusFilter] = useState<JobStatus | undefined>(undefined);
 
-  const filteredJobs = useMemo(() => {
-    return initialJobs.filter((job) => {
-      // Filter by status
-      if (!selectedStatuses.includes(job.status)) return false;
+  const { data, isLoading } = useGetJobs({
+    page,
+    limit: PAGE_SIZE,
+    searchTerm: searchQuery || undefined,
+    status: statusFilter
+  });
 
-      // Filter by category
-      if (!selectedCategories.includes(job.category)) return false;
-
-      // Filter by search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        return job.jobId.toLowerCase().includes(query) || job.user.toLowerCase().includes(query);
-      }
-
-      return true;
-    });
-  }, [initialJobs, searchQuery, selectedStatuses, selectedCategories]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const paginatedJobs = filteredJobs.slice(startIndex, startIndex + PAGE_SIZE);
-
-  const handleStatusChange = (status: Status, checked: boolean) => {
-    setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
-    setPage(1);
-  };
-
-  const handleCategoryChange = (category: Category, checked: boolean) => {
-    setSelectedCategories((prev) =>
-      checked ? [...prev, category] : prev.filter((c) => c !== category)
-    );
-    setPage(1);
-  };
+  const jobs = data?.data.data ?? [];
+  const meta = data?.data.meta;
+  const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.limit)) : 1;
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
+    setPage(1);
+  };
+
+  const handleStatusFilterChange = (status: JobStatus | undefined) => {
+    setStatusFilter(status);
     setPage(1);
   };
 
@@ -92,11 +61,6 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
     router.push(`/admin/jobs/${id}`);
   };
 
-  const handleDelete = (id: string) => {
-    console.log("Delete job:", id);
-    // TODO: Implement delete job
-  };
-
   return (
     <div className="space-y-4">
       {/* Search and Filter Bar */}
@@ -105,17 +69,15 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
           <SearchBar
             value={searchQuery}
             onSearch={handleSearchChange}
-            placeholder="Search by job ID or user name..."
+            placeholder="Search by job title or user name..."
           />
         </CardContent>
         <CardContent className="flex gap-2">
-          <FilterButton
-            selectedStatuses={selectedStatuses}
-            selectedCategories={selectedCategories}
-            onStatusChange={handleStatusChange}
-            onCategoryChange={handleCategoryChange}
+          <JobFilterButton
+            selectedStatus={statusFilter}
+            onStatusChange={handleStatusFilterChange}
           />
-          <ExportCSVButton jobs={filteredJobs} />
+          <ExportCSVButton />
         </CardContent>
       </Card>
 
@@ -124,43 +86,40 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
-              <TableHead className="rounded-tl-xl">Job ID</TableHead>
+              <TableHead className="rounded-tl-xl">Title</TableHead>
               <TableHead>User</TableHead>
-              <TableHead className="">Category</TableHead>
-              <TableHead className="">Offers</TableHead>
-              <TableHead className="">Status</TableHead>
+              <TableHead>Bike</TableHead>
+              <TableHead>Offers</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="rounded-tr-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedJobs.length > 0 ? (
-              paginatedJobs.map((job) => (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={7} className="py-8 text-center text-gray-500">
+                  Loading jobs...
+                </TableCell>
+              </TableRow>
+            ) : jobs.length > 0 ? (
+              jobs.map((job) => (
                 <TableRow
-                  key={job.jobId}
+                  key={job.id}
                   className="cursor-pointer border-border hover:bg-gray-50"
-                  onClick={() => handleRowClick(job.jobId)}
+                  onClick={() => handleRowClick(job.id)}
                 >
-                  <TableCell className="font-medium">{job.jobId}</TableCell>
-                  <TableCell>{job.user}</TableCell>
-                  <TableCell className="">
-                    <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                      {job.category.replace(/-/g, " ")}
-                    </span>
-                  </TableCell>
-                  <TableCell className="">{job.offers}</TableCell>
-                  <TableCell className="">
+                  <TableCell className="font-medium">{job.title}</TableCell>
+                  <TableCell>{job.user.name}</TableCell>
+                  <TableCell>{`${job.bikeBrand} ${job.bikeName}`}</TableCell>
+                  <TableCell>{job.offers.length}</TableCell>
+                  <TableCell>
                     <JobStatusBadge status={job.status} />
                   </TableCell>
                   <TableCell>{new Date(job.createdAt).toLocaleDateString("da-DK")}</TableCell>
-                  <TableCell className="">
+                  <TableCell>
                     <div onClick={(e) => e.stopPropagation()}>
-                      <JobActions
-                        jobId={job.jobId}
-                        jobStatus={job.status}
-                        onView={handleView}
-                        onDelete={handleDelete}
-                      />
+                      <JobActions jobId={job.id} onView={handleView} />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -179,9 +138,9 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
       {/* Results Summary */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">
-          Showing {paginatedJobs.length} of {filteredJobs.length} jobs
+          {meta ? `Showing ${jobs.length} of ${meta.total} jobs` : ""}
         </p>
-        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
+        <TablePagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );
