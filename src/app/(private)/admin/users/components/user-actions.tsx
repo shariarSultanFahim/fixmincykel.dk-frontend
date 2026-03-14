@@ -1,5 +1,7 @@
 import { Ban, CheckCircle, Eye, MoreHorizontal, Trash2, XCircle } from "lucide-react";
 
+import type { UserManageStatus } from "@/types/users-manage";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,11 +11,9 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { UserStatus } from "../data/users";
-
 interface UserActionsProps {
   userId: string;
-  userStatus: UserStatus;
+  userStatus: UserManageStatus;
   onView?: (id: string) => void;
   onBan?: (id: string) => void;
   onApprove?: (id: string) => void;
@@ -47,7 +47,7 @@ export default function UserActions({
           </DropdownMenuItem>
         )}
 
-        {userStatus === "pending" && (
+        {userStatus === "INACTIVE" && (
           <>
             {onApprove && (
               <DropdownMenuItem onClick={() => onApprove(userId)}>
@@ -64,7 +64,7 @@ export default function UserActions({
           </>
         )}
 
-        {userStatus !== "banned" && onBan && (
+        {userStatus !== "BANNED" && onBan && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onBan(userId)} className="text-red-600">
@@ -74,7 +74,7 @@ export default function UserActions({
           </>
         )}
 
-        {userStatus === "banned" && onUnban && (
+        {userStatus === "BANNED" && onUnban && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onUnban(userId)}>

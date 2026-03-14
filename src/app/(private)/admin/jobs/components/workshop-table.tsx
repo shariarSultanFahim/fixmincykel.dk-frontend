@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/widgets";
 
 import type { Category, Job, Status } from "../data/jobs";
 import JobActions from "./job-actions";
@@ -24,9 +25,12 @@ interface WorkshopTableProps {
   initialJobs: Job[];
 }
 
+const PAGE_SIZE = 5;
+
 export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
     "pending",
     "booked",
@@ -58,14 +62,26 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
     });
   }, [initialJobs, searchQuery, selectedStatuses, selectedCategories]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredJobs.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedJobs = filteredJobs.slice(startIndex, startIndex + PAGE_SIZE);
+
   const handleStatusChange = (status: Status, checked: boolean) => {
     setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
+    setPage(1);
   };
 
   const handleCategoryChange = (category: Category, checked: boolean) => {
     setSelectedCategories((prev) =>
       checked ? [...prev, category] : prev.filter((c) => c !== category)
     );
+    setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setPage(1);
   };
 
   const handleView = (id: string) => {
@@ -88,7 +104,7 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
         <CardContent className="flex-1">
           <SearchBar
             value={searchQuery}
-            onSearch={setSearchQuery}
+            onSearch={handleSearchChange}
             placeholder="Search by job ID or user name..."
           />
         </CardContent>
@@ -118,8 +134,8 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
+            {paginatedJobs.length > 0 ? (
+              paginatedJobs.map((job) => (
                 <TableRow
                   key={job.jobId}
                   className="cursor-pointer border-border hover:bg-gray-50"
@@ -161,8 +177,11 @@ export default function WorkshopTable({ initialJobs }: WorkshopTableProps) {
       </Card>
 
       {/* Results Summary */}
-      <div className="text-sm text-gray-600">
-        Showing {filteredJobs.length} of {initialJobs.length} jobs
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">
+          Showing {paginatedJobs.length} of {filteredJobs.length} jobs
+        </p>
+        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

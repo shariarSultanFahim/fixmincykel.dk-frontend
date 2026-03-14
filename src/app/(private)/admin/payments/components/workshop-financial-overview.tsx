@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/widgets";
 
 import type { FeeStatus, WorkshopFinancial } from "../data/payments";
 import { AdjustFeeDialog, InvoiceDialog, MarkAsPaidDialog, SendReminderDialog } from "./dialogs";
@@ -25,12 +26,15 @@ interface WorkshopFinancialOverviewProps {
   workshops: WorkshopFinancial[];
 }
 
+const PAGE_SIZE = 5;
+
 export default function WorkshopFinancialOverview({ workshops }: WorkshopFinancialOverviewProps) {
   const [selectedWorkshop, setSelectedWorkshop] = useState<WorkshopFinancial | null>(null);
   const [openDialog, setOpenDialog] = useState<
     "invoice" | "adjust" | "reminder" | "mark-paid" | null
   >(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedFeeStatuses, setSelectedFeeStatuses] = useState<FeeStatus[]>(["paid", "pending"]);
   const [adjustedPercentages, setAdjustedPercentages] = useState<Record<string, number>>({});
 
@@ -51,10 +55,21 @@ export default function WorkshopFinancialOverview({ workshops }: WorkshopFinanci
     return true;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredWorkshops.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedWorkshops = filteredWorkshops.slice(startIndex, startIndex + PAGE_SIZE);
+
   const handleFeeStatusChange = (status: FeeStatus, checked: boolean) => {
     setSelectedFeeStatuses((prev) =>
       checked ? [...prev, status] : prev.filter((s) => s !== status)
     );
+    setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setPage(1);
   };
 
   const handleAction = (
@@ -93,7 +108,7 @@ export default function WorkshopFinancialOverview({ workshops }: WorkshopFinanci
         </CardHeader>
         <CardContent className="space-y-4 overflow-x-auto px-0">
           <div className="flex flex-col gap-3 px-4 sm:flex-row sm:items-center sm:justify-between">
-            <SearchBar value={searchQuery} onSearch={setSearchQuery} />
+            <SearchBar value={searchQuery} onSearch={handleSearchChange} />
             <FilterButton
               selectedFeeStatuses={selectedFeeStatuses}
               onFeeStatusChange={handleFeeStatusChange}
@@ -113,8 +128,8 @@ export default function WorkshopFinancialOverview({ workshops }: WorkshopFinanci
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredWorkshops.length > 0 ? (
-                  filteredWorkshops.map((workshop) => (
+                {paginatedWorkshops.length > 0 ? (
+                  paginatedWorkshops.map((workshop) => (
                     <TableRow key={workshop.id} className="border-border">
                       <TableCell className="font-medium">{workshop.name}</TableCell>
                       <TableCell className="text-right">
@@ -181,6 +196,16 @@ export default function WorkshopFinancialOverview({ workshops }: WorkshopFinanci
                 )}
               </TableBody>
             </Table>
+            <div className="mt-4 flex items-center justify-between px-4">
+              <p className="text-sm text-gray-600">
+                Showing {paginatedWorkshops.length} of {filteredWorkshops.length} workshops
+              </p>
+              <TablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

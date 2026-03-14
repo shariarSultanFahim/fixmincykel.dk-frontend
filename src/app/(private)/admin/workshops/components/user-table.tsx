@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/widgets";
 
 import { WorkshopStatus, type Workshop } from "../data/workshop";
 import ExportCSVButton from "./export-csv-button";
@@ -24,9 +25,12 @@ interface WorkshopTableProps {
   initialWorkshops: Workshop[];
 }
 
+const PAGE_SIZE = 5;
+
 export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedStatuses, setSelectedStatuses] = useState<WorkshopStatus[]>([
     "approved",
     "pending"
@@ -51,8 +55,19 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
     });
   }, [initialWorkshops, searchQuery, selectedStatuses]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredWorkshops.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedWorkshops = filteredWorkshops.slice(startIndex, startIndex + PAGE_SIZE);
+
   const handleStatusChange = (status: WorkshopStatus, checked: boolean) => {
     setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
+    setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setPage(1);
   };
 
   const handleView = (id: string) => {
@@ -103,7 +118,7 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
       {/* Search and Filter Bar */}
       <Card className="flex flex-col gap-3 border-none sm:flex-row sm:items-center sm:justify-between">
         <CardContent className="flex-1">
-          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
+          <SearchBar value={searchQuery} onSearch={handleSearchChange} />
         </CardContent>
         <CardContent className="flex gap-2">
           <FilterButton selectedStatuses={selectedStatuses} onStatusChange={handleStatusChange} />
@@ -126,8 +141,8 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredWorkshops.length > 0 ? (
-              filteredWorkshops.map((workshop) => (
+            {paginatedWorkshops.length > 0 ? (
+              paginatedWorkshops.map((workshop) => (
                 <TableRow
                   key={workshop.id}
                   className="cursor-pointer border-border hover:bg-gray-50"
@@ -171,8 +186,11 @@ export default function WorkshopTable({ initialWorkshops }: WorkshopTableProps) 
       </Card>
 
       {/* Results Summary */}
-      <div className="text-sm text-gray-600">
-        Showing {filteredWorkshops.length} of {initialWorkshops.length} workshops
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">
+          Showing {paginatedWorkshops.length} of {filteredWorkshops.length} workshops
+        </p>
+        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

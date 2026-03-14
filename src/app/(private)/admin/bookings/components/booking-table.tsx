@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/widgets";
 
 import type { Booking, Payment, Status } from "../data/bookings";
 import BookingActions from "./booking-actions";
@@ -25,6 +26,8 @@ interface BookingTableProps {
   initialBookings: Booking[];
 }
 
+const PAGE_SIZE = 5;
+
 const currencyFormatter = new Intl.NumberFormat("da-DK", {
   style: "currency",
   currency: "DKK"
@@ -33,6 +36,7 @@ const currencyFormatter = new Intl.NumberFormat("da-DK", {
 export default function BookingTable({ initialBookings }: BookingTableProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
     "booked",
     "completed",
@@ -62,14 +66,26 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
     });
   }, [initialBookings, searchQuery, selectedPayments, selectedStatuses]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredBookings.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedBookings = filteredBookings.slice(startIndex, startIndex + PAGE_SIZE);
+
   const handleStatusChange = (status: Status, checked: boolean) => {
     setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
+    setPage(1);
   };
 
   const handlePaymentChange = (payment: Payment, checked: boolean) => {
     setSelectedPayments((prev) =>
       checked ? [...prev, payment] : prev.filter((p) => p !== payment)
     );
+    setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setPage(1);
   };
 
   const handleView = (id: string) => {
@@ -80,7 +96,7 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
     <div className="space-y-4">
       <Card className="flex flex-col gap-3 border-none sm:flex-row sm:items-center sm:justify-between">
         <CardContent className="flex-1">
-          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
+          <SearchBar value={searchQuery} onSearch={handleSearchChange} />
         </CardContent>
         <CardContent className="flex gap-2">
           <FilterButton
@@ -108,8 +124,8 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredBookings.length > 0 ? (
-              filteredBookings.map((booking) => (
+            {paginatedBookings.length > 0 ? (
+              paginatedBookings.map((booking) => (
                 <TableRow
                   key={booking.bookingID}
                   className="cursor-pointer border-border hover:bg-gray-50"
@@ -148,8 +164,11 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
         </Table>
       </Card>
 
-      <div className="text-sm text-gray-600">
-        Showing {filteredBookings.length} of {initialBookings.length} bookings
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">
+          Showing {paginatedBookings.length} of {filteredBookings.length} bookings
+        </p>
+        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

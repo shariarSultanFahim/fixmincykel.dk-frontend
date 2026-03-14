@@ -1,23 +1,31 @@
+import type { UserManageStatus } from "@/types/users-manage";
+
 import { Badge } from "@/components/ui/badge";
 
-import type { UserStatus } from "../data/users";
-
 interface StatusBadgeProps {
-  status: UserStatus;
+  status: UserManageStatus;
 }
 
-const statusConfig = {
-  active: {
+const statusConfig: Record<
+  UserManageStatus,
+  { variant: "default" | "secondary" | "destructive" | "outline"; label: string; icon: string }
+> = {
+  ACTIVE: {
     variant: "default" as const,
     label: "Active",
     icon: "✓"
   },
-  pending: {
+  INACTIVE: {
     variant: "secondary" as const,
-    label: "Pending",
+    label: "Inactive",
     icon: "⚠"
   },
-  banned: {
+  SUSPENDED: {
+    variant: "outline" as const,
+    label: "Suspended",
+    icon: "⏸"
+  },
+  BANNED: {
     variant: "destructive" as const,
     label: "Banned",
     icon: "⊘"
@@ -25,7 +33,11 @@ const statusConfig = {
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? {
+    variant: "secondary" as const,
+    label: status,
+    icon: "?"
+  };
 
   return (
     <Badge variant={config.variant} className="flex items-center gap-1">

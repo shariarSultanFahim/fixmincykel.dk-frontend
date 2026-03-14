@@ -1,5 +1,7 @@
 import { Filter } from "lucide-react";
 
+import type { UserManageStatus } from "@/types/users-manage";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,21 +13,20 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { UserStatus } from "../data/users";
-
 interface FilterButtonProps {
-  selectedStatuses: UserStatus[];
-  onStatusChange: (status: UserStatus, checked: boolean) => void;
+  selectedStatus?: UserManageStatus;
+  onStatusChange: (status?: UserManageStatus) => void;
 }
 
-const statuses: UserStatus[] = ["active", "pending", "banned"];
-const statusLabels: Record<UserStatus, string> = {
-  active: "Active",
-  pending: "Pending",
-  banned: "Banned"
+const statuses: UserManageStatus[] = ["ACTIVE", "INACTIVE", "SUSPENDED", "BANNED"];
+const statusLabels: Record<UserManageStatus, string> = {
+  ACTIVE: "Active",
+  INACTIVE: "Inactive",
+  SUSPENDED: "Suspended",
+  BANNED: "Banned"
 };
 
-export default function FilterButton({ selectedStatuses, onStatusChange }: FilterButtonProps) {
+export default function FilterButton({ selectedStatus, onStatusChange }: FilterButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,18 +41,16 @@ export default function FilterButton({ selectedStatuses, onStatusChange }: Filte
         {statuses.map((status) => (
           <DropdownMenuCheckboxItem
             key={status}
-            checked={selectedStatuses.includes(status)}
-            onCheckedChange={(checked) => onStatusChange(status, checked)}
+            checked={selectedStatus === status}
+            onCheckedChange={(checked) => onStatusChange(checked ? status : undefined)}
           >
             {statusLabels[status]}
           </DropdownMenuCheckboxItem>
         ))}
-        {selectedStatuses.length > 0 && (
+        {selectedStatus && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => selectedStatuses.forEach((s) => onStatusChange(s, false))}
-            >
+            <DropdownMenuItem onClick={() => onStatusChange(undefined)}>
               Clear filters
             </DropdownMenuItem>
           </>
