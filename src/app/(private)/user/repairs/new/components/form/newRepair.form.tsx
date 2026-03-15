@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -109,6 +110,7 @@ const toPreferredTimeIso = (preferredDate: Date, preferredTime: string, customTi
 };
 
 export function NewRepairForm() {
+  const router = useRouter();
   const { toast } = useToast();
   const createJob = useCreateJob();
 
@@ -178,15 +180,14 @@ export function NewRepairForm() {
         photos: data.photos.photos
       };
 
-      await createJob.mutateAsync(payload);
+      const createResponse = await createJob.mutateAsync(payload);
 
       toast({
         title: "Success",
         description: "Your repair request has been submitted successfully."
       });
-
       form.reset();
-      setCurrentStep(1);
+      router.push(`/user/repairs/${createResponse.data.id}`);
     } catch (error) {
       const errorMessage = isAxiosError(error)
         ? (error.response?.data as { message?: string } | undefined)?.message ||

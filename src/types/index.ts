@@ -61,6 +61,13 @@ export type {
   UserProfileFormValues
 } from "./user-profile";
 export type {
+  UserRepair,
+  UserRepairListMeta,
+  UserRepairListPayload,
+  UserRepairListResponse,
+  UserRepairQueryParams
+} from "./user-repair";
+export type {
   WorkshopNotifications,
   WorkshopOpeningHours,
   WorkshopProfileData,
