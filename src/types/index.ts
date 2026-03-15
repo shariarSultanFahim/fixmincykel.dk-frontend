@@ -49,15 +49,15 @@ export type {
 export type { ReviewModerationItem, ReviewModerationStatus } from "./review-moderation";
 export type { User } from "./user";
 export type {
+  AddBikeDialogProps,
   BikeCardProps,
   EditBikeDialogProps,
   PreferenceToggleProps,
   UserBike,
   UserBikeFormValues,
-  UserPreferences,
+  UserPreferencesFormValues,
   UserProfile,
   UserProfileData,
-  UserProfileFormProps,
   UserProfileFormValues
 } from "./user-profile";
 export type {

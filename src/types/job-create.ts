@@ -1,12 +1,13 @@
-export type BikeType =
-  | "ROAD"
-  | "MOUNTAIN"
-  | "HYBRID"
-  | "ELECTRIC"
-  | "BMX"
-  | "GRAVEL"
-  | "CRUISER"
-  | "OTHER";
+export enum BikeType {
+  ROAD = "ROAD",
+  MOUNTAIN = "MOUNTAIN",
+  HYBRID = "HYBRID",
+  ELECTRIC = "ELECTRIC",
+  BMX = "BMX",
+  GRAVEL = "GRAVEL",
+  CRUISER = "CRUISER",
+  OTHER = "OTHER"
+}
 
 export interface JobCategoryOption {
   id: string;

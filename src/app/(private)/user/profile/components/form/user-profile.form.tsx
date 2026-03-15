@@ -1,9 +1,21 @@
 "use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import { Camera, Mail, MapPin, Phone, User } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import type { BikeType } from "@/types/job-create";
+
+import {
+  useCreateBike,
+  useGetMyBikes,
+  useGetMyProfile,
+  useUpdateBike,
+  useUpdateMyProfile
+} from "@/lib/actions/users/profile.user";
 
 import {
   Button,
@@ -20,31 +32,153 @@ import {
 } from "@/components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import type { UserProfileFormProps, UserProfileFormValues } from "@/types";
+import type { UserBikeFormValues, UserPreferencesFormValues, UserProfileFormValues } from "@/types";
 
 import { BikeCard } from "../bike-card";
 import { AddBikeDialog } from "../dialog";
 import { PreferenceToggle } from "../preference-toggle";
-import { userProfileSchema } from "../schema";
+import { userPreferencesSchema, userProfileSchema } from "../schema";
+import { UserProfileSkeleton } from "../skeleton";
 
-export function UserProfileForm({ initialValues }: UserProfileFormProps) {
+const EMPTY_FORM_VALUES: UserProfileFormValues = {
+  fullName: "",
+  email: "",
+  phone: "",
+  address: ""
+};
+
+const DEFAULT_PREFERENCE_VALUES: UserPreferencesFormValues = {
+  emailNotifications: true,
+  smsNotifications: true,
+  marketingEmails: false
+};
+
+const normalizeBikeType = (type: string): BikeType => type.trim().toUpperCase() as BikeType;
+
+export function UserProfileForm() {
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { data: userResponse, isLoading: isUserLoading } = useGetMyProfile();
+  const { data: bikesResponse, isLoading: isBikeLoading } = useGetMyBikes();
+  const updateProfileMutation = useUpdateMyProfile();
+  const createBikeMutation = useCreateBike();
+  const updateBikeMutation = useUpdateBike();
+
+  const user = userResponse?.data;
+  const bikes = bikesResponse?.data ?? [];
+  const isLoading = isUserLoading || isBikeLoading;
+  const fullNameInitial = user?.name?.charAt(0) ?? "U";
+
   const form = useForm<UserProfileFormValues>({
     resolver: zodResolver(userProfileSchema),
-    defaultValues: {
-      fullName: initialValues.fullName,
-      email: initialValues.email,
-      phone: initialValues.phone,
-      address: initialValues.address,
-      preferences: initialValues.preferences
+    defaultValues: EMPTY_FORM_VALUES
+  });
+
+  const preferencesForm = useForm<UserPreferencesFormValues>({
+    resolver: zodResolver(userPreferencesSchema),
+    defaultValues: DEFAULT_PREFERENCE_VALUES
+  });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    form.reset({
+      fullName: user.name,
+      email: user.email,
+      phone: user.phone,
+      address: user.address ?? ""
+    });
+  }, [form, user]);
+
+  const avatarPreview = useMemo(() => {
+    if (!avatarFile) {
+      return user?.avatar ?? undefined;
+    }
+
+    return URL.createObjectURL(avatarFile);
+  }, [avatarFile, user?.avatar]);
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview && avatarFile) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarFile, avatarPreview]);
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    if (!user) {
+      return;
+    }
+
+    try {
+      const response = await updateProfileMutation.mutateAsync({
+        userId: user.id,
+        data: {
+          name: values.fullName,
+          address: values.address
+        },
+        image: avatarFile
+      });
+
+      toast.success(response.message || "Profile updated.");
+      setAvatarFile(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to update profile.";
+      toast.error(message);
     }
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("User profile", values);
-    toast.success("Profile updated.");
+  const onCreateBike = async (values: UserBikeFormValues & { ownerId: string }) => {
+    await createBikeMutation.mutateAsync({
+      ownerId: values.ownerId,
+      name: values.name,
+      type: normalizeBikeType(values.type),
+      brand: values.brand,
+      model: values.model,
+      year: Number(values.year),
+      color: values.color
+    });
+  };
+
+  const onUpdateBike = async (bikeId: string, values: UserBikeFormValues) => {
+    await updateBikeMutation.mutateAsync({
+      bikeId,
+      data: {
+        ownerId: user?.id,
+        name: values.name,
+        type: normalizeBikeType(values.type),
+        brand: values.brand,
+        model: values.model,
+        year: Number(values.year),
+        color: values.color
+      }
+    });
+  };
+
+  const onPreferenceSubmit = preferencesForm.handleSubmit(() => {
+    toast.info("Preferences API is not ready yet.");
   });
-  const primaryBike = initialValues.bikes.find((bike) => bike.isPrimary);
-  const secondaryBikes = initialValues.bikes.filter((bike) => !bike.isPrimary);
+
+  const primaryBike = bikes.find((bike) => bike.isPrimary);
+  const secondaryBikes = bikes.filter((bike) => !bike.isPrimary);
+
+  if (isLoading) {
+    return <UserProfileSkeleton />;
+  }
+
+  if (!user) {
+    return (
+      <Card className="rounded-3xl border-none shadow-sm">
+        <CardContent>
+          <p className="text-sm text-muted-foreground">Unable to load profile data.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -53,12 +187,28 @@ export function UserProfileForm({ initialValues }: UserProfileFormProps) {
           <Card className="rounded-3xl border-none shadow-sm">
             <CardContent className="flex flex-col items-center gap-4">
               <Avatar className="h-32 w-32 rounded-full">
-                <AvatarImage src={initialValues.avatarUrl} />
+                <AvatarImage src={avatarPreview} />
                 <AvatarFallback className="bg-muted text-5xl text-primary">
-                  {initialValues.fullName.charAt(0)}
+                  {form.getValues("fullName").charAt(0) || fullNameInitial}
                 </AvatarFallback>
               </Avatar>
-              <Button type="button" variant="outline" size="sm" className="gap-2 border-dashed">
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+                  setAvatarFile(file);
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2 border-dashed"
+                onClick={() => inputRef.current?.click()}
+              >
                 <Camera className="size-4" />
                 Change Photo
               </Button>
@@ -101,7 +251,7 @@ export function UserProfileForm({ initialValues }: UserProfileFormProps) {
                         <InputGroupAddon>
                           <Mail className="size-4" />
                         </InputGroupAddon>
-                        <InputGroupInput placeholder="user@example.com" {...field} />
+                        <InputGroupInput placeholder="user@example.com" disabled {...field} />
                       </InputGroup>
                     </FormControl>
                     <FormMessage />
@@ -119,7 +269,7 @@ export function UserProfileForm({ initialValues }: UserProfileFormProps) {
                         <InputGroupAddon>
                           <Phone className="size-4" />
                         </InputGroupAddon>
-                        <InputGroupInput placeholder="+45 12 34 56 78" {...field} />
+                        <InputGroupInput placeholder="+45 12 34 56 78" disabled {...field} />
                       </InputGroup>
                     </FormControl>
                     <FormMessage />
@@ -151,13 +301,18 @@ export function UserProfileForm({ initialValues }: UserProfileFormProps) {
         <Card className="rounded-3xl border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base font-semibold text-navy">My Bikes</CardTitle>
-            <AddBikeDialog />
+            <AddBikeDialog ownerId={user.id} onSubmit={onCreateBike} />
           </CardHeader>
           <CardContent className="space-y-4">
-            {primaryBike && <BikeCard bike={primaryBike} variant="primary" />}
+            {primaryBike && (
+              <BikeCard bike={primaryBike} variant="primary" onEditBike={onUpdateBike} />
+            )}
             {secondaryBikes.map((bike) => (
-              <BikeCard key={bike.id} bike={bike} variant="secondary" />
+              <BikeCard key={bike.id} bike={bike} variant="secondary" onEditBike={onUpdateBike} />
             ))}
+            {bikes.length === 0 && (
+              <p className="text-sm text-muted-foreground">No bikes added yet.</p>
+            )}
           </CardContent>
         </Card>
 
@@ -165,30 +320,46 @@ export function UserProfileForm({ initialValues }: UserProfileFormProps) {
           <CardHeader>
             <CardTitle className="text-base font-semibold text-navy">Preferences</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <PreferenceToggle
-              control={form.control}
-              name="preferences.emailNotifications"
-              label="Email Notifications"
-              description="Receive updates about your repairs"
-            />
-            <PreferenceToggle
-              control={form.control}
-              name="preferences.smsNotifications"
-              label="SMS Notifications"
-              description="Get text reminders for appointments"
-            />
-            <PreferenceToggle
-              control={form.control}
-              name="preferences.marketingEmails"
-              label="Marketing Emails"
-              description="Receive tips and special offers"
-            />
+          <CardContent>
+            <Form {...preferencesForm}>
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  <PreferenceToggle
+                    control={preferencesForm.control}
+                    name="emailNotifications"
+                    label="Email Notifications"
+                    description="Receive updates about your repairs"
+                  />
+                  <PreferenceToggle
+                    control={preferencesForm.control}
+                    name="smsNotifications"
+                    label="SMS Notifications"
+                    description="Get text reminders for appointments"
+                  />
+                  <PreferenceToggle
+                    control={preferencesForm.control}
+                    name="marketingEmails"
+                    label="Marketing Emails"
+                    description="Receive tips and special offers"
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="px-6"
+                    onClick={onPreferenceSubmit}
+                  >
+                    Save Preferences
+                  </Button>
+                </div>
+              </div>
+            </Form>
           </CardContent>
         </Card>
 
         <div className="flex justify-end">
-          <Button type="submit" className="px-6">
+          <Button type="submit" className="px-6" disabled={updateProfileMutation.isPending}>
             Save Changes
           </Button>
         </div>

@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { BikeType } from "@/types/job-create";
+
 import {
   Button,
   Form,
@@ -26,28 +28,41 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
-import type { UserBikeFormValues } from "@/types";
+import type { AddBikeDialogProps, UserBikeFormValues } from "@/types";
 
 import { bikeSchema } from "../schema";
 
-export function AddBikeDialog() {
+const BIKE_TYPE_OPTIONS = Object.values(BikeType);
+
+export function AddBikeDialog({ ownerId, onSubmit: onSaveBike }: AddBikeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const form = useForm<UserBikeFormValues>({
     resolver: zodResolver(bikeSchema),
     defaultValues: {
       name: "",
-      type: "",
+      type: BikeType.ROAD,
+      brand: "",
+      model: "",
       year: "",
-      color: "",
-      frameSize: ""
+      color: ""
     }
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("New bike", values);
-    toast.success("Bike saved.");
-    form.reset();
-    setIsOpen(false);
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      setIsSaving(true);
+      await onSaveBike({ ...values, ownerId });
+      toast.success("Bike saved.");
+      form.reset();
+      setIsOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save bike.";
+      toast.error(message);
+    } finally {
+      setIsSaving(false);
+    }
   });
 
   return (
@@ -88,7 +103,42 @@ export function AddBikeDialog() {
                   <FormItem>
                     <FormLabel>Type</FormLabel>
                     <FormControl>
-                      <Input className="bg-muted/60" placeholder="Road Bike" {...field} />
+                      <select
+                        {...field}
+                        className="w-full rounded-md border border-input bg-muted/60 px-3 py-2 text-sm"
+                      >
+                        {BIKE_TYPE_OPTIONS.map((bikeType) => (
+                          <option key={bikeType} value={bikeType}>
+                            {bikeType}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="brand"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brand</FormLabel>
+                    <FormControl>
+                      <Input className="bg-muted/60" placeholder="Yamaha" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="model"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model</FormLabel>
+                    <FormControl>
+                      <Input className="bg-muted/60" placeholder="R15" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,19 +164,6 @@ export function AddBikeDialog() {
               />
               <FormField
                 control={form.control}
-                name="frameSize"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Frame Size</FormLabel>
-                    <FormControl>
-                      <Input className="bg-muted/60" placeholder="56cm" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="color"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
@@ -140,7 +177,7 @@ export function AddBikeDialog() {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" className="px-6">
+              <Button type="submit" className="px-6" disabled={isSaving}>
                 Save Bike
               </Button>
             </DialogFooter>

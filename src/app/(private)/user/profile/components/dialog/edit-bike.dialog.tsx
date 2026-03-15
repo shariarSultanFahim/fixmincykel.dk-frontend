@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { BikeType } from "@/types/job-create";
 
 import {
   Button,
@@ -27,25 +31,40 @@ import type { EditBikeDialogProps, UserBikeFormValues } from "@/types";
 
 import { bikeSchema } from "../schema";
 
-export function EditBikeDialog({ bike }: EditBikeDialogProps) {
+const BIKE_TYPE_OPTIONS = Object.values(BikeType);
+
+export function EditBikeDialog({ bike, onSubmit: onSubmitBike }: EditBikeDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const form = useForm<UserBikeFormValues>({
     resolver: zodResolver(bikeSchema),
     defaultValues: {
       name: bike.name,
       type: bike.type,
-      year: bike.year,
-      color: bike.color,
-      frameSize: bike.frameSize
+      brand: bike.brand,
+      model: bike.model,
+      year: String(bike.year),
+      color: bike.color
     }
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("Edit bike", { id: bike.id, ...values });
-    toast.success("Bike updated.");
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      setIsSaving(true);
+      await onSubmitBike(bike.id, values);
+      toast.success("Bike updated.");
+      setIsOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to update bike.";
+      toast.error(message);
+    } finally {
+      setIsSaving(false);
+    }
   });
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button type="button" variant="link" size="sm" className="px-0">
           Edit
@@ -79,7 +98,42 @@ export function EditBikeDialog({ bike }: EditBikeDialogProps) {
                   <FormItem>
                     <FormLabel>Type</FormLabel>
                     <FormControl>
-                      <Input className="bg-muted/60" placeholder="Road Bike" {...field} />
+                      <select
+                        {...field}
+                        className="w-full rounded-md border border-input bg-muted/60 px-3 py-2 text-sm"
+                      >
+                        {BIKE_TYPE_OPTIONS.map((bikeType) => (
+                          <option key={bikeType} value={bikeType}>
+                            {bikeType}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="brand"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brand</FormLabel>
+                    <FormControl>
+                      <Input className="bg-muted/60" placeholder="Yamaha" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="model"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model</FormLabel>
+                    <FormControl>
+                      <Input className="bg-muted/60" placeholder="R15" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,19 +159,6 @@ export function EditBikeDialog({ bike }: EditBikeDialogProps) {
               />
               <FormField
                 control={form.control}
-                name="frameSize"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Frame Size</FormLabel>
-                    <FormControl>
-                      <Input className="bg-muted/60" placeholder="56cm" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="color"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
@@ -131,7 +172,7 @@ export function EditBikeDialog({ bike }: EditBikeDialogProps) {
               />
             </div>
             <DialogFooter>
-              <Button type="submit" className="px-6">
+              <Button type="submit" className="px-6" disabled={isSaving}>
                 Save Changes
               </Button>
             </DialogFooter>
