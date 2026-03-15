@@ -22,6 +22,15 @@ export type {
   WorkshopInvoiceAction,
   WorkshopInvoiceItem
 } from "./invoice-report";
+export type {
+  CreateJobCategoryInput,
+  CreateJobInput,
+  CreateJobResponse,
+  CreatedJob,
+  JobCategoryListPayload,
+  JobCategoryListResponse,
+  JobCategoryOption
+} from "./job-create";
 export type { PartnerBenefit } from "./partner-benefit";
 export type { RescheduleForm } from "./reschedule-form";
 export type {

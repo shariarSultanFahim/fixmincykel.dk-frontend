@@ -1,16 +1,22 @@
 import { z } from "zod";
 
 export const detailsSchema = z.object({
-  repairIssue: z.string().optional(),
+  repairIssue: z.string().trim().min(1, "Please enter a title for your repair request"),
+  repairDescription: z
+    .string()
+    .trim()
+    .min(1, "Please provide a repair description")
+    .max(500, "Description must be less than 500 characters"),
   categories: z
     .array(
       z.object({
-        category: z.string().min(1, "Category is required"),
-        description: z.string().max(500, "Description must be less than 500 characters").optional()
+        categoryId: z.string().min(1, "Category is required"),
+        description: z
+          .string()
+          .trim()
+          .min(1, "Category description is required")
+          .max(500, "Description must be less than 500 characters")
       })
     )
-    .min(1, "Please select at least one category"),
-  urgency: z.enum(["Low", "Medium", "High"]).default("Medium")
+    .min(1, "Please select at least one category")
 });
-
-export type Details = z.infer<typeof detailsSchema>;
