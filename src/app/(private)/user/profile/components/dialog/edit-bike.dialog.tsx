@@ -33,9 +33,14 @@ import { bikeSchema } from "../schema";
 
 const BIKE_TYPE_OPTIONS = Object.values(BikeType);
 
-export function EditBikeDialog({ bike, onSubmit: onSubmitBike }: EditBikeDialogProps) {
+export function EditBikeDialog({
+  bike,
+  hasPrimaryBike,
+  onSubmit: onSubmitBike
+}: EditBikeDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const canSetAsPrimary = bike.isPrimary || !hasPrimaryBike;
 
   const form = useForm<UserBikeFormValues>({
     resolver: zodResolver(bikeSchema),
@@ -45,7 +50,8 @@ export function EditBikeDialog({ bike, onSubmit: onSubmitBike }: EditBikeDialogP
       brand: bike.brand,
       model: bike.model,
       year: String(bike.year),
-      color: bike.color
+      color: bike.color,
+      isPrimary: bike.isPrimary
     }
   });
 
@@ -161,11 +167,39 @@ export function EditBikeDialog({ bike, onSubmit: onSubmitBike }: EditBikeDialogP
                 control={form.control}
                 name="color"
                 render={({ field }) => (
-                  <FormItem className="sm:col-span-2">
+                  <FormItem>
                     <FormLabel>Color</FormLabel>
                     <FormControl>
                       <Input className="bg-muted/60" placeholder="Black" {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="isPrimary"
+                render={({ field }) => (
+                  <FormItem className="rounded-md border border-input bg-muted/40 px-3 py-2 sm:col-span-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <FormLabel>Set as primary bike</FormLabel>
+                        <p className="text-xs text-muted-foreground">
+                          {!canSetAsPrimary
+                            ? "Another bike is already primary. Only one bike can be primary."
+                            : "Set this bike as your primary bike."}
+                        </p>
+                      </div>
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          checked={field.value}
+                          onChange={(event) => field.onChange(event.target.checked)}
+                          disabled={!canSetAsPrimary}
+                          aria-label="Set as primary bike"
+                        />
+                      </FormControl>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

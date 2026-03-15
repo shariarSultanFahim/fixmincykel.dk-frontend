@@ -140,7 +140,8 @@ export function UserProfileForm() {
       brand: values.brand,
       model: values.model,
       year: Number(values.year),
-      color: values.color
+      color: values.color,
+      isPrimary: values.isPrimary
     });
   };
 
@@ -154,7 +155,8 @@ export function UserProfileForm() {
         brand: values.brand,
         model: values.model,
         year: Number(values.year),
-        color: values.color
+        color: values.color,
+        isPrimary: values.isPrimary
       }
     });
   };
@@ -165,6 +167,7 @@ export function UserProfileForm() {
 
   const primaryBike = bikes.find((bike) => bike.isPrimary);
   const secondaryBikes = bikes.filter((bike) => !bike.isPrimary);
+  const hasPrimaryBike = Boolean(primaryBike);
 
   if (isLoading) {
     return <UserProfileSkeleton />;
@@ -301,14 +304,29 @@ export function UserProfileForm() {
         <Card className="rounded-3xl border-none shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base font-semibold text-navy">My Bikes</CardTitle>
-            <AddBikeDialog ownerId={user.id} onSubmit={onCreateBike} />
+            <AddBikeDialog
+              ownerId={user.id}
+              hasPrimaryBike={hasPrimaryBike}
+              onSubmit={onCreateBike}
+            />
           </CardHeader>
           <CardContent className="space-y-4">
             {primaryBike && (
-              <BikeCard bike={primaryBike} variant="primary" onEditBike={onUpdateBike} />
+              <BikeCard
+                bike={primaryBike}
+                variant="primary"
+                hasPrimaryBike={hasPrimaryBike}
+                onEditBike={onUpdateBike}
+              />
             )}
             {secondaryBikes.map((bike) => (
-              <BikeCard key={bike.id} bike={bike} variant="secondary" onEditBike={onUpdateBike} />
+              <BikeCard
+                key={bike.id}
+                bike={bike}
+                variant="secondary"
+                hasPrimaryBike={hasPrimaryBike}
+                onEditBike={onUpdateBike}
+              />
             ))}
             {bikes.length === 0 && (
               <p className="text-sm text-muted-foreground">No bikes added yet.</p>

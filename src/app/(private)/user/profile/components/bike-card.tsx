@@ -5,10 +5,11 @@ import type { BikeCardProps, UserBikeFormValues } from "@/types";
 import { EditBikeDialog } from "./dialog";
 
 interface BikeCardWithActionProps extends BikeCardProps {
+  hasPrimaryBike: boolean;
   onEditBike: (bikeId: string, values: UserBikeFormValues) => Promise<void>;
 }
 
-export function BikeCard({ bike, variant, onEditBike }: BikeCardWithActionProps) {
+export function BikeCard({ bike, variant, hasPrimaryBike, onEditBike }: BikeCardWithActionProps) {
   return (
     <div
       className={cn(
@@ -23,7 +24,7 @@ export function BikeCard({ bike, variant, onEditBike }: BikeCardWithActionProps)
           </p>
           <p className="text-xs text-muted-foreground">{bike.name}</p>
         </div>
-        <EditBikeDialog bike={bike} onSubmit={onEditBike} />
+        <EditBikeDialog bike={bike} hasPrimaryBike={hasPrimaryBike} onSubmit={onEditBike} />
       </div>
       <div className="mt-3 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
         <p>

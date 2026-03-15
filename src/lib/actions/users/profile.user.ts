@@ -57,6 +57,7 @@ export interface CreateBikeInput {
   model: string;
   year: number;
   color: string;
+  isPrimary: boolean;
   ownerId?: string;
 }
 

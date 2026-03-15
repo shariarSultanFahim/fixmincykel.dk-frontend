@@ -48,6 +48,7 @@ export interface UserBikeFormValues {
   model: string;
   year: string;
   color: string;
+  isPrimary: boolean;
 }
 
 export interface BikeCardProps {
@@ -57,11 +58,13 @@ export interface BikeCardProps {
 
 export interface EditBikeDialogProps {
   bike: UserBike;
+  hasPrimaryBike: boolean;
   onSubmit: (bikeId: string, values: UserBikeFormValues) => Promise<void>;
 }
 
 export interface AddBikeDialogProps {
   ownerId: string;
+  hasPrimaryBike: boolean;
   onSubmit: (values: UserBikeFormValues & { ownerId: string }) => Promise<void>;
 }
 
