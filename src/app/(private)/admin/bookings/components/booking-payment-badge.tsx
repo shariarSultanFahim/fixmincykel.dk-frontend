@@ -1,28 +1,32 @@
+import type { BookingManagePaymentStatus } from "@/types/booking-manage";
+
 import { Badge } from "@/components/ui/badge";
 
-import type { Payment } from "../data/bookings";
-
 interface PaymentBadgeProps {
-  payment: Payment;
+  paymentStatus: BookingManagePaymentStatus;
 }
 
 const paymentConfig = {
-  paid: {
+  PAID: {
     variant: "default" as const,
     label: "Paid"
   },
-  unpaid: {
+  PENDING: {
     variant: "secondary" as const,
-    label: "Unpaid"
+    label: "Pending"
   },
-  refunded: {
+  FAILED: {
+    variant: "destructive" as const,
+    label: "Failed"
+  },
+  REFUNDED: {
     variant: "outline" as const,
     label: "Refunded"
   }
 };
 
-export default function PaymentBadge({ payment }: PaymentBadgeProps) {
-  const config = paymentConfig[payment];
+export default function PaymentBadge({ paymentStatus }: PaymentBadgeProps) {
+  const config = paymentConfig[paymentStatus];
 
   return <Badge variant={config.variant}>{config.label}</Badge>;
 }

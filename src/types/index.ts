@@ -10,6 +10,14 @@ export type {
   BlogUpdateInput
 } from "./blog-manage";
 export type { Booking, BookingWorkshop } from "./booking";
+export type {
+  AdminBooking,
+  BookingManageDetailsResponse,
+  BookingManageListResponse,
+  BookingManagePaymentStatus,
+  BookingManageQueryParams,
+  BookingManageStatus
+} from "./booking-manage";
 export type { BookingStatus, CalendarBooking, CalendarData } from "./calendar";
 export type { DataTableProps } from "./data-table";
 export type { FaqItem } from "./faq-item";

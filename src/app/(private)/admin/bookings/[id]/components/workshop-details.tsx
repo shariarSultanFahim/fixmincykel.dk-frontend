@@ -1,15 +1,15 @@
 import { MapPin, Phone } from "lucide-react";
 
+import type { AdminBooking } from "@/types/booking-manage";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { BookingDetails } from "../../data/bookings";
-
 interface WorkshopDetailsProps {
-  details?: BookingDetails;
+  booking: AdminBooking;
 }
 
-export default function WorkshopDetails({ details }: WorkshopDetailsProps) {
-  if (!details) {
+export default function WorkshopDetails({ booking }: WorkshopDetailsProps) {
+  if (!booking.workshop) {
     return null;
   }
 
@@ -21,7 +21,7 @@ export default function WorkshopDetails({ details }: WorkshopDetailsProps) {
       <CardContent className="space-y-4">
         <div>
           <p className="text-sm text-gray-600">Workshop Name</p>
-          <p className="font-medium text-gray-900">{details.workshopName}</p>
+          <p className="font-medium text-gray-900">{booking.workshop.workshopName}</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1">
@@ -29,7 +29,7 @@ export default function WorkshopDetails({ details }: WorkshopDetailsProps) {
             <MapPin className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
               <p className="text-sm text-gray-600">Address</p>
-              <p className="font-medium text-gray-900">{details.workshopAddress}</p>
+              <p className="font-medium text-gray-900">{booking.workshop.address}</p>
             </div>
           </div>
 
@@ -37,7 +37,7 @@ export default function WorkshopDetails({ details }: WorkshopDetailsProps) {
             <Phone className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
               <p className="text-sm text-gray-600">Phone</p>
-              <p className="font-medium text-gray-900">{details.workshopPhone}</p>
+              <p className="font-medium text-gray-900">{booking.workshop.phone}</p>
             </div>
           </div>
         </div>

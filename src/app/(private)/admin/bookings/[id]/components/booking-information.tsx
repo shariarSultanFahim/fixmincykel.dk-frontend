@@ -1,34 +1,46 @@
 import { Briefcase, Calendar, DollarSign } from "lucide-react";
 
+import type {
+  AdminBooking,
+  BookingManagePaymentStatus,
+  BookingManageStatus
+} from "@/types/booking-manage";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { Booking, Payment, Status } from "../../data/bookings";
-
 interface BookingInformationProps {
-  booking: Booking;
+  booking: AdminBooking;
 }
 
-function getStatusColor(status: Status): "default" | "secondary" | "destructive" | "outline" {
+function getStatusColor(
+  status: BookingManageStatus
+): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return "default";
-    case "booked":
+    case "CONFIRMED":
+    case "IN_PROGRESS":
+    case "PENDING":
       return "secondary";
-    case "cancle":
+    case "CANCELLED":
       return "destructive";
     default:
       return "outline";
   }
 }
 
-function getPaymentColor(payment: Payment): "default" | "secondary" | "destructive" | "outline" {
-  switch (payment) {
-    case "paid":
+function getPaymentColor(
+  paymentStatus: BookingManagePaymentStatus
+): "default" | "secondary" | "destructive" | "outline" {
+  switch (paymentStatus) {
+    case "PAID":
       return "default";
-    case "unpaid":
+    case "PENDING":
       return "outline";
-    case "refunded":
+    case "FAILED":
+      return "destructive";
+    case "REFUNDED":
       return "secondary";
     default:
       return "outline";
@@ -41,9 +53,9 @@ export default function BookingInformation({ booking }: BookingInformationProps)
     currency: "DKK"
   });
 
-  const formattedDate = new Date(booking.date).toLocaleString("da-DK");
-  const statusLabel = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
-  const paymentLabel = booking.payment.charAt(0).toUpperCase() + booking.payment.slice(1);
+  const formattedDate = new Date(booking.scheduleStart).toLocaleString("da-DK");
+  const statusLabel = booking.status.replaceAll("_", " ");
+  const paymentLabel = booking.paymentStatus.replaceAll("_", " ");
 
   return (
     <Card className="border-border">
@@ -52,7 +64,7 @@ export default function BookingInformation({ booking }: BookingInformationProps)
           <CardTitle>Booking Information</CardTitle>
           <div className="flex gap-2">
             <Badge variant={getStatusColor(booking.status)}>{statusLabel}</Badge>
-            <Badge variant={getPaymentColor(booking.payment)}>{paymentLabel}</Badge>
+            <Badge variant={getPaymentColor(booking.paymentStatus)}>{paymentLabel}</Badge>
           </div>
         </div>
       </CardHeader>
@@ -71,20 +83,20 @@ export default function BookingInformation({ booking }: BookingInformationProps)
             <div>
               <p className="text-sm text-gray-600">Amount</p>
               <p className="font-medium text-gray-900">
-                {currencyFormatter.format(booking.amount)}
+                {currencyFormatter.format(booking.offer?.price ?? 0)}
               </p>
             </div>
           </div>
         </div>
 
-        {booking.details && (
+        {booking.job && (
           <div className="flex items-start gap-3 border-t pt-4">
             <Briefcase className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
               <p className="text-sm text-gray-600">Related Job</p>
               <div className="mt-1 space-y-1">
-                <p className="font-medium text-gray-900">{booking.details.jobId}</p>
-                <p className="text-sm text-gray-600">{booking.details.jobCategory}</p>
+                <p className="font-medium text-gray-900">{booking.job.id}</p>
+                <p className="text-sm text-gray-600">{booking.job.title}</p>
               </div>
             </div>
           </div>
