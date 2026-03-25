@@ -36,7 +36,7 @@ export default function UserDetailsContent({ userId }: UserDetailsContentProps) 
       <Header title={user.name} subtitle="Complete user profile and activity history" />
       <div className="space-y-6">
         <FullProfile user={user} />
-        <AdminActions userId={user.id} userStatus={user.status} />
+        <AdminActions userId={user.id} userStatus={user.status} userEmail={user.email} />
         <JobHistory jobs={user.jobs} />
         <BookingHistory bookings={user.bookings} />
         <ReviewsSubmitted reviews={user.reviews ?? []} />

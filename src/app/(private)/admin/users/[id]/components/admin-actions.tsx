@@ -1,13 +1,14 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Ban, Download, RotateCcw, ShieldCheck } from "lucide-react";
+import { Ban, RotateCcw, ShieldCheck } from "lucide-react";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
 
 import type { UserManageStatus } from "@/types/users-manage";
 
+import { useForgetPassword } from "@/lib/actions/auth/forget-password";
 import { useBanUser, useUnbanUser } from "@/lib/actions/users/ban-unban.user";
-
-import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,13 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface AdminActionsProps {
   userId: string;
   userStatus: UserManageStatus;
+  userEmail: string;
 }
 
-export default function AdminActions({ userId, userStatus }: AdminActionsProps) {
+export default function AdminActions({ userId, userStatus, userEmail }: AdminActionsProps) {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   const { mutate: banUser, isPending: isBanning } = useBanUser();
   const { mutate: unbanUser, isPending: isUnbanning } = useUnbanUser();
+  const forgetPasswordMutation = useForgetPassword();
 
   const isSubmitting = isBanning || isUnbanning;
   const isUserBanned = userStatus === "BANNED";
@@ -29,16 +31,12 @@ export default function AdminActions({ userId, userStatus }: AdminActionsProps) 
   const handleBanUser = () => {
     banUser(userId, {
       onSuccess: (result) => {
-        toast({ title: result.message });
+        toast.success(result.message);
         queryClient.invalidateQueries({ queryKey: ["users-details", userId] });
         queryClient.invalidateQueries({ queryKey: ["users-manage"] });
       },
       onError: () => {
-        toast({
-          title: "Failed to ban user",
-          description: "Please try again.",
-          variant: "destructive"
-        });
+        toast.error("Failed to ban user. Please try again.");
       }
     });
   };
@@ -46,31 +44,30 @@ export default function AdminActions({ userId, userStatus }: AdminActionsProps) 
   const handleUnbanUser = () => {
     unbanUser(userId, {
       onSuccess: (result) => {
-        toast({ title: result.message });
+        toast.success(result.message);
         queryClient.invalidateQueries({ queryKey: ["users-details", userId] });
         queryClient.invalidateQueries({ queryKey: ["users-manage"] });
       },
       onError: () => {
-        toast({
-          title: "Failed to unban user",
-          description: "Please try again.",
-          variant: "destructive"
-        });
+        toast.error("Failed to unban user. Please try again.");
       }
     });
   };
 
-  const handleResetPassword = () => {
-    // TODO: Implement reset password
-  };
-
-  //   const handleViewMessages = () => {
-  //     // TODO: Implement view messages
-  //     console.log("View messages for user:", userId);
-  //   };
-
-  const handleExportData = () => {
-    // TODO: Implement export data
+  const handleResetPassword = async () => {
+    try {
+      const response = await forgetPasswordMutation.mutateAsync({ email: userEmail });
+      console.log("Forget password response:", response);
+      const message = response.message || response.data?.status || "Password reset email sent.";
+      toast.success(message);
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? error.response?.data?.message || error.message
+        : error instanceof Error
+          ? error.message
+          : "Could not send reset email. Please try again.";
+      toast.error(message);
+    }
   };
 
   return (
@@ -105,14 +102,6 @@ export default function AdminActions({ userId, userStatus }: AdminActionsProps) 
         <Button variant="outline" size="sm" className="gap-2" onClick={handleResetPassword}>
           <RotateCcw className="h-4 w-4" />
           Reset Password
-        </Button>
-        {/* <Button variant="outline" size="sm" className="gap-2" onClick={handleViewMessages}>
-          <MessageSquare className="h-4 w-4" />
-          View Messages
-        </Button> */}
-        <Button variant="outline" size="sm" className="gap-2" onClick={handleExportData}>
-          <Download className="h-4 w-4" />
-          Export Data
         </Button>
       </CardContent>
     </Card>
