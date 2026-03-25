@@ -90,7 +90,11 @@ export default function BookingTable() {
             onStatusChange={handleStatusChange}
             onPaymentChange={handlePaymentChange}
           />
-          <ExportCSVButton bookings={bookings} />
+          <ExportCSVButton
+            searchTerm={searchQuery || undefined}
+            status={selectedStatus}
+            paymentStatus={selectedPayment}
+          />
         </CardContent>
       </Card>
 

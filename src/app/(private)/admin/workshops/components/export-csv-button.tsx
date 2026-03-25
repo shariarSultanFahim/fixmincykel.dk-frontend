@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
 
-import { exportWorkshops } from "@/lib/actions/workshops/export.workshops";
+import { exportWorkshops } from "@/lib/actions/analytics/export.workshops";
 
 import { Button } from "@/components/ui/button";
 

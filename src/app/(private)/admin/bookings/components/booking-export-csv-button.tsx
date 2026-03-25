@@ -1,56 +1,77 @@
+"use client";
+
 import { Download } from "lucide-react";
 
-import type { AdminBooking } from "@/types/booking-manage";
+import type {
+  BookingManagePaymentStatus,
+  BookingManageQueryParams,
+  BookingManageStatus
+} from "@/types/booking-manage";
+
+import { useExportBookings } from "@/lib/actions/analytics/export.bookings";
+
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 
 interface ExportCSVButtonProps {
-  bookings: AdminBooking[];
+  searchTerm?: string;
+  status?: BookingManageStatus;
+  paymentStatus?: BookingManagePaymentStatus;
 }
 
-const currencyFormatter = new Intl.NumberFormat("da-DK", {
-  style: "currency",
-  currency: "DKK"
-});
+export default function ExportCSVButton({
+  searchTerm,
+  status,
+  paymentStatus
+}: ExportCSVButtonProps) {
+  const { mutate: runExport, isPending } = useExportBookings();
+  const { toast } = useToast();
 
-export default function ExportCSVButton({ bookings }: ExportCSVButtonProps) {
   const handleExport = () => {
-    if (bookings.length === 0) return;
+    const params: BookingManageQueryParams = {};
 
-    const headers = ["Booking ID", "User", "Workshop", "Status", "Payment", "Date", "Amount"];
+    if (searchTerm) {
+      params.searchTerm = searchTerm;
+    }
 
-    const rows = bookings.map((booking) => [
-      booking.id,
-      booking.user?.name ?? booking.userId,
-      booking.workshop?.workshopName ?? booking.workshopId,
-      booking.status,
-      booking.paymentStatus,
-      new Date(booking.scheduleStart).toLocaleDateString("da-DK"),
-      currencyFormatter.format(booking.offer?.price ?? 0)
-    ]);
+    if (status) {
+      params.status = status;
+    }
 
-    const csvContent = [
-      headers.join(","),
-      ...rows.map((row) => row.map((col) => `"${col}"`).join(","))
-    ].join("\n");
+    if (paymentStatus) {
+      params.paymentStatus = paymentStatus;
+    }
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
+    runExport(params, {
+      onSuccess: (blob) => {
+        const csvBlob = new Blob([blob], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(csvBlob);
+        const link = document.createElement("a");
 
-    link.setAttribute("href", url);
-    link.setAttribute("download", `bookings-${new Date().toISOString().split("T")[0]}.csv`);
-    link.style.visibility = "hidden";
+        link.setAttribute("href", url);
+        link.setAttribute("download", `bookings-${new Date().toISOString().split("T")[0]}.csv`);
+        link.style.visibility = "hidden";
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      onError: () => {
+        toast({
+          title: "Export failed",
+          description: "Could not export bookings. Please try again.",
+          variant: "destructive"
+        });
+      }
+    });
   };
 
   return (
-    <Button onClick={handleExport} disabled={bookings.length === 0}>
+    <Button onClick={handleExport} disabled={isPending}>
       <Download className="mr-2 h-4 w-4" />
-      Export CSV
+      {isPending ? "Exporting..." : "Export CSV"}
     </Button>
   );
 }

@@ -4,7 +4,7 @@ import { Download } from "lucide-react";
 
 import type { UserManageQueryParams, UserManageStatus } from "@/types/users-manage";
 
-import { useExportUsers } from "@/lib/actions/users/export.users";
+import { useExportUsers } from "@/lib/actions/analytics/export.users";
 
 import { useToast } from "@/hooks/use-toast";
 

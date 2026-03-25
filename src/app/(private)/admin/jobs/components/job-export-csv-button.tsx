@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
 
-import { exportJobs } from "@/lib/actions/jobs/export.jobs";
+import { exportJobs } from "@/lib/actions/analytics/export.jobs";
 
 import { Button } from "@/components/ui/button";
 

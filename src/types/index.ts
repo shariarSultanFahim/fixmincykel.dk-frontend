@@ -40,6 +40,15 @@ export type {
   JobCategoryOption
 } from "./job-create";
 export type { PartnerBenefit } from "./partner-benefit";
+export type {
+  CreatePlatformCategoryPayload,
+  PlatformCategory,
+  PlatformCategoryListResponse,
+  PlatformCategoryMutationResponse,
+  PlatformData,
+  PlatformDataResponse,
+  UpdatePlatformDataPayload
+} from "./platform-data";
 export type { RescheduleForm } from "./reschedule-form";
 export type {
   PendingReview,
