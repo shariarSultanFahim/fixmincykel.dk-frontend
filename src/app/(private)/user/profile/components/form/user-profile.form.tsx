@@ -32,12 +32,11 @@ import {
 } from "@/components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import type { UserBikeFormValues, UserPreferencesFormValues, UserProfileFormValues } from "@/types";
+import type { UserBikeFormValues, UserProfileFormValues } from "@/types";
 
 import { BikeCard } from "../bike-card";
 import { AddBikeDialog } from "../dialog";
-import { PreferenceToggle } from "../preference-toggle";
-import { userPreferencesSchema, userProfileSchema } from "../schema";
+import { userProfileSchema } from "../schema";
 import { UserProfileSkeleton } from "../skeleton";
 
 const EMPTY_FORM_VALUES: UserProfileFormValues = {
@@ -47,11 +46,11 @@ const EMPTY_FORM_VALUES: UserProfileFormValues = {
   address: ""
 };
 
-const DEFAULT_PREFERENCE_VALUES: UserPreferencesFormValues = {
-  emailNotifications: true,
-  smsNotifications: true,
-  marketingEmails: false
-};
+// const DEFAULT_PREFERENCE_VALUES: UserPreferencesFormValues = {
+//   emailNotifications: true,
+//   smsNotifications: true,
+//   marketingEmails: false
+// };
 
 const normalizeBikeType = (type: string): BikeType => type.trim().toUpperCase() as BikeType;
 
@@ -75,10 +74,10 @@ export function UserProfileForm() {
     defaultValues: EMPTY_FORM_VALUES
   });
 
-  const preferencesForm = useForm<UserPreferencesFormValues>({
-    resolver: zodResolver(userPreferencesSchema),
-    defaultValues: DEFAULT_PREFERENCE_VALUES
-  });
+  // const preferencesForm = useForm<UserPreferencesFormValues>({
+  //   resolver: zodResolver(userPreferencesSchema),
+  //   defaultValues: DEFAULT_PREFERENCE_VALUES
+  // });
 
   useEffect(() => {
     if (!user) {
@@ -161,9 +160,9 @@ export function UserProfileForm() {
     });
   };
 
-  const onPreferenceSubmit = preferencesForm.handleSubmit(() => {
-    toast.info("Preferences API is not ready yet.");
-  });
+  // const onPreferenceSubmit = preferencesForm.handleSubmit(() => {
+  //   toast.info("Preferences API is not ready yet.");
+  // });
 
   const primaryBike = bikes.find((bike) => bike.isPrimary);
   const secondaryBikes = bikes.filter((bike) => !bike.isPrimary);
@@ -334,7 +333,8 @@ export function UserProfileForm() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-3xl border-none shadow-sm">
+        {/* Preferences */}
+        {/* <Card className="rounded-3xl border-none shadow-sm">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-navy">Preferences</CardTitle>
           </CardHeader>
@@ -374,7 +374,7 @@ export function UserProfileForm() {
               </div>
             </Form>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <div className="flex justify-end">
           <Button type="submit" className="px-6" disabled={updateProfileMutation.isPending}>
