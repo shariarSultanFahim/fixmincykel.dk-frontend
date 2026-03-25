@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { QuickAction } from "@/types/dashboard";
+import type { DashboardQuickAction } from "@/types/admin-analytics";
 
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface QuickActionsCardProps {
-  actions: QuickAction[];
+  actions: DashboardQuickAction[];
 }
 
 export default function QuickActionsCard({ actions }: QuickActionsCardProps) {

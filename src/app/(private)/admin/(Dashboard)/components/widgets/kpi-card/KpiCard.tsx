@@ -1,11 +1,11 @@
-import type { KpiStat } from "@/types/dashboard";
+import type { DashboardKpiStat } from "@/types/admin-analytics";
 
 import { cn } from "@/lib/utils";
 
 import { Card, CardContent } from "@/components/ui/card";
 
 interface KpiCardProps {
-  stat: KpiStat;
+  stat: DashboardKpiStat;
 }
 
 export default function KpiCard({ stat }: KpiCardProps) {
