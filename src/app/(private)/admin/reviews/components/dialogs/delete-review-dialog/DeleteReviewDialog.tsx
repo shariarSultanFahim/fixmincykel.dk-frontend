@@ -9,12 +9,14 @@ interface DeleteReviewDialogProps {
   review: ReviewModerationItem;
   onClose: () => void;
   onConfirm: (id: string) => void;
+  isLoading?: boolean;
 }
 
 export default function DeleteReviewDialog({
   review,
   onClose,
-  onConfirm
+  onConfirm,
+  isLoading = false
 }: DeleteReviewDialogProps) {
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
@@ -37,14 +39,15 @@ export default function DeleteReviewDialog({
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onClose()}>
+          <Button variant="outline" onClick={() => onClose()} disabled={isLoading}>
             Cancel
           </Button>
           <Button
             className="bg-red-600 text-white hover:bg-red-700"
+            disabled={isLoading}
             onClick={() => onConfirm(review.id)}
           >
-            Delete Permanently
+            {isLoading ? "Deleting..." : "Delete Permanently"}
           </Button>
         </div>
       </DialogContent>

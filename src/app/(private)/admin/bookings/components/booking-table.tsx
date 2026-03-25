@@ -129,8 +129,18 @@ export default function BookingTable() {
                   onClick={() => handleView(booking.id)}
                 >
                   <TableCell className="font-medium">{booking.id}</TableCell>
-                  <TableCell>{booking.user?.name ?? booking.userId}</TableCell>
-                  <TableCell>{booking.workshop?.workshopName ?? booking.workshopId}</TableCell>
+                  <TableCell
+                  // className="hover:underline"
+                  // onClick={() => router.push(`/admin/users/${booking.userId}`)}
+                  >
+                    {booking.user?.name ?? booking.userId}
+                  </TableCell>
+                  <TableCell
+                  // className="hover:underline"
+                  // onClick={() => router.push(`/admin/workshops/${booking.workshopId}`)}
+                  >
+                    {booking.workshop?.workshopName ?? booking.workshopId}
+                  </TableCell>
                   <TableCell className="">
                     <StatusBadge status={booking.status} />
                   </TableCell>

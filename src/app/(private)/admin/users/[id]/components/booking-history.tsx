@@ -61,7 +61,7 @@ export default function BookingHistory({ bookings }: BookingHistoryProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bookings.length > 0 ? (
+            {bookings?.length > 0 ? (
               bookings.map((booking) => (
                 <TableRow
                   key={booking.id}

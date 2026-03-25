@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, Star } from "lucide-react";
+import { AlertTriangle, CheckCircle2, EyeOff, Star } from "lucide-react";
 
 import type { ReviewModerationItem } from "@/types/review-moderation";
 
@@ -74,17 +74,25 @@ export default function ReviewDetailsDialog({
               "mt-2 border",
               review.status === "visible"
                 ? "border-green-200 bg-green-50 text-green-700"
-                : "border-amber-200 bg-amber-50 text-amber-700"
+                : review.status === "hidden"
+                  ? "border-slate-200 bg-slate-100 text-slate-700"
+                  : "border-amber-200 bg-amber-50 text-amber-700"
             )}
           >
             <span className="mr-1">
               {review.status === "visible" ? (
                 <CheckCircle2 className="h-3 w-3" />
+              ) : review.status === "hidden" ? (
+                <EyeOff className="h-3 w-3" />
               ) : (
                 <AlertTriangle className="h-3 w-3" />
               )}
             </span>
-            {review.status === "visible" ? "Visible" : "Flagged"}
+            {review.status === "visible"
+              ? "Visible"
+              : review.status === "hidden"
+                ? "Hidden"
+                : "Flagged"}
           </Badge>
         </div>
 
