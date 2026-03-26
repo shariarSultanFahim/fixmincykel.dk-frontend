@@ -6,6 +6,9 @@ import { toast } from "sonner";
 
 import type { SendOfferValues } from "@/types/send-offer";
 
+import { useCreateJobOffer } from "@/lib/actions/jobs/create-job-offer";
+import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
+
 import {
   Form,
   FormControl,
@@ -22,11 +25,13 @@ import { sendOfferSchema } from "../schema/send-offer-schema";
 interface SendOfferFormProps {
   formId: string;
   jobId: string;
-  category: string;
   onSuccess?: () => void;
 }
 
-export function SendOfferForm({ formId, jobId, category, onSuccess }: SendOfferFormProps) {
+export function SendOfferForm({ formId, jobId, onSuccess }: SendOfferFormProps) {
+  const { data: workshopResponse } = useGetMyWorkshopProfile();
+  const { mutateAsync: createJobOffer } = useCreateJobOffer();
+
   const form = useForm<SendOfferValues>({
     resolver: zodResolver(sendOfferSchema),
     defaultValues: {
@@ -36,10 +41,29 @@ export function SendOfferForm({ formId, jobId, category, onSuccess }: SendOfferF
     }
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("Send offer", { jobId, category, ...values });
-    toast.success("Offer sent successfully!");
-    onSuccess?.();
+  const onSubmit = form.handleSubmit(async (values) => {
+    const workshopId = workshopResponse?.data?.id;
+    if (!workshopId) {
+      toast.error("Unable to identify workshop. Please refresh and try again.");
+      return;
+    }
+
+    try {
+      await createJobOffer({
+        jobId,
+        workshopId,
+        price: Number(values.price),
+        estimatedTime: values.estimatedTime,
+        message: values.message?.trim() ?? ""
+      });
+
+      toast.success("Offer sent successfully!");
+      form.reset();
+      onSuccess?.();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to send offer.";
+      toast.error(message);
+    }
   });
 
   return (

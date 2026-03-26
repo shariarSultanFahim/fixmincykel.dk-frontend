@@ -9,6 +9,7 @@ export interface JobAction {
 export interface JobInboxItem {
   id: string;
   status: JobStatus;
+  title: string;
   category: string;
   distance: string;
   time: string;

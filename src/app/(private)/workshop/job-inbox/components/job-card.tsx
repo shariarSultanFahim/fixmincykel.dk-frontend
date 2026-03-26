@@ -1,7 +1,5 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
-
 import type { JobInboxItem, JobStatus } from "@/types/job-inbox";
 
 import { cn } from "@/lib/utils";
@@ -37,29 +35,11 @@ export function JobCard({
   category,
   distance,
   time,
-  user,
-  bike,
-  verified,
-  posted,
-  description,
+  title,
   subtext,
   actions
 }: JobInboxItem) {
   const statusStyle = statusStyles[status];
-  const jobDetails = {
-    id,
-    status,
-    category,
-    distance,
-    time,
-    user,
-    bike,
-    verified,
-    posted,
-    description,
-    subtext,
-    actions
-  };
 
   return (
     <Card className="border-0 shadow-md">
@@ -75,29 +55,13 @@ export function JobCard({
               <span className={cn("h-2 w-2 rounded-full", statusStyle.dot)} />
               {status.toUpperCase()}
             </span>
-            <span className="font-semibold text-primary">{id}</span>
+            <span className="font-semibold text-primary">{title}</span>
             <span className="text-muted-foreground">|</span>
             <span>{category}</span>
             <span className="text-muted-foreground">|</span>
             <span>{distance}</span>
           </div>
           <span className="text-xs text-muted-foreground">{time}</span>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 text-sm text-navy/80">
-          <span>
-            User: <span className="font-medium text-navy">{user}</span>
-          </span>
-          {verified && (
-            <span className="inline-flex items-center gap-1 text-emerald-600">
-              <CheckCircle2 className="h-4 w-4" />
-              Verified
-            </span>
-          )}
-          <span className="text-muted-foreground">|</span>
-          <span>
-            Bike: <span className="font-medium text-navy">{bike}</span>
-          </span>
         </div>
 
         {subtext && <p className="text-xs text-purple-600">{subtext}</p>}
@@ -122,7 +86,7 @@ export function JobCard({
             }
 
             if (action.label === "View Details") {
-              return <JobDetailsDialog key={action.label} job={jobDetails} trigger={button} />;
+              return <JobDetailsDialog key={action.label} jobId={id} trigger={button} />;
             }
 
             return (

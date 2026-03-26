@@ -2,8 +2,9 @@
 
 import * as React from "react";
 
-import type { JobInboxItem, JobStatus } from "@/types/job-inbox";
+import type { JobStatus } from "@/types/job-inbox";
 
+import { useGetJobById } from "@/lib/actions/jobs/get-job-by-id";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -16,9 +17,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface JobDetailsDialogProps {
-  job: JobInboxItem;
+  jobId: string;
   trigger: React.ReactNode;
 }
 
@@ -41,36 +43,91 @@ const statusStyles: Record<JobStatus, { badge: string; dot: string }> = {
   }
 };
 
-export function JobDetailsDialog({ job, trigger }: JobDetailsDialogProps) {
-  const statusStyle = statusStyles[job.status];
+export function JobDetailsDialog({ jobId, trigger }: JobDetailsDialogProps) {
+  const [open, setOpen] = React.useState(false);
+  const { data: job, isLoading, isError } = useGetJobById(open ? jobId : undefined);
+
+  if (isError) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Job Details</DialogTitle>
+          </DialogHeader>
+          <div className="py-10 text-center text-muted-foreground">
+            Failed to load job details. Please try again.
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (isLoading || !job) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Job Details</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 md:grid-cols-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-6 w-32" />
+              </div>
+            ))}
+          </div>
+          <Skeleton className="h-24 w-full" />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  const displayStatus = job.status === "OPEN" ? "New" : "Viewed";
+  const statusStyle = statusStyles[displayStatus];
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Job Details: {job.id}</DialogTitle>
+          <DialogTitle>Job Details: {job.title}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 text-sm text-navy/80 md:grid-cols-2">
           <div className="space-y-1">
-            <p className="text-xs text-navy/60">Customer</p>
-            <p className="font-medium text-navy">{job.user}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-xs text-navy/60">Category</p>
-            <p className="font-medium text-navy">{job.category}</p>
+            <p className="text-xs text-navy/60">Bike Model</p>
+            <p className="font-medium text-navy">{job.bikeBrand || "Unknown"}</p>
           </div>
           <div className="space-y-1">
             <p className="text-xs text-navy/60">Bike Type</p>
-            <p className="font-medium text-navy">{job.bike}</p>
+            <p className="font-medium text-navy">{job.bikeType || "Unknown"}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs text-navy/60">Distance</p>
-            <p className="font-medium text-navy">{job.distance}</p>
+            <p className="text-xs text-navy/60">Location</p>
+            <p className="font-medium text-navy">{job.city || job.address}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs text-navy/60">Posted</p>
-            <p className="font-medium text-navy">{job.posted}</p>
+            <p className="text-xs text-navy/60">Prefer Time</p>
+            <p className="font-medium text-navy">
+              {new Date(job.preferredTime).toLocaleDateString("da-DK", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              })}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-navy/60">Urgency</p>
+            <p className="font-medium text-navy">{job.urgency}</p>
           </div>
           <div className="space-y-1">
             <p className="text-xs text-navy/60">Status</p>
@@ -81,14 +138,29 @@ export function JobDetailsDialog({ job, trigger }: JobDetailsDialogProps) {
               )}
             >
               <span className={cn("h-2 w-2 rounded-full", statusStyle.dot)} />
-              {job.status.toUpperCase()}
+              {displayStatus}
             </span>
           </div>
         </div>
         <div className="space-y-2">
-          <p className="text-xs text-navy/60">Job Description</p>
+          <p className="text-xs text-navy/60">Description</p>
           <div className="rounded-lg bg-muted/40 p-4 text-sm text-navy">{job.description}</div>
         </div>
+        {job.photos && job.photos.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs text-navy/60">Photos</p>
+            <div className="grid grid-cols-2 gap-2">
+              {job.photos.map((photo, idx) => (
+                <img
+                  key={idx}
+                  src={photo}
+                  alt={`Job photo ${idx + 1}`}
+                  className="h-24 w-full rounded-lg object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Close</Button>

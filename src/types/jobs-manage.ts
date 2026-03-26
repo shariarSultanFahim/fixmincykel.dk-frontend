@@ -96,6 +96,7 @@ export interface JobUser {
   email: string;
   role: string;
   avatar: string | null;
+  isVerified?: boolean;
 }
 
 export interface AdminJob {
