@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import { CheckCircle, Star } from "lucide-react";
-import { format } from "date-fns";
 
 import type { JobOffer } from "@/types/jobs-manage";
 
@@ -77,7 +76,7 @@ export function OffersTable({ jobId }: OffersTableProps) {
                 <TableHead className="rounded-tl-xl">Workshop</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Price</TableHead>
-                <TableHead>Completion Time</TableHead>
+                <TableHead>Estimated Time</TableHead>
                 <TableHead>Message</TableHead>
                 <TableHead>Distance</TableHead>
                 <TableHead>Rating</TableHead>
@@ -108,9 +107,7 @@ export function OffersTable({ jobId }: OffersTableProps) {
                     <TableCell className="font-semibold">
                       {currencyFormatter.format(offer.price)}
                     </TableCell>
-                    <TableCell className="text-sm">
-                      {format(new Date(offer.estimatedTime), "PPpp")}
-                    </TableCell>
+                    <TableCell className="text-sm">{offer.estimatedTime}</TableCell>
                     <TableCell className="max-w-xs text-sm text-muted-foreground">
                       <p className="line-clamp-2">{offer.message}</p>
                     </TableCell>

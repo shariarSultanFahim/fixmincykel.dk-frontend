@@ -4,6 +4,7 @@ export type JobStatus = "New" | "Viewed" | "Offer Sent" | "Booked";
 export interface JobAction {
   label: string;
   variant: JobActionVariant;
+  disabled?: boolean;
 }
 
 export interface JobInboxItem {

@@ -11,7 +11,9 @@ import { Card, CardContent } from "@/components/ui";
 
 import { FiltersBar, FiltersBarSkeleton, JobCard, JobListSkeleton } from "./components";
 
-function transformJobToInboxItem(job: AdminJob): JobInboxItem {
+type WorkshopInboxJob = AdminJob & { offerSend?: boolean };
+
+function transformJobToInboxItem(job: WorkshopInboxJob): JobInboxItem {
   // Map API job status to display status
   const statusMap: Record<string, DisplayJobStatus> = {
     OPEN: "New",
@@ -25,7 +27,7 @@ function transformJobToInboxItem(job: AdminJob): JobInboxItem {
   return {
     id: job.id,
     title: job.title,
-    status: statusMap[job.status] || "New",
+    status: job.offerSend ? "Offer Sent" : statusMap[job.status] || "New",
     category: job.categories?.[0]?.description || "Bike Repair",
     distance: `${job.radius || 0} km`,
     time: new Date(job.preferredTime).toLocaleDateString("da-DK", {
@@ -46,8 +48,9 @@ function transformJobToInboxItem(job: AdminJob): JobInboxItem {
         variant: "default"
       },
       {
-        label: "Send Offer",
-        variant: "outline"
+        label: job.offerSend ? "Offer Already Sent" : "Send Offer",
+        variant: "outline",
+        disabled: Boolean(job.offerSend)
       }
     ]
   };

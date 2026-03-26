@@ -68,7 +68,7 @@ export function SendOfferForm({ formId, jobId, onSuccess }: SendOfferFormProps) 
 
   return (
     <Form {...form}>
-      <form id={formId} onSubmit={onSubmit} className="space-y-4">
+      <form id={formId} onSubmit={onSubmit} className="space-y-4 py-4">
         <FormField
           control={form.control}
           name="price"

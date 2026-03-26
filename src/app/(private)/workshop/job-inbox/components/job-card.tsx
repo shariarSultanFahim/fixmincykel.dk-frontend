@@ -69,12 +69,12 @@ export function JobCard({
         <div className="flex flex-wrap gap-2">
           {actions.map((action) => {
             const button = (
-              <Button variant={action.variant} size="sm">
+              <Button variant={action.variant} size="sm" disabled={action.disabled}>
                 {action.label}
               </Button>
             );
 
-            if (action.label === "Send Offer") {
+            if (action.label === "Send Offer" && !action.disabled) {
               return (
                 <SendOfferDialog
                   key={action.label}
@@ -90,7 +90,12 @@ export function JobCard({
             }
 
             return (
-              <Button key={action.label} variant={action.variant} size="sm">
+              <Button
+                key={action.label}
+                variant={action.variant}
+                size="sm"
+                disabled={action.disabled}
+              >
                 {action.label}
               </Button>
             );

@@ -9,7 +9,7 @@ import { api as instance } from "@/lib/api";
 interface GetWorkshopJobsResponse {
   success: boolean;
   message: string;
-  data: AdminJob[];
+  data: Array<AdminJob & { offerSend?: boolean; workshopIds?: string[] }>;
 }
 
 export const useGetWorkshopJobs = (sort: string = "createdAt", sortOrder: string = "asc") => {
