@@ -4,6 +4,7 @@ export interface WorkshopProfileInfo {
   address: string;
   cvrNumber: string;
   description: string;
+  avatar?: string | null;
 }
 
 export interface WorkshopMeCategory {
@@ -74,6 +75,7 @@ export interface UpdateWorkshopProfilePayload {
 export interface UpdateWorkshopProfileInput {
   workshopId: string;
   data: UpdateWorkshopProfilePayload;
+  image?: File | null;
 }
 
 export interface WorkshopCategoryDetails {
@@ -135,6 +137,7 @@ export interface WorkshopProfileData {
 
 export interface WorkshopProfileFormProps {
   initialValues: WorkshopProfileInfo;
+  avatarUrl?: string | null;
 }
 
 export interface WorkshopServiceFormProps {

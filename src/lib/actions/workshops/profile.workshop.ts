@@ -13,6 +13,18 @@ import type {
 
 import { api as instance } from "@/lib/api";
 
+const toWorkshopUpdateFormData = (payload: UpdateWorkshopProfileInput) => {
+  const formData = new FormData();
+
+  formData.append("data", JSON.stringify(payload.data));
+
+  if (payload.image) {
+    formData.append("image", payload.image);
+  }
+
+  return formData;
+};
+
 export const useGetMyWorkshopProfile = () => {
   return useQuery({
     queryKey: ["workshop-profile", "me"],
@@ -28,10 +40,17 @@ export const useUpdateWorkshopProfile = () => {
 
   return useMutation({
     mutationFn: async (payload: UpdateWorkshopProfileInput) => {
-      const response = await instance.patch<WorkshopMeResponse>(
-        `/workshop/${payload.workshopId}`,
-        payload.data
-      );
+      const response = payload.image
+        ? await instance.patch<WorkshopMeResponse>(
+            `/workshop/${payload.workshopId}`,
+            toWorkshopUpdateFormData(payload),
+            {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          )
+        : await instance.patch<WorkshopMeResponse>(`/workshop/${payload.workshopId}`, payload.data);
 
       return response.data;
     },

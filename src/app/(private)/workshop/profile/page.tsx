@@ -79,7 +79,10 @@ export default function ProfilePage() {
         </div>
       ) : (
         <div className="space-y-6">
-          <WorkshopProfileForm initialValues={workshopProfile.profile} />
+          <WorkshopProfileForm
+            initialValues={workshopProfile.profile}
+            avatarUrl={workshop?.avatar}
+          />
           <WorkshopServiceForm initialValues={workshopProfile.service} workshopId={workshop?.id} />
         </div>
       )}
