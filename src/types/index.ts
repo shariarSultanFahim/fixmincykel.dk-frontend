@@ -85,6 +85,14 @@ export type {
   UserRepairQueryParams
 } from "./user-repair";
 export type {
+  UpdateWorkshopProfileInput,
+  UpdateWorkshopProfilePayload,
+  WorkshopCategoryItem,
+  WorkshopCategoryListResponse,
+  WorkshopCategoryMutationPayload,
+  WorkshopCategoryMutationResponse,
+  WorkshopMeData,
+  WorkshopMeResponse,
   WorkshopNotifications,
   WorkshopOpeningHours,
   WorkshopProfileData,

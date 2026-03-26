@@ -1,8 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { useUpdateWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
 
 import {
   Button,
@@ -26,6 +30,8 @@ import type { WorkshopProfileFormProps, WorkshopProfileInfo } from "@/types";
 import { profileSchema } from "../schema/profile.schema";
 
 export function WorkshopProfileForm({ initialValues }: WorkshopProfileFormProps) {
+  const updateWorkshopProfileMutation = useUpdateWorkshopProfile();
+
   const form = useForm<WorkshopProfileInfo>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -34,9 +40,33 @@ export function WorkshopProfileForm({ initialValues }: WorkshopProfileFormProps)
     }
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("Workshop profile", values);
-    toast.success("Workshop profile saved.");
+  useEffect(() => {
+    form.reset({
+      ...initialValues,
+      description: initialValues.description ?? ""
+    });
+  }, [form, initialValues]);
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    if (!initialValues.workshopId) {
+      return;
+    }
+
+    try {
+      const response = await updateWorkshopProfileMutation.mutateAsync({
+        workshopId: initialValues.workshopId,
+        data: {
+          workshopName: values.workshopName,
+          description: values.description,
+          address: values.address
+        }
+      });
+
+      toast.success(response.message || "Workshop profile saved.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to update workshop profile.";
+      toast.error(message);
+    }
   });
 
   return (
@@ -92,6 +122,7 @@ export function WorkshopProfileForm({ initialValues }: WorkshopProfileFormProps)
                       className="border border-border focus-visible:ring-primary/50 data-[state=invalid]:border-destructive"
                       inputMode="numeric"
                       placeholder="12345678"
+                      disabled
                       {...field}
                     />
                   </FormControl>
@@ -119,8 +150,12 @@ export function WorkshopProfileForm({ initialValues }: WorkshopProfileFormProps)
               )}
             />
             <CardFooter className="justify-end px-0">
-              <Button type="submit" className="px-6">
-                Save Changes
+              <Button
+                type="submit"
+                className="px-6"
+                disabled={updateWorkshopProfileMutation.isPending}
+              >
+                {updateWorkshopProfileMutation.isPending ? "Saving..." : "Save Changes"}
               </Button>
             </CardFooter>
           </form>

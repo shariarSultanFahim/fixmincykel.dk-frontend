@@ -1,8 +1,8 @@
-import { Suspense } from "react";
+"use client";
 
 import { Settings } from "lucide-react";
 
-import profileData from "@/data/profile.json";
+import { getTimeByDay, useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WorkshopProfileData } from "@/types";
@@ -36,7 +36,33 @@ function ProfilePageSkeleton() {
 }
 
 export default function ProfilePage() {
-  const workshopProfile = profileData as WorkshopProfileData;
+  const { data: workshopResponse, isLoading, isError } = useGetMyWorkshopProfile();
+
+  const workshop = workshopResponse?.data;
+
+  const workshopProfile: WorkshopProfileData = {
+    profile: {
+      workshopId: workshop?.id,
+      workshopName: workshop?.workshopName ?? "",
+      address: workshop?.address ?? "",
+      cvrNumber: workshop?.cvrNumber ?? "",
+      description: workshop?.description ?? ""
+    },
+    service: {
+      serviceCategories: [],
+      openingHours: {
+        weekdaysStart: getTimeByDay(workshop?.workshopOpeningHours ?? [], "TUESDAY").open,
+        weekdaysEnd: getTimeByDay(workshop?.workshopOpeningHours ?? [], "TUESDAY").close,
+        saturdayStart: getTimeByDay(workshop?.workshopOpeningHours ?? [], "SATURDAY").open,
+        saturdayEnd: getTimeByDay(workshop?.workshopOpeningHours ?? [], "SATURDAY").close
+      },
+      notifications: {
+        email: true,
+        sms: false,
+        inApp: true
+      }
+    }
+  };
 
   return (
     <div className="space-y-6 py-8">
@@ -45,12 +71,18 @@ export default function ProfilePage() {
         <h1 className="text-lg font-semibold">Profile Settings</h1>
       </header>
 
-      <Suspense fallback={<ProfilePageSkeleton />}>
+      {isLoading ? (
+        <ProfilePageSkeleton />
+      ) : isError ? (
+        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+          Failed to load workshop profile. Please refresh and try again.
+        </div>
+      ) : (
         <div className="space-y-6">
           <WorkshopProfileForm initialValues={workshopProfile.profile} />
-          <WorkshopServiceForm initialValues={workshopProfile.service} />
+          <WorkshopServiceForm initialValues={workshopProfile.service} workshopId={workshop?.id} />
         </div>
-      </Suspense>
+      )}
     </div>
   );
 }

@@ -1,9 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useGetCategories } from "@/lib/actions/jobs/get.categories";
+import {
+  useAddWorkshopCategory,
+  useGetWorkshopCategories,
+  useRemoveWorkshopCategory
+} from "@/lib/actions/workshops/profile.workshop";
 import { cn } from "@/lib/utils";
 
 import {
@@ -27,18 +35,77 @@ import type { WorkshopServiceFormProps, WorkshopServiceSettings } from "@/types"
 
 import { serviceSchema } from "../schema/service.schema";
 
-const SERVICE_CATEGORIES = ["Puncture", "Brakes", "Chain", "Gears", "Electric", "Full Service"];
-
-export function WorkshopServiceForm({ initialValues }: WorkshopServiceFormProps) {
+export function WorkshopServiceForm({ initialValues, workshopId }: WorkshopServiceFormProps) {
   const form = useForm<WorkshopServiceSettings>({
     resolver: zodResolver(serviceSchema),
     defaultValues: initialValues
   });
 
-  const onSubmit = form.handleSubmit((values) => {
-    console.log("Workshop service settings", values);
+  const { data: allCategoriesResponse, isLoading: isAllCategoriesLoading } = useGetCategories(
+    1,
+    500,
+    "name",
+    Boolean(workshopId)
+  );
+  const { data: workshopCategoriesResponse, isLoading: isWorkshopCategoriesLoading } =
+    useGetWorkshopCategories(Boolean(workshopId));
+  const addWorkshopCategoryMutation = useAddWorkshopCategory();
+  const removeWorkshopCategoryMutation = useRemoveWorkshopCategory();
+
+  useEffect(() => {
+    form.reset(initialValues);
+  }, [form, initialValues]);
+
+  useEffect(() => {
+    const workshopCategoryNames =
+      workshopCategoriesResponse?.data?.map((item) => item.category.name) ?? [];
+
+    form.setValue("serviceCategories", workshopCategoryNames, {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false
+    });
+  }, [form, workshopCategoriesResponse?.data]);
+
+  const onSubmit = form.handleSubmit(() => {
     toast.success("Service settings saved.");
   });
+
+  const availableCategories = allCategoriesResponse?.data?.data ?? [];
+  const workshopCategories = workshopCategoriesResponse?.data ?? [];
+
+  const handleCategoryToggle = async (categoryId: string, isSelected: boolean) => {
+    if (!workshopId) {
+      return;
+    }
+
+    try {
+      if (isSelected) {
+        const workshopCategory = workshopCategories.find((item) => item.categoryId === categoryId);
+
+        if (!workshopCategory) {
+          return;
+        }
+
+        const response = await removeWorkshopCategoryMutation.mutateAsync(workshopCategory.id);
+        toast.success(response.message || "Category removed from workshop.");
+        return;
+      }
+
+      const response = await addWorkshopCategoryMutation.mutateAsync({
+        workshopId,
+        categoryId
+      });
+      toast.success(response.message || "Category added to workshop.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update workshop category.";
+      toast.error(message);
+    }
+  };
+
+  const isCategoryActionPending =
+    addWorkshopCategoryMutation.isPending || removeWorkshopCategoryMutation.isPending;
 
   return (
     <Card className="rounded-3xl border-none">
@@ -59,28 +126,39 @@ export function WorkshopServiceForm({ initialValues }: WorkshopServiceFormProps)
                     <FormLabel>Service Categories</FormLabel>
                     <FormControl>
                       <div className="flex flex-wrap gap-2">
-                        {SERVICE_CATEGORIES.map((category) => {
-                          const isSelected = selectedCategories.includes(category);
+                        {isAllCategoriesLoading || isWorkshopCategoriesLoading ? (
+                          <p className="text-sm text-muted-foreground">Loading categories...</p>
+                        ) : availableCategories.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">No categories available.</p>
+                        ) : (
+                          availableCategories.map((category) => {
+                            const isSelected = selectedCategories.includes(category.name);
 
-                          return (
-                            <Button
-                              key={category}
-                              type="button"
-                              size="sm"
-                              variant={isSelected ? "default" : "outline"}
-                              className={cn("rounded-full px-4 text-xs", isSelected && "shadow-sm")}
-                              onClick={() => {
-                                const nextValue = isSelected
-                                  ? selectedCategories.filter((item) => item !== category)
-                                  : [...selectedCategories, category];
+                            return (
+                              <Button
+                                key={category.id}
+                                type="button"
+                                size="sm"
+                                variant={isSelected ? "default" : "outline"}
+                                className={cn(
+                                  "rounded-full px-4 text-xs",
+                                  isSelected && "shadow-sm"
+                                )}
+                                disabled={isCategoryActionPending || !workshopId}
+                                onClick={async () => {
+                                  const nextValue = isSelected
+                                    ? selectedCategories.filter((item) => item !== category.name)
+                                    : [...selectedCategories, category.name];
 
-                                field.onChange(nextValue);
-                              }}
-                            >
-                              {category}
-                            </Button>
-                          );
-                        })}
+                                  field.onChange(nextValue);
+                                  await handleCategoryToggle(category.id, isSelected);
+                                }}
+                              >
+                                {category.name}
+                              </Button>
+                            );
+                          })
+                        )}
                       </div>
                     </FormControl>
                     <FormMessage />
