@@ -128,6 +128,8 @@
     "emailPlaceholder": "Enter your email",
     "phoneLabel": "Phone Number",
     "phonePlaceholder": "Enter your phone number",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Enter your address",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Create a password",
     "confirmPasswordLabel": "Confirm Password",
@@ -148,7 +150,24 @@
     "emailInvalid": "Please enter a valid email address",
     "phoneInvalid": "Please enter a valid phone number",
     "passwordMin": "Password must be at least 6 characters",
+    "addressMin": "Address must be at least 2 characters",
     "confirmPasswordMatch": "Passwords must match"
+  },
+  "VerifyOTP": {
+    "backToHome": "Back to Home",
+    "brand": "FixMinCykel.dk",
+    "title": "Verify Your Email",
+    "subtitle": "Enter the 6-digit code sent to your email",
+    "otpLabel": "Verification Code",
+    "otpPlaceholder": "Enter 6-digit code",
+    "submit": "Verify Email",
+    "resendOTP": "Resend Code",
+    "resendHint": "Didn't receive the code?",
+    "success": "Email verified successfully!"
+  },
+  "VerifyOTPSchema": {
+    "otpInvalid": "Please enter a valid 6-digit code",
+    "otpMin": "Code must be exactly 6 digits"
   },
   "Hero": {
     "title": "Upload your bike issue. Get offers. Book repair.",

@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Check, ChevronLeft, Chrome, Facebook } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import type { LoginErrorResponse } from "@/types/auth";
+
+import { useRegister } from "@/lib/actions/auth/register";
 
 import { useCopy } from "@/hooks";
 
@@ -20,22 +26,48 @@ import {
   Input
 } from "@/components/ui";
 
-import { createRegisterSchema, RegisterFormValues } from "./register.schema";
+import { createRegisterSchema, type RegisterFormValues } from "./register.schema";
 
 export function FormRegister() {
+  const router = useRouter();
   const { t: tRegister } = useCopy("Register");
   const { t: tSchema } = useCopy("RegisterSchema");
+  const registerMutation = useRegister();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(createRegisterSchema(tSchema)),
-    defaultValues: { email: "", password: "" }
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      name: "",
+      phone: "",
+      address: ""
+    }
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    toast("", {
-      description: <pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>,
-      duration: 5000
-    });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      const { confirmPassword, ...payload } = values;
+      const response = await registerMutation.mutateAsync(payload);
+
+      toast.success(response.message || "Account created successfully.");
+
+      // Check if user needs to verify email
+      if (response.data?.isVerified === false) {
+        router.push(`/verify-otp?email=${encodeURIComponent(response.data.email)}`);
+      } else {
+        router.push("/login");
+      }
+    } catch (error) {
+      const message = isAxiosError<LoginErrorResponse>(error)
+        ? error.response?.data?.message || error.message
+        : error instanceof Error
+          ? error.message
+          : "Registration failed. Please try again.";
+
+      toast.error(message);
+    }
   });
 
   return (
@@ -92,6 +124,19 @@ export function FormRegister() {
                     <FormLabel>{tRegister("phoneLabel")}</FormLabel>
                     <FormControl>
                       <Input placeholder={tRegister("phonePlaceholder")} type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tRegister("addressLabel")}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={tRegister("addressPlaceholder")} type="text" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
