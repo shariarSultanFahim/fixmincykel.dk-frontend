@@ -1,62 +1,56 @@
-import { Suspense } from "react";
+"use client";
 
 import { Download } from "lucide-react";
 
-import { Button } from "@/components/ui";
+import { useGetAnalytics } from "@/lib/actions/analytics/get-analytics";
 
-import {
-  JobsByCategoryChart,
-  JobsByCategoryChartSkeleton,
-  RatingCard,
-  RatingCardSkeleton,
-  RevenueTrendChart,
-  RevenueTrendChartSkeleton,
-  StatCard,
-  StatCardSkeleton
-} from "./components";
-import analyticsData from "./data/analytics.json";
+import { Button, Card, CardContent } from "@/components/ui";
 
-async function getAnalyticsData() {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return analyticsData;
-}
+import { RatingCard, RatingCardSkeleton, StatCard, StatCardSkeleton } from "./components";
 
-async function StatsSection() {
-  const data = await getAnalyticsData();
+const currencyFormatter = new Intl.NumberFormat("da-DK", {
+  style: "currency",
+  currency: "DKK",
+  maximumFractionDigits: 0
+});
 
-  return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-      {data.stats.map((stat) => (
-        <StatCard key={stat.id} label={stat.label} value={stat.value} color={stat.color} />
-      ))}
-    </div>
-  );
-}
+function AnalyticsContent() {
+  const { data: analyticsResponse, isLoading, isError } = useGetAnalytics();
+  const analytics = analyticsResponse?.data;
+  console.log("Analytics data:", analytics);
 
-async function ChartsSection() {
-  const data = await getAnalyticsData();
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-navy">Analytics</h1>
+          <Button variant="ghost" className="border border-secondary hover:border-primary" disabled>
+            <Download className="h-4 w-4" />
+            Download Data
+          </Button>
+        </div>
 
-  return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <RevenueTrendChart data={data.revenueTrend} />
-      <JobsByCategoryChart data={data.jobsByCategory} />
-    </div>
-  );
-}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {[...Array(5)].map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
 
-async function RatingSection() {
-  const data = await getAnalyticsData();
+        <RatingCardSkeleton />
+      </div>
+    );
+  }
 
-  return (
-    <RatingCard
-      score={data.rating.score}
-      reviews={data.rating.reviews}
-      reportUrl={data.rating.reportUrl}
-    />
-  );
-}
+  if (isError || !analytics) {
+    return (
+      <Card className="rounded-2xl border-none shadow-sm">
+        <CardContent className="py-10 text-center text-muted-foreground">
+          Failed to load analytics. Please try again later.
+        </CardContent>
+      </Card>
+    );
+  }
 
-export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -67,32 +61,39 @@ export default function AnalyticsPage() {
         </Button>
       </div>
 
-      <Suspense
-        fallback={
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {[...Array(5)].map((_, i) => (
-              <StatCardSkeleton key={i} />
-            ))}
-          </div>
-        }
-      >
-        <StatsSection />
-      </Suspense>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+        <StatCard
+          label="Total Offers Made"
+          value={analytics.totalOffersMade.toString()}
+          color="text-navy"
+        />
+        <StatCard
+          label="Total Bookings"
+          value={analytics.totalBookings.toString()}
+          color="text-navy"
+        />
+        <StatCard
+          label="Conversion Rate"
+          value={`${analytics.conversionRate}%`}
+          color="text-navy"
+        />
+        <StatCard
+          label="Platform Fees"
+          value={currencyFormatter.format(analytics.platformFees)}
+          color="text-destructive"
+        />
+        <StatCard
+          label="Your Revenue"
+          value={currencyFormatter.format(analytics.workshopRevenue)}
+          color="text-emerald-600"
+        />
+      </div>
 
-      <Suspense
-        fallback={
-          <div className="grid gap-6 lg:grid-cols-2">
-            <RevenueTrendChartSkeleton />
-            <JobsByCategoryChartSkeleton />
-          </div>
-        }
-      >
-        <ChartsSection />
-      </Suspense>
-
-      <Suspense fallback={<RatingCardSkeleton />}>
-        <RatingSection />
-      </Suspense>
+      <RatingCard score={analytics.avgRating} reviews={analytics.reviewsCount} reportUrl="#" />
     </div>
   );
+}
+
+export default function AnalyticsPage() {
+  return <AnalyticsContent />;
 }
