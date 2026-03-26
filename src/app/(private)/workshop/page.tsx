@@ -1,6 +1,10 @@
 "use client";
 
-import { useGetAnalytics } from "@/lib/actions/analytics/get-analytics";
+import {
+  useGetAnalytics,
+  useGetWeeklyBookingsAnalytics,
+  useGetWorkshopActivities
+} from "@/lib/actions/analytics/get-analytics";
 
 import { Card, CardContent } from "@/components/ui";
 
@@ -12,7 +16,6 @@ import {
   StatsCardSkeleton
 } from "./component/dashboard/components/Skeletons";
 import { StatsCard } from "./component/dashboard/components/statsCard";
-import dashboardData from "./component/dashboard/data/dashboard.json";
 
 const currencyFormatter = new Intl.NumberFormat("da-DK", {
   style: "currency",
@@ -20,9 +23,72 @@ const currencyFormatter = new Intl.NumberFormat("da-DK", {
   maximumFractionDigits: 0
 });
 
+const pluralize = (value: number, unit: string) => {
+  return `${value} ${unit}${value === 1 ? "" : "s"} ago`;
+};
+
+const formatActivityTimestamp = (isoTimestamp: string) => {
+  const timestamp = new Date(isoTimestamp);
+  if (Number.isNaN(timestamp.getTime())) {
+    return "-";
+  }
+
+  const now = Date.now();
+  const diffMs = now - timestamp.getTime();
+
+  if (diffMs < 0) {
+    return timestamp.toLocaleDateString("da-DK", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  }
+
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  if (minutes < 60) {
+    return pluralize(Math.max(1, minutes), "minute");
+  }
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (days < 7) {
+    return pluralize(Math.max(1, days), "day");
+  }
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 4) {
+    return pluralize(Math.max(1, weeks), "week");
+  }
+
+  return timestamp.toLocaleDateString("da-DK", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+};
+
 function DashboardContent() {
-  const { data: analyticsResponse, isLoading, isError } = useGetAnalytics();
+  const {
+    data: analyticsResponse,
+    isLoading: isAnalyticsLoading,
+    isError: isAnalyticsError
+  } = useGetAnalytics();
+  const {
+    data: weeklyResponse,
+    isLoading: isWeeklyLoading,
+    isError: isWeeklyError
+  } = useGetWeeklyBookingsAnalytics();
+  const {
+    data: activitiesResponse,
+    isLoading: isActivitiesLoading,
+    isError: isActivitiesError
+  } = useGetWorkshopActivities();
+
   const analytics = analyticsResponse?.data;
+  const weeklyBookings = weeklyResponse?.data;
+  const activities = activitiesResponse?.data ?? [];
+
+  const isLoading = isAnalyticsLoading || isWeeklyLoading || isActivitiesLoading;
+  const isError = isAnalyticsError || isWeeklyError || isActivitiesError;
 
   const currentDate = new Date().toLocaleDateString("da-DK", {
     weekday: "long",
@@ -53,7 +119,7 @@ function DashboardContent() {
     );
   }
 
-  if (isError || !analytics) {
+  if (isError || !analytics || !weeklyBookings) {
     return (
       <Card className="rounded-2xl border-none shadow-sm">
         <CardContent className="py-10 text-center text-muted-foreground">
@@ -115,6 +181,29 @@ function DashboardContent() {
     }
   ];
 
+  const weeklyJobs = [
+    { day: "Sun", jobs: weeklyBookings.sunDay },
+    { day: "Mon", jobs: weeklyBookings.monDay },
+    { day: "Tue", jobs: weeklyBookings.tuesDay },
+    { day: "Wed", jobs: weeklyBookings.wednesDay },
+    { day: "Thu", jobs: weeklyBookings.thursDay },
+    { day: "Fri", jobs: weeklyBookings.friDay },
+    { day: "Sat", jobs: weeklyBookings.saturDay }
+  ];
+
+  const recentActivities = activities.slice(0, 5).map((activity, index) => ({
+    id: `${activity.details?.id || index}`,
+    type: activity.type,
+    message: activity.message,
+    timestamp: formatActivityTimestamp(activity.timestamp),
+    color:
+      activity.type === "OFFER_ACCEPTED"
+        ? "bg-emerald-500"
+        : activity.type === "OFFER_SENT"
+          ? "bg-blue-500"
+          : "bg-slate-500"
+  }));
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -139,8 +228,8 @@ function DashboardContent() {
 
       {/* Charts and Activity */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <RecentActivity activities={dashboardData.recentActivity} />
-        <Chart data={dashboardData.weeklyJobs} title="Jobs Received This Week" />
+        <RecentActivity activities={recentActivities} />
+        <Chart data={weeklyJobs} title="Bookings This Week" />
       </div>
     </div>
   );

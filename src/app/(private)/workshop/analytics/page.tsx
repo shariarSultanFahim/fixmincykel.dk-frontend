@@ -1,10 +1,8 @@
 "use client";
 
-import { Download } from "lucide-react";
-
 import { useGetAnalytics } from "@/lib/actions/analytics/get-analytics";
 
-import { Button, Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui";
 
 import { RatingCard, RatingCardSkeleton, StatCard, StatCardSkeleton } from "./components";
 
@@ -17,17 +15,16 @@ const currencyFormatter = new Intl.NumberFormat("da-DK", {
 function AnalyticsContent() {
   const { data: analyticsResponse, isLoading, isError } = useGetAnalytics();
   const analytics = analyticsResponse?.data;
-  console.log("Analytics data:", analytics);
 
   if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-navy">Analytics</h1>
-          <Button variant="ghost" className="border border-secondary hover:border-primary" disabled>
+          {/* <Button variant="ghost" className="border border-secondary hover:border-primary" disabled>
             <Download className="h-4 w-4" />
             Download Data
-          </Button>
+          </Button> */}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -55,10 +52,10 @@ function AnalyticsContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-navy">Analytics</h1>
-        <Button variant="ghost" className="border border-secondary hover:border-primary">
+        {/* <Button variant="ghost" className="border border-secondary hover:border-primary">
           <Download className="h-4 w-4" />
           Download Data
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
