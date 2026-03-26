@@ -10,6 +10,7 @@ import { formatDate } from "@/lib/date";
 
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 
+import { OffersTable } from "./offers-table";
 import { RepairDetailsSkeleton } from "./skeletons";
 
 interface RepairDetailsClientProps {
@@ -149,6 +150,8 @@ export function RepairDetailsClient({ repairId }: RepairDetailsClientProps) {
           )}
         </CardContent>
       </Card>
+
+      <OffersTable jobId={repairId} />
     </div>
   );
 }

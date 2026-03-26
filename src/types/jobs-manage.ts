@@ -30,6 +30,29 @@ export interface JobBooking {
   updatedAt: string;
 }
 
+export interface Workshop {
+  id: string;
+  email: string;
+  phone: string;
+  role: string;
+  avatar: string | null;
+  workshopName: string;
+  ownerName: string;
+  cvrNumber: string;
+  description: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+  isVerified: boolean;
+  avgRating: number;
+  reviewsCount: number;
+  approvalStatus: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface JobOffer {
   id: string;
   jobId: string;
@@ -38,8 +61,24 @@ export interface JobOffer {
   estimatedTime: string;
   message: string;
   status: OfferStatus;
+  distance: number;
+  isBestValue: boolean;
+  score: number;
   createdAt: string;
   updatedAt: string;
+  workshop: Workshop;
+}
+
+export interface JobOffersMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface JobOffersPayload {
+  meta: JobOffersMeta;
+  data: JobOffer[];
 }
 
 export interface JobUser {
@@ -126,7 +165,7 @@ export interface JobDetailsResponse {
 export interface JobOffersResponse {
   success: boolean;
   message: string;
-  data: JobOffer[];
+  data: JobOffersPayload;
 }
 
 export interface JobsQueryParams {
