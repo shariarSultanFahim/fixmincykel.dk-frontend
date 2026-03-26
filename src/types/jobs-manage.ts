@@ -28,6 +28,15 @@ export interface JobBooking {
   paymentStatus: PaymentStatus;
   createdAt: string;
   updatedAt: string;
+  workshop: {
+    workshopName: string;
+    address: string;
+    phone: string;
+    email: string;
+  };
+  offer: {
+    price: number;
+  };
 }
 
 export interface Workshop {

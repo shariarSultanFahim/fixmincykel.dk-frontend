@@ -110,7 +110,11 @@ export function UpcomingBookingCard({ booking }: UpcomingBookingCardProps) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="border-0">
-                <RescheduleForm bookingTitle={booking.title} onCompleted={() => setIsOpen(false)} />
+                <RescheduleForm
+                  bookingId={booking.id}
+                  bookingTitle={booking.title}
+                  onCompleted={() => setIsOpen(false)}
+                />
               </DialogContent>
             </Dialog>
           </div>
