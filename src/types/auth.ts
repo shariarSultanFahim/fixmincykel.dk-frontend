@@ -13,7 +13,8 @@ export interface LoginResponseData {
     phone: string;
     role: string;
     isVerified: boolean;
-    status: string;
+    status?: string;
+    approvalStatus?: string;
   };
 }
 
@@ -116,4 +117,68 @@ export interface VerifyUserResponse {
 
 export interface ResendOTPRequest {
   email: string;
+}
+
+export interface WorkshopRegisterRequest {
+  workshopName: string;
+  email: string;
+  phone: string;
+  address: string;
+  password: string;
+  description: string;
+  city: string;
+  cvrNumber: string;
+  ownerName: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface WorkshopRegisterResponseData {
+  id: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  cvrNumber: string;
+  ownerName: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+  workshopName: string;
+  description: string;
+  role: string;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkshopRegisterResponse {
+  success: boolean;
+  message: string;
+  data?: WorkshopRegisterResponseData;
+}
+
+export interface VerifyWorkshopRequest {
+  email: string;
+  otp: number;
+}
+
+export interface VerifyWorkshopResponseData {
+  accessToken?: string;
+  refreshToken?: string;
+  workshop?: {
+    id: string;
+    email: string;
+    phone: string;
+    role: string;
+    isVerified: boolean;
+    approvalStatus?: string;
+  };
+}
+
+export interface VerifyWorkshopResponse {
+  success: boolean;
+  message: string;
+  data?: VerifyWorkshopResponseData;
 }

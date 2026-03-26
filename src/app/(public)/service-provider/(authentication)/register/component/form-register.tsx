@@ -1,11 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Check, ChevronLeft, Clock, Headset, LayoutDashboard, Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import type { LoginErrorResponse } from "@/types/auth";
+
+import { useWorkshopRegister } from "@/lib/actions/auth/register.workshop";
 
 import {
   Button,
@@ -15,32 +22,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input
+  Input,
+  Textarea
 } from "@/components/ui";
 
-import { createRegisterSchema, RegisterFormValues } from "./register.schema";
+import { createRegisterSchema, type RegisterFormValues } from "./register.schema";
+
+const LocationPicker = dynamic(() => import("@/components/map/LeafletMap"), {
+  ssr: false,
+  loading: () => <div className="h-100 w-full animate-pulse rounded bg-muted" />
+});
 
 export function FormRegister() {
+  const router = useRouter();
+  const registerMutation = useWorkshopRegister();
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(createRegisterSchema()),
     defaultValues: {
       workshopName: "",
       cvrNumber: "",
       address: "",
+      description: "",
       city: "",
       postalCode: "",
       email: "",
       phone: "",
       ownerName: "",
-      password: ""
+      password: "",
+      latitude: undefined,
+      longitude: undefined
     }
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    toast("", {
-      description: <pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>,
-      duration: 5000
-    });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      const response = await registerMutation.mutateAsync(values);
+
+      toast.success(response.message || "Application submitted successfully.");
+
+      if (response.data?.isVerified === false) {
+        router.push(
+          `/service-provider/verify-otp?email=${encodeURIComponent(response.data.email)}`
+        );
+        return;
+      }
+
+      router.push("/service-provider/login");
+    } catch (error) {
+      const message = isAxiosError<LoginErrorResponse>(error)
+        ? error.response?.data?.message || error.message
+        : error instanceof Error
+          ? error.message
+          : "Registration failed. Please try again.";
+
+      toast.error(message);
+    }
   });
 
   return (
@@ -110,6 +147,23 @@ export function FormRegister() {
                     <FormLabel>Address</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter street address" type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Workshop Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell customers what your workshop specializes in"
+                        className="min-h-24"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,8 +252,53 @@ export function FormRegister() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-navy">
-                Submit Application
+              <div className="space-y-3 rounded-xl border border-navy/10 p-4">
+                <p className="text-sm font-semibold text-navy">Workshop Location</p>
+                <p className="text-xs text-muted-foreground">
+                  We use your OpenStreet current location. You can drag the marker to fine-tune.
+                </p>
+                <LocationPicker
+                  onLocationSelect={(latitude, longitude) => {
+                    form.setValue("latitude", latitude, { shouldValidate: true });
+                    form.setValue("longitude", longitude, { shouldValidate: true });
+                  }}
+                />
+                <div className="grid gap-3 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="latitude"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Latitude</FormLabel>
+                        <FormControl>
+                          <Input type="text" readOnly value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="longitude"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Longitude</FormLabel>
+                        <FormControl>
+                          <Input type="text" readOnly value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-navy"
+                disabled={registerMutation.isPending}
+              >
+                {registerMutation.isPending ? "Submitting..." : "Submit Application"}
               </Button>
             </form>
           </Form>

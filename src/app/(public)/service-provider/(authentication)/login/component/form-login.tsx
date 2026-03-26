@@ -43,6 +43,16 @@ export function FormLogin() {
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       const response = await loginMutation.mutateAsync(values);
+
+      const status =
+        response.data?.user?.approvalStatus?.toUpperCase() ??
+        response.data?.user?.status?.toUpperCase();
+
+      if (status === "PENDING") {
+        toast.info("Your workshop is waiting for approval. Please check back in a day.");
+        return;
+      }
+
       const session = buildSessionFromLoginResponse(response);
 
       cookie.set(AUTH_SESSION_COOKIE, JSON.stringify(session));
