@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import type { MessageDictionary } from "@/types/messages";
 
@@ -49,12 +50,14 @@ export default function BecomePartner() {
                   <BenefitItem key={benefit.id} label={getMessage(copy, benefit.labelKey)} />
                 ))}
               </div>
-              <Button
-                variant="outline"
-                className="border-primary/40 bg-secondary text-navy hover:bg-secondary hover:text-navy"
-              >
-                {getMessage(copy, "Partner.cta")}
-              </Button>
+              <Link href="/service-provider/register">
+                <Button
+                  variant="outline"
+                  className="border-primary/40 bg-secondary text-navy hover:bg-secondary hover:text-navy"
+                >
+                  {getMessage(copy, "Partner.cta")}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
