@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
+import type { JobCategoryOption } from "@/types/job-create";
 import type { JobStatus as DisplayJobStatus, JobInboxItem } from "@/types/job-inbox";
 import type { AdminJob } from "@/types/jobs-manage";
 
 import { useGetWorkshopJobs } from "@/lib/actions/jobs/get-workshop-jobs";
+import { useGetCategories } from "@/lib/actions/jobs/get.categories";
 
 import { Card, CardContent } from "@/components/ui";
 
 import { FiltersBar, FiltersBarSkeleton, JobCard, JobListSkeleton } from "./components";
+import type { CategoryOption, SortOption } from "./components/FiltersBar";
 
 type WorkshopInboxJob = AdminJob & { offerSend?: boolean };
 
@@ -56,14 +59,50 @@ function transformJobToInboxItem(job: WorkshopInboxJob): JobInboxItem {
   };
 }
 
-const staticFilters = {
-  status: ["All", "New", "Viewed", "Offer Sent", "Booked"],
-  category: ["All", "Puncture", "Brakes", "Gears", "Chain", "Tune-up"],
-  sortBy: ["Newest", "Oldest", "Closest", "Highest Value"]
-};
+const SORT_OPTIONS: SortOption[] = [
+  { label: "Newest", sort: "createdAt", sortOrder: "desc" },
+  { label: "Oldest", sort: "createdAt", sortOrder: "asc" },
+  { label: "Closest", sort: "radius", sortOrder: "asc" }
+];
 
 export default function JobIndexPage() {
-  const { data: jobs, isLoading, isError } = useGetWorkshopJobs("createdAt", "asc");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedSort, setSelectedSort] = useState<string>("Newest");
+
+  // Get selected sort option details
+  const selectedSortOption =
+    SORT_OPTIONS.find((opt) => opt.label === selectedSort) || SORT_OPTIONS[0];
+
+  // Fetch categories from API
+  const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetCategories(
+    1,
+    500,
+    "name",
+    true
+  );
+
+  // Transform categories for dropdown
+  const categories = useMemo((): CategoryOption[] => {
+    if (!categoriesResponse?.data?.data || !Array.isArray(categoriesResponse.data.data)) {
+      return [];
+    }
+    return categoriesResponse.data.data.map((cat: JobCategoryOption) => ({
+      label: cat.name || "Unknown",
+      id: cat.name || cat.id
+    }));
+  }, [categoriesResponse]);
+
+  // Fetch jobs with applied filters
+  const {
+    data: jobs,
+    isLoading,
+    isError
+  } = useGetWorkshopJobs(
+    selectedSortOption.sort,
+    selectedSortOption.sortOrder,
+    "OPEN",
+    selectedCategory === "All" ? null : selectedCategory
+  );
 
   const inboxItems = useMemo(() => {
     if (!Array.isArray(jobs)) {
@@ -73,7 +112,8 @@ export default function JobIndexPage() {
     return jobs.map(transformJobToInboxItem);
   }, [jobs]);
 
-  if (isLoading) {
+  // Show full skeleton only on initial load (when categories are loading)
+  if (isCategoriesLoading) {
     return (
       <div className="space-y-6">
         <div>
@@ -92,6 +132,15 @@ export default function JobIndexPage() {
         <div>
           <h1 className="text-2xl font-bold text-navy">Job Inbox</h1>
         </div>
+        <FiltersBar
+          categoryOptions={categories}
+          sortOptions={SORT_OPTIONS}
+          selectedCategory={selectedCategory}
+          selectedSort={selectedSort}
+          onCategoryChange={setSelectedCategory}
+          onSortChange={setSelectedSort}
+          isCategoriesLoading={isCategoriesLoading}
+        />
         <Card className="rounded-2xl border-none shadow-sm">
           <CardContent className="py-10 text-center text-muted-foreground">
             <p>Failed to load jobs. Please try again later.</p>
@@ -114,22 +163,30 @@ export default function JobIndexPage() {
       </div>
 
       <FiltersBar
-        statusOptions={staticFilters.status}
-        categoryOptions={staticFilters.category}
-        sortOptions={staticFilters.sortBy}
+        categoryOptions={categories}
+        sortOptions={SORT_OPTIONS}
+        selectedCategory={selectedCategory}
+        selectedSort={selectedSort}
+        onCategoryChange={setSelectedCategory}
+        onSortChange={setSelectedSort}
+        isCategoriesLoading={isCategoriesLoading}
       />
 
-      <div className="space-y-4">
-        {inboxItems.length > 0 ? (
-          inboxItems.map((job) => <JobCard key={job.id} {...job} />)
-        ) : (
-          <Card className="border-0 shadow-sm">
-            <CardContent className="py-8 text-center text-muted-foreground">
-              No jobs available at this time.
-            </CardContent>
-          </Card>
-        )}
-      </div>
+      {isLoading ? (
+        <JobListSkeleton />
+      ) : (
+        <div className="space-y-4">
+          {inboxItems.length > 0 ? (
+            inboxItems.map((job) => <JobCard key={job.id} {...job} />)
+          ) : (
+            <Card className="border-0 shadow-sm">
+              <CardContent className="py-8 text-center text-muted-foreground">
+                No jobs available at this time.
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
     </div>
   );
 }

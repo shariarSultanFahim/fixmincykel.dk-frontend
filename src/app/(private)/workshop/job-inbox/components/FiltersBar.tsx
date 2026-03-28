@@ -14,25 +14,48 @@ import {
   ComboboxList
 } from "@/components/ui/combobox";
 
-interface FiltersBarProps {
-  statusOptions: string[];
-  categoryOptions: string[];
-  sortOptions: string[];
+export interface SortOption {
+  label: string;
+  sort: string;
+  sortOrder: "asc" | "desc";
 }
 
-function FilterField({
+export interface CategoryOption {
+  label: string;
+  id: string;
+}
+
+interface FiltersBarProps {
+  categoryOptions: CategoryOption[];
+  sortOptions: SortOption[];
+  selectedCategory: string;
+  selectedSort: string;
+  onCategoryChange: (category: string) => void;
+  onSortChange: (sort: string) => void;
+  isCategoriesLoading?: boolean;
+}
+
+interface FilterFieldProps<T extends string | { label: string }> {
+  label: string;
+  options: T[];
+  value: string;
+  onChange: (value: string | null) => void;
+  placeholder: string;
+  isLoading?: boolean;
+  getLabel?: (option: T) => string;
+  getValue?: (option: T) => string;
+}
+
+function FilterField<T extends string | { label: string }>({
   label,
   options,
   value,
   onChange,
-  placeholder
-}: {
-  label: string;
-  options: string[];
-  value: string;
-  onChange: (value: string | null) => void;
-  placeholder: string;
-}) {
+  placeholder,
+  isLoading,
+  getLabel,
+  getValue
+}: FilterFieldProps<T>) {
   const [inputValue, setInputValue] = React.useState(value);
 
   React.useEffect(() => {
@@ -43,7 +66,10 @@ function FilterField({
   const normalizedValue = value.trim().toLowerCase();
   const shouldFilter = normalizedQuery.length > 0 && normalizedQuery !== normalizedValue;
   const filteredOptions = shouldFilter
-    ? options.filter((option) => option.toLowerCase().includes(normalizedQuery))
+    ? options.filter((option) => {
+        const label = getLabel ? getLabel(option) : (option as string);
+        return label.toLowerCase().includes(normalizedQuery);
+      })
     : options;
 
   return (
@@ -58,14 +84,23 @@ function FilterField({
           setInputValue(nextValue ?? "");
         }}
       >
-        <ComboboxInput placeholder={placeholder} className="w-full border-border" showClear />
+        <ComboboxInput
+          placeholder={placeholder}
+          className="w-full border-border"
+          showClear
+          disabled={isLoading}
+        />
         <ComboboxContent>
           <ComboboxList>
-            {filteredOptions.map((option) => (
-              <ComboboxItem key={option} value={option}>
-                {option}
-              </ComboboxItem>
-            ))}
+            {filteredOptions.map((option) => {
+              const optionLabel = getLabel ? getLabel(option) : (option as string);
+              const optionValue = getValue ? getValue(option) : (option as string);
+              return (
+                <ComboboxItem key={optionValue} value={optionValue}>
+                  {optionLabel}
+                </ComboboxItem>
+              );
+            })}
           </ComboboxList>
           <ComboboxEmpty>No matches</ComboboxEmpty>
         </ComboboxContent>
@@ -74,34 +109,38 @@ function FilterField({
   );
 }
 
-export function FiltersBar({ statusOptions, categoryOptions, sortOptions }: FiltersBarProps) {
-  const [status, setStatus] = React.useState(statusOptions[0] ?? "All");
-  const [category, setCategory] = React.useState(categoryOptions[0] ?? "All");
-  const [sortBy, setSortBy] = React.useState(sortOptions[0] ?? "Newest");
+export function FiltersBar({
+  categoryOptions,
+  sortOptions,
+  selectedCategory,
+  selectedSort,
+  onCategoryChange,
+  onSortChange,
+  isCategoriesLoading
+}: FiltersBarProps) {
+  const categoryOptionsWithAll = [{ label: "All Categories", id: "All" }, ...categoryOptions];
 
   return (
     <Card className={cn("border-0 shadow-md")}>
-      <CardContent className="grid gap-4 md:grid-cols-3">
-        <FilterField
-          label="Status"
-          options={statusOptions}
-          value={status}
-          onChange={(nextValue) => setStatus(nextValue ?? "All")}
-          placeholder="Select status"
-        />
-        <FilterField
+      <CardContent className="grid gap-4 md:grid-cols-2">
+        <FilterField<CategoryOption>
           label="Category"
-          options={categoryOptions}
-          value={category}
-          onChange={(nextValue) => setCategory(nextValue ?? "All")}
+          options={categoryOptionsWithAll}
+          value={selectedCategory}
+          onChange={(nextValue) => onCategoryChange(nextValue ?? "All")}
           placeholder="Select category"
+          isLoading={isCategoriesLoading}
+          getLabel={(option) => option.label}
+          getValue={(option) => option.id}
         />
-        <FilterField
+        <FilterField<SortOption>
           label="Sort by"
           options={sortOptions}
-          value={sortBy}
-          onChange={(nextValue) => setSortBy(nextValue ?? "Newest")}
+          value={selectedSort}
+          onChange={(nextValue) => onSortChange(nextValue ?? sortOptions[0]?.label ?? "Newest")}
           placeholder="Sort by"
+          getLabel={(option) => option.label}
+          getValue={(option) => option.label}
         />
       </CardContent>
     </Card>

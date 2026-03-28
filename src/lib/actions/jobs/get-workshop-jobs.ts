@@ -35,12 +35,25 @@ const extractWorkshopJobs = (payload: unknown): WorkshopJob[] => {
   return [];
 };
 
-export const useGetWorkshopJobs = (sort: string = "createdAt", sortOrder: string = "asc") => {
+export const useGetWorkshopJobs = (
+  sort: string = "createdAt",
+  sortOrder: string = "desc",
+  status: string = "OPEN",
+  category: string | null = null
+) => {
+  const params = new URLSearchParams();
+  params.append("sort", sort);
+  params.append("sortOrder", sortOrder);
+  params.append("status", status);
+  if (category && category !== "All") {
+    params.append("category", category);
+  }
+
   return useQuery({
-    queryKey: ["workshop-jobs", sort, sortOrder],
+    queryKey: ["workshop-jobs", sort, sortOrder, status, category],
     queryFn: async () => {
       const response = await instance.get<GetWorkshopJobsResponse>(
-        `/workshop/me/jobs?sort=${sort}&sortOrder=${sortOrder}`
+        `/workshop/me/jobs?${params.toString()}`
       );
       return extractWorkshopJobs(response.data);
     }
