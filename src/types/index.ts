@@ -19,6 +19,20 @@ export type {
   BookingManageStatus
 } from "./booking-manage";
 export type { BookingStatus, CalendarBooking, CalendarData } from "./calendar";
+export type {
+  ApiResponse,
+  ChatMessage,
+  ChatMessageEntity,
+  ChatMessageStatus,
+  ChatMessagesMeta,
+  ChatMessagesPage,
+  ChatRoom,
+  ChatRoomBooking,
+  ChatRoomUser,
+  ChatRoomWorkshop,
+  SendMessageInput,
+  SendMessageVariables
+} from "./chat";
 export type { DataTableProps } from "./data-table";
 export type { FaqItem } from "./faq-item";
 export type { HowItWorksSimpleStep, HowItWorksStat, HowItWorksStep } from "./how-it-works";

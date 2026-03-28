@@ -66,7 +66,11 @@ export default function JobIndexPage() {
   const { data: jobs, isLoading, isError } = useGetWorkshopJobs("createdAt", "asc");
 
   const inboxItems = useMemo(() => {
-    return jobs?.map(transformJobToInboxItem) ?? [];
+    if (!Array.isArray(jobs)) {
+      return [];
+    }
+
+    return jobs.map(transformJobToInboxItem);
   }, [jobs]);
 
   if (isLoading) {

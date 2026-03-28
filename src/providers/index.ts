@@ -1,3 +1,4 @@
+export { UserChatRealtimeProvider, WorkshopChatRealtimeProvider } from "./ChatRealtimeProvider";
 export { CopyProvider } from "./CopyProvider";
 export { CounterProvider } from "./CounterProvider";
 export { DashboardThemeProvider } from "./DashboardThemeProvider";

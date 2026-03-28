@@ -12,6 +12,29 @@ interface GetWorkshopJobsResponse {
   data: Array<AdminJob & { offerSend?: boolean; workshopIds?: string[] }>;
 }
 
+type WorkshopJob = AdminJob & { offerSend?: boolean; workshopIds?: string[] };
+
+const extractWorkshopJobs = (payload: unknown): WorkshopJob[] => {
+  if (!payload || typeof payload !== "object") {
+    return [];
+  }
+
+  const topLevelData = (payload as { data?: unknown }).data;
+
+  if (Array.isArray(topLevelData)) {
+    return topLevelData as WorkshopJob[];
+  }
+
+  if (topLevelData && typeof topLevelData === "object") {
+    const nestedData = (topLevelData as { data?: unknown }).data;
+    if (Array.isArray(nestedData)) {
+      return nestedData as WorkshopJob[];
+    }
+  }
+
+  return [];
+};
+
 export const useGetWorkshopJobs = (sort: string = "createdAt", sortOrder: string = "asc") => {
   return useQuery({
     queryKey: ["workshop-jobs", sort, sortOrder],
@@ -19,7 +42,7 @@ export const useGetWorkshopJobs = (sort: string = "createdAt", sortOrder: string
       const response = await instance.get<GetWorkshopJobsResponse>(
         `/workshop/me/jobs?sort=${sort}&sortOrder=${sortOrder}`
       );
-      return response.data.data;
+      return extractWorkshopJobs(response.data);
     }
   });
 };

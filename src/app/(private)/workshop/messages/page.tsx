@@ -1,8 +1,11 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
-import { Conversation } from "@/types/conversation";
+import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
+import { getSocketClient } from "@/lib/socket";
+
+import { useChatRooms } from "@/hooks";
 
 import {
   ChatWindow,
@@ -12,14 +15,51 @@ import {
   MobileAvatarsList,
   MobileSearch
 } from "./components";
-import messagesData from "./data/messages.json";
 
 export default function MessagesPage() {
-  const conversations: Conversation[] = messagesData as Conversation[];
-  const [selectedConversationId, setSelectedConversationId] = useState(conversations[0]?.id || "");
+  const [selectedConversationId, setSelectedConversationId] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
 
-  const selectedConversation = conversations.find((conv) => conv.id === selectedConversationId);
+  const { data: profileData } = useGetMyWorkshopProfile();
+  const currentUserId = profileData?.data?.id ?? "";
+
+  const { data: roomsResponse } = useChatRooms();
+  const rooms = roomsResponse?.data ?? [];
+
+  const socket = useMemo(() => getSocketClient(), []);
+
+  const activeRoomId = selectedConversationId || rooms[0]?.id || "";
+
+  const selectedConversation = rooms.find((room) => room.id === activeRoomId);
+
+  useEffect(() => {
+    if (!socket || !activeRoomId) {
+      console.log("[WorkshopMessagesPage] Skip join_room: socket or activeRoomId missing", {
+        hasSocket: !!socket,
+        activeRoomId
+      });
+      return;
+    }
+
+    console.log("[WorkshopMessagesPage] Joining room", {
+      activeRoomId,
+      socketConnected: socket.connected
+    });
+
+    socket.emit("join_room", { roomId: activeRoomId }, (acknowledgment: unknown) => {
+      console.log("[WorkshopMessagesPage] join_room acknowledged", {
+        activeRoomId,
+        acknowledgment
+      });
+    });
+
+    return () => {
+      if (socket && activeRoomId) {
+        console.log("[WorkshopMessagesPage] Leaving room", { activeRoomId });
+        socket.emit("leave_room", { roomId: activeRoomId });
+      }
+    };
+  }, [socket, activeRoomId]);
 
   return (
     <>
@@ -34,7 +74,7 @@ export default function MessagesPage() {
           <div className="shrink-0 md:w-80 lg:w-96">
             <Suspense fallback={<ConversationListSkeleton />}>
               <ConversationsList
-                conversations={conversations}
+                conversations={rooms}
                 selectedId={selectedConversationId}
                 onSelect={setSelectedConversationId}
               />
@@ -45,7 +85,11 @@ export default function MessagesPage() {
           <div className="min-w-0 flex-1">
             {selectedConversation ? (
               <Suspense fallback={<ChatWindowSkeleton />}>
-                <ChatWindow conversation={selectedConversation} />
+                <ChatWindow
+                  room={selectedConversation}
+                  currentUserId={currentUserId}
+                  socket={socket}
+                />
               </Suspense>
             ) : (
               <div className="flex h-full items-center justify-center rounded-lg border-0 bg-white shadow-md">
@@ -69,7 +113,7 @@ export default function MessagesPage() {
         {/* Mobile Avatar List */}
         <div className="shrink-0 rounded-lg bg-white px-4 py-2 shadow-lg">
           <MobileAvatarsList
-            conversations={conversations}
+            conversations={rooms}
             selectedId={selectedConversationId}
             onSelect={setSelectedConversationId}
             searchQuery={mobileSearchQuery}
@@ -80,7 +124,11 @@ export default function MessagesPage() {
         <div className="min-h-0 flex-1">
           {selectedConversation ? (
             <Suspense fallback={<ChatWindowSkeleton />}>
-              <ChatWindow conversation={selectedConversation} />
+              <ChatWindow
+                room={selectedConversation}
+                currentUserId={currentUserId}
+                socket={socket}
+              />
             </Suspense>
           ) : (
             <div className="flex h-full items-center justify-center bg-white">
