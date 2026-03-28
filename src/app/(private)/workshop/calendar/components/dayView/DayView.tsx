@@ -103,11 +103,6 @@ export function DayView({ data }: DayViewProps) {
                   </Button>
                 </>
               )}
-              {booking.status === "completed" && (
-                <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-                  View Receipt
-                </Button>
-              )}
               {booking.status === "awaiting-payment" && (
                 <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
                   Collect Payment

@@ -1,5 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
+import { toast } from "sonner";
+
+import { useStartWorkshopBooking } from "@/lib/actions/bookings/update-workshop-booking-status";
+
 import { Button } from "@/components/ui";
 import {
   Dialog,
@@ -26,8 +32,22 @@ const formatCurrency = (amount: number, currency: string) => {
 };
 
 export function StartBookingDialog({ booking, currency }: StartBookingDialogProps) {
+  const [open, setOpen] = useState(false);
+  const { mutateAsync: startBooking, isPending } = useStartWorkshopBooking();
+
+  const handleStartBooking = async () => {
+    try {
+      const response = await startBooking(booking.id);
+      toast.success(response.message || "Booking started successfully.");
+      setOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to start booking.";
+      toast.error(message);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
           Start
@@ -51,9 +71,15 @@ export function StartBookingDialog({ booking, currency }: StartBookingDialogProp
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button className="bg-primary text-white hover:bg-primary/90">Cancel</Button>
+            <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button className="bg-primary text-white hover:bg-primary/90">Start Booking</Button>
+          <Button
+            className="bg-primary text-white hover:bg-primary/90"
+            onClick={handleStartBooking}
+            disabled={isPending}
+          >
+            {isPending ? "Starting..." : "Start Booking"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

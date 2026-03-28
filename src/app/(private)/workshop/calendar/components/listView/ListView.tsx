@@ -106,11 +106,6 @@ export function ListView({ data }: ListViewProps) {
                       {booking.status === "in-progress" && (
                         <CompleteServiceDialog booking={booking} currency={data.currency} />
                       )}
-                      {booking.status === "completed" && (
-                        <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-                          Receipt
-                        </Button>
-                      )}
                       {booking.status === "awaiting-payment" && (
                         <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
                           Collect
