@@ -1,54 +1,56 @@
 "use client";
 
-import { currencyFormatter } from "@/constants/currency-formatter";
+import Link from "next/link";
+
+import type { UserRepair } from "@/types/user-repair";
+
+import { useGetMyJobs } from "@/lib/actions/jobs/my-jobs";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Offer {
-  amount: string;
-}
-
-interface BaseJob {
-  id: string;
-  title: string;
-  status: string;
-  statusColor: string;
-  actions: string[];
-}
-
-interface JobWithOffers extends BaseJob {
-  offers: Offer[];
-}
-
-interface JobWithWorkshop extends BaseJob {
-  workshop: string;
-}
-
-type Job = JobWithOffers | JobWithWorkshop;
+const getStatusDisplay = (job: UserRepair) => {
+  if (job.status === "OPEN") {
+    return {
+      label: "Comparing Offers",
+      color: "bg-amber-100 text-amber-800"
+    };
+  }
+  if (job.status === "PENDING" || job.status === "IN_PROGRESS") {
+    return {
+      label: "Booked",
+      color: "bg-green-100 text-green-800"
+    };
+  }
+  return {
+    label: job.status,
+    color: "bg-gray-100 text-gray-800"
+  };
+};
 
 export function CurrentActiveJobs() {
-  const jobs: Job[] = [
-    {
-      id: "JOB-2050",
-      title: "Gear Problem",
-      status: "Comparing Offers (3 offers received)",
-      statusColor: "bg-amber-100 text-amber-800",
-      offers: [{ amount: "350" }, { amount: "300" }, { amount: "400" }],
-      actions: ["View Offers", "Cancel"]
-    },
-    {
-      id: "JOB-2048",
-      title: "Brake Squeaking",
-      status: "Booked (Oct 16, 09:00)",
-      statusColor: "bg-green-100 text-green-800",
-      workshop: "Copenhagen Bike Repair",
-      actions: ["View Booking", "Message"]
-    }
-  ];
+  const { data: jobsData, isLoading } = useGetMyJobs();
+  const jobs =
+    jobsData?.data?.result?.filter(
+      (job: UserRepair) =>
+        job.status === "OPEN" || job.status === "PENDING" || job.status === "IN_PROGRESS"
+    ) ?? [];
 
-  const isJobWithOffers = (job: Job): job is JobWithOffers => "offers" in job;
-  const isJobWithWorkshop = (job: Job): job is JobWithWorkshop => "workshop" in job;
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-navy">
+          <span>⚙️</span> Current Active Jobs
+        </h2>
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, idx) => (
+            <Skeleton key={idx} className="h-32 w-full rounded" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -56,61 +58,60 @@ export function CurrentActiveJobs() {
         <span>⚙️</span> Current Active Jobs
       </h2>
 
-      {jobs.map((job) => (
-        <Card key={job.id} className="overflow-hidden border-0 shadow-sm">
-          <div className="space-y-4 px-6">
-            <div>
-              <h3 className="font-semibold text-navy">{job.title}</h3>
-              <p className="text-sm text-muted-foreground">{job.id}</p>
-            </div>
-
-            <div
-              className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${job.statusColor}`}
-            >
-              {job.status}
-            </div>
-
-            {/* Offers Section */}
-            {isJobWithOffers(job) && (
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Offers:</p>
-                <div className="flex gap-2">
-                  {job.offers.map((offer, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-full border border-gray-300 px-3 py-1 text-xs"
-                    >
-                      {currencyFormatter.format(Number(offer.amount))}
-                    </div>
-                  ))}
+      {jobs.length > 0 ? (
+        jobs.map((job: UserRepair) => {
+          const statusDisplay = getStatusDisplay(job);
+          return (
+            <Card key={job.id} className="overflow-hidden border-0 shadow-sm">
+              <div className="space-y-4 px-6">
+                <div>
+                  <h3 className="font-semibold text-navy">{job.title}</h3>
+                  <p className="text-sm text-muted-foreground">{job.id}</p>
                 </div>
-              </div>
-            )}
 
-            {/* Workshop Section */}
-            {isJobWithWorkshop(job) && (
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Workshop:</p>
-                <p className="text-sm text-navy">{job.workshop}</p>
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="flex gap-2">
-              {job.actions.map((action, idx) => (
-                <Button
-                  key={idx}
-                  size="sm"
-                  variant={idx === 0 ? "default" : "outline"}
-                  className="flex-1"
+                <div
+                  className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${statusDisplay.color}`}
                 >
-                  {action}
-                </Button>
-              ))}
-            </div>
+                  {statusDisplay.label}
+                </div>
+
+                {/* For OPEN jobs - show link to compare offers */}
+                {job.status === "OPEN" && (
+                  <div>
+                    <Link href={`/user/offers?jobId=${job.id}`}>
+                      <Button variant="default" className="w-full">
+                        View Offers →
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+
+                {/* For IN_PROGRESS/PENDING jobs - show action buttons */}
+                {(job.status === "PENDING" || job.status === "IN_PROGRESS") && (
+                  <div className="flex gap-2">
+                    <Link href="/user/bookings" className="flex-1">
+                      <Button variant="default" className="w-full">
+                        View Booking
+                      </Button>
+                    </Link>
+                    <Link href="/user/messages" className="flex-1">
+                      <Button variant="outline" className="w-full">
+                        Message
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </Card>
+          );
+        })
+      ) : (
+        <Card className="border-0 shadow-sm">
+          <div className="px-6 py-8 text-center">
+            <p className="text-sm text-muted-foreground">No active jobs yet</p>
           </div>
         </Card>
-      ))}
+      )}
     </div>
   );
 }

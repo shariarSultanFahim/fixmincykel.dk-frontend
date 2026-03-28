@@ -35,6 +35,8 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
       form.setValue("preferences.postalCode", postalCode, { shouldValidate: true });
     }
 
+    form.setValue("preferences.maximumDistance", "5", { shouldValidate: true });
+
     if (typeof latitude === "number" && typeof longitude === "number") {
       form.setValue(
         "location",
@@ -95,7 +97,7 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="preferences.maximumDistance"
           render={({ field }) => (
@@ -112,7 +114,7 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
       </div>
     </Card>
   );
