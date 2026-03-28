@@ -4,34 +4,32 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 import { ReviewForm } from "../forms/ReviewForm";
 
-export function ReviewFormDialog({ state, open, onOpenChange }: ReviewFormDialogProps) {
+export function ReviewFormDialog({
+  state,
+  open,
+  isSubmitting,
+  onSubmit,
+  onOpenChange
+}: ReviewFormDialogProps) {
   if (!state) return null;
 
-  const isEdit = state.mode === "edit";
-  const workshopName = isEdit ? state.review?.workshopName : state.pendingReview?.workshopName;
-  const defaultValues: ReviewFormValues = isEdit
-    ? {
-        rating: state.review?.rating ?? 0,
-        comment: state.review?.message ?? ""
-      }
-    : { rating: 0, comment: "" };
+  const workshopName = state.pendingReview?.workshopName;
+  const defaultValues: ReviewFormValues = { rating: 0, comment: "" };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit review" : "Leave a review"}</DialogTitle>
+          <DialogTitle>Leave a review</DialogTitle>
           <DialogDescription>
-            {isEdit
-              ? `Update your review for ${workshopName ?? "this workshop"}.`
-              : `Share your experience with ${workshopName ?? "this workshop"}.`}
+            {`Share your experience with ${workshopName ?? "this workshop"}.`}
           </DialogDescription>
         </DialogHeader>
         <ReviewForm
           defaultValues={defaultValues}
-          submitLabel={isEdit ? "Save changes" : "Submit review"}
-          helperText={isEdit ? "Your updates will be visible right away." : undefined}
-          onSubmit={() => onOpenChange(false)}
+          submitLabel="Submit review"
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
           onCancel={() => onOpenChange(false)}
         />
       </DialogContent>

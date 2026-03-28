@@ -38,15 +38,6 @@ export function PendingReviewCard({ pendingReview, onOpen }: PendingReviewCardPr
           <Button type="button" size="sm" className="shadow-none" onClick={handleLeaveReviewClick}>
             Leave Review
           </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            className="border-white bg-white"
-            onClick={handleActionClick}
-          >
-            Remind Me Later
-          </Button>
         </div>
       </CardContent>
     </Card>
