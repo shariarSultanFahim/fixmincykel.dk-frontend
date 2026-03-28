@@ -2,10 +2,16 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import {
+  chatRoomsQueryKey,
+  useChatNotificationRooms,
+  useChatRooms,
+  useMarkChatNotificationAsRead
+} from "@/lib/actions/chat";
 import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
 import { getSocketClient } from "@/lib/socket";
-
-import { useChatRooms } from "@/hooks";
 
 import {
   ChatWindow,
@@ -25,12 +31,69 @@ export default function MessagesPage() {
 
   const { data: roomsResponse } = useChatRooms();
   const rooms = roomsResponse?.data ?? [];
+  const roomIds = rooms.map((room) => room.id);
+  const queryClient = useQueryClient();
+  const markNotificationAsReadMutation = useMarkChatNotificationAsRead();
+  const { data: notificationsByRoom } = useChatNotificationRooms(roomIds);
 
   const socket = useMemo(() => getSocketClient(), []);
 
   const activeRoomId = selectedConversationId || rooms[0]?.id || "";
 
-  const selectedConversation = rooms.find((room) => room.id === activeRoomId);
+  const roomsWithUnread = useMemo(() => {
+    if (!notificationsByRoom) {
+      return rooms;
+    }
+
+    return rooms.map((room) => {
+      const notifications = notificationsByRoom[room.id] ?? [];
+      const unreadCount = notifications.filter((notification) => !notification.isRead).length;
+
+      return {
+        ...room,
+        unreadCount
+      };
+    });
+  }, [notificationsByRoom, rooms]);
+
+  const selectedConversation = roomsWithUnread.find((room) => room.id === activeRoomId);
+
+  useEffect(() => {
+    if (!activeRoomId || !notificationsByRoom?.[activeRoomId]?.length) {
+      return;
+    }
+
+    const unreadNotifications = notificationsByRoom[activeRoomId].filter(
+      (notification) => !notification.isRead
+    );
+
+    if (!unreadNotifications.length) {
+      return;
+    }
+
+    let isMounted = true;
+
+    const markAsRead = async () => {
+      await Promise.all(
+        unreadNotifications.map((notification) =>
+          markNotificationAsReadMutation.mutateAsync(notification.id)
+        )
+      );
+
+      if (!isMounted) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({ queryKey: chatRoomsQueryKey });
+      await queryClient.invalidateQueries({ queryKey: ["chat-notifications", "rooms"] });
+    };
+
+    void markAsRead();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeRoomId, notificationsByRoom, markNotificationAsReadMutation, queryClient]);
 
   useEffect(() => {
     if (!socket || !activeRoomId) {
@@ -74,8 +137,8 @@ export default function MessagesPage() {
           <div className="shrink-0 md:w-80 lg:w-96">
             <Suspense fallback={<ConversationListSkeleton />}>
               <ConversationsList
-                conversations={rooms}
-                selectedId={selectedConversationId}
+                conversations={roomsWithUnread}
+                selectedId={activeRoomId}
                 onSelect={setSelectedConversationId}
               />
             </Suspense>
@@ -113,8 +176,8 @@ export default function MessagesPage() {
         {/* Mobile Avatar List */}
         <div className="shrink-0 rounded-lg bg-white px-4 py-2 shadow-lg">
           <MobileAvatarsList
-            conversations={rooms}
-            selectedId={selectedConversationId}
+            conversations={roomsWithUnread}
+            selectedId={activeRoomId}
             onSelect={setSelectedConversationId}
             searchQuery={mobileSearchQuery}
           />

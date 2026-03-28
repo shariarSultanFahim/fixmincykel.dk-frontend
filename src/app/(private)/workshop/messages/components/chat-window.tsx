@@ -31,6 +31,7 @@ export function ChatWindow({ room, currentUserId, socket }: ChatWindowProps) {
   const [messageInput, setMessageInput] = useState("");
   const [isSocketConnected, setIsSocketConnected] = useState(socket?.connected ?? false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollToLatestRef = useRef(true);
 
   const {
     data,
@@ -79,6 +80,35 @@ export function ChatWindow({ room, currentUserId, socket }: ChatWindowProps) {
       return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
   }, [data]);
+
+  useEffect(() => {
+    shouldScrollToLatestRef.current = true;
+  }, [room.id]);
+
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element || messages.length === 0) {
+      return;
+    }
+
+    const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+    const isNearBottom = distanceFromBottom < 120;
+
+    if (!shouldScrollToLatestRef.current && !isNearBottom) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      const targetElement = scrollRef.current;
+
+      if (!targetElement) {
+        return;
+      }
+
+      targetElement.scrollTop = targetElement.scrollHeight;
+      shouldScrollToLatestRef.current = false;
+    });
+  }, [messages.length]);
 
   const handleSendMessage = () => {
     const value = messageInput.trim();

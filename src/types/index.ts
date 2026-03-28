@@ -26,6 +26,7 @@ export type {
   ChatMessageStatus,
   ChatMessagesMeta,
   ChatMessagesPage,
+  ChatNotification,
   ChatRoom,
   ChatRoomBooking,
   ChatRoomUser,

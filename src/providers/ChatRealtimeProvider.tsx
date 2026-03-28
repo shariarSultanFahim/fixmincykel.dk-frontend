@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useChatRooms } from "@/lib/actions/chat";
 import { chatMessagesQueryKey } from "@/lib/actions/chat/use-chat-messages";
+import { chatRoomNotificationsQueryKey } from "@/lib/actions/chat/use-chat-notifications";
 import { chatRoomsQueryKey } from "@/lib/actions/chat/use-chat-rooms";
 import { useGetMyProfile } from "@/lib/actions/users/profile.user";
 import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
@@ -64,6 +65,15 @@ function ChatRealtimeBridge({ children, actorId }: ChatRealtimeBridgeProps) {
       void queryClient.refetchQueries({ queryKey: chatMessagesQueryKey(roomId), type: "active" });
       void queryClient.invalidateQueries({ queryKey: chatRoomsQueryKey });
       void queryClient.refetchQueries({ queryKey: chatRoomsQueryKey, type: "active" });
+
+      // Keep unread indicators in sync without requiring a full page refresh.
+      void queryClient.invalidateQueries({ queryKey: chatRoomNotificationsQueryKey(roomId) });
+      void queryClient.refetchQueries({
+        queryKey: chatRoomNotificationsQueryKey(roomId),
+        type: "active"
+      });
+      void queryClient.invalidateQueries({ queryKey: ["chat-notifications"] });
+      void queryClient.refetchQueries({ queryKey: ["chat-notifications"], type: "active" });
     };
 
     socket.on("connect", onConnect);

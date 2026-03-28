@@ -44,6 +44,9 @@ export const post = async <T, B = unknown>(url: string, body?: B, config?: Cfg) 
 export const put = async <T, B = unknown>(url: string, body?: B, config?: Cfg) =>
   (await api.put<T>(url, body, config)).data;
 
+export const patch = async <T, B = unknown>(url: string, body?: B, config?: Cfg) =>
+  (await api.patch<T>(url, body, config)).data;
+
 export const del = async <T>(url: string, config?: Cfg) => (await api.delete<T>(url, config)).data;
 
 const getCookieValue = (name: string): string | null => {

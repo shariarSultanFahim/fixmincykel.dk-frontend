@@ -59,6 +59,18 @@ export interface ChatMessage {
   status: ChatMessageStatus;
 }
 
+export interface ChatNotification {
+  id: string;
+  chatRoomId: string;
+  messageId: string;
+  triggeredById: string;
+  title: string;
+  body: string;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ChatMessagesMeta {
   hasNextPage?: boolean;
   nextCursor?: string | null;

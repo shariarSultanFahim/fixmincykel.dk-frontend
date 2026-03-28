@@ -83,6 +83,11 @@ export function ConversationsList({ conversations, selectedId, onSelect }: Conve
               }`}
             >
               <div className="flex items-start gap-2 md:gap-3">
+                <div
+                  className={`mt-1 h-2 w-2 shrink-0 rounded-full md:mt-2 ${
+                    conversation.unreadCount > 0 ? "bg-primary" : "bg-transparent"
+                  }`}
+                />
                 <div className="min-w-0 flex-1">
                   <h3 className="text-xs font-semibold text-navy md:text-sm">
                     {conversation.workshop?.workshopName ?? conversation.user?.name ?? "Unknown"}
