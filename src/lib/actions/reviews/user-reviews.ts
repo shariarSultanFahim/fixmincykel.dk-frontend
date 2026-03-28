@@ -2,8 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { get, post } from "@/lib/api";
-
 import type {
   PendingReviewApiResponse,
   ReviewCreatePayload,
@@ -11,13 +9,16 @@ import type {
   UserReviewsApiResponse
 } from "@/types/review";
 
+import { get, post } from "@/lib/api";
+
 export const pendingReviewsQueryKey = ["user-reviews", "pending"] as const;
 export const userReviewsQueryKey = (userId?: string) => ["user-reviews", "list", userId] as const;
 
 export const useGetPendingReviews = () => {
   return useQuery({
     queryKey: pendingReviewsQueryKey,
-    queryFn: ({ signal }) => get<PendingReviewApiResponse>("/review/pending-reviews/get", { signal })
+    queryFn: ({ signal }) =>
+      get<PendingReviewApiResponse>("/review/pending-reviews/get", { signal })
   });
 };
 

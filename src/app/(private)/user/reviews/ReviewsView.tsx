@@ -7,13 +7,12 @@ import { toast } from "sonner";
 
 import type { PendingReview, ReviewFormDialogState, ReviewItem } from "@/types/review";
 
-import { useGetMyProfile } from "@/lib/actions/users/profile.user";
 import {
   useCreateReview,
   useGetPendingReviews,
   useGetUserReviews
 } from "@/lib/actions/reviews/user-reviews";
-
+import { useGetMyProfile } from "@/lib/actions/users/profile.user";
 import { cn } from "@/lib/utils";
 
 import { Separator } from "@/ui";

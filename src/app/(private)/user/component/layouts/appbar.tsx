@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 import {
   CalendarHeartIcon,
-  GitCompare,
   Home,
   LayoutDashboard,
   ListTodo,
@@ -52,11 +51,6 @@ const data = {
           title: "My Repairs",
           url: `/user/repairs`,
           icon: ListTodo
-        },
-        {
-          title: "Compare Offers",
-          url: `/user/offers`,
-          icon: GitCompare
         },
         {
           title: "My Bookings",

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
-import { CheckCircle, Star } from "lucide-react";
+import { CheckCircle, GitCompare, Star } from "lucide-react";
 
 import type { JobOffer } from "@/types/jobs-manage";
 
@@ -64,10 +65,16 @@ export function OffersTable({ jobId }: OffersTableProps) {
   return (
     <div className="space-y-4">
       <Card className="rounded-3xl border-none shadow-sm">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle className="text-base text-navy">
             Offers from Workshops ({meta?.total ?? 0})
           </CardTitle>
+          <Link href={`/user/offers?jobId=${jobId}`}>
+            <Button size="sm" variant="outline" className="gap-2">
+              <GitCompare className="size-4" />
+              Compare Offers
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>

@@ -14,9 +14,9 @@ export function PendingReviewCard({ pendingReview, onOpen }: PendingReviewCardPr
     event.stopPropagation();
     handleOpen();
   };
-  const handleActionClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-  };
+  // const handleActionClick = (event: MouseEvent<HTMLButtonElement>) => {
+  //   event.stopPropagation();
+  // };
 
   return (
     <Card className="border-0 bg-[#FEFCE8]">
