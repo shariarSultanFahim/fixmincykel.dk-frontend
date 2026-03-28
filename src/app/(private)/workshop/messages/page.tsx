@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -25,6 +26,8 @@ import {
 export default function MessagesPage() {
   const [selectedConversationId, setSelectedConversationId] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const appliedRouteSelectionRef = useRef("");
 
   const { data: profileData } = useGetMyWorkshopProfile();
   const currentUserId = profileData?.data?.id ?? "";
@@ -48,15 +51,66 @@ export default function MessagesPage() {
     return rooms.map((room) => {
       const notifications = notificationsByRoom[room.id] ?? [];
       const unreadCount = notifications.filter((notification) => !notification.isRead).length;
+      const latestNotification = notifications.reduce((latest, current) => {
+        if (!latest) {
+          return current;
+        }
+
+        return new Date(current.createdAt).getTime() > new Date(latest.createdAt).getTime()
+          ? current
+          : latest;
+      }, notifications[0]);
+
+      const fallbackLastMessage =
+        room.lastMessage ??
+        (latestNotification
+          ? {
+              id: latestNotification.messageId,
+              roomId: room.id,
+              senderId: latestNotification.triggeredById,
+              content: latestNotification.body,
+              createdAt: latestNotification.createdAt,
+              updatedAt: latestNotification.updatedAt,
+              isRead: latestNotification.isRead,
+              type: "TEXT"
+            }
+          : null);
 
       return {
         ...room,
-        unreadCount
+        unreadCount,
+        lastMessage: fallbackLastMessage,
+        lastMessageAt: room.lastMessageAt ?? latestNotification?.createdAt ?? null
       };
     });
   }, [notificationsByRoom, rooms]);
 
   const selectedConversation = roomsWithUnread.find((room) => room.id === activeRoomId);
+
+  useEffect(() => {
+    const routeRoomId = searchParams.get("roomId");
+    const routeBookingId = searchParams.get("bookingId");
+    const routeSelectionKey = `${routeRoomId ?? ""}|${routeBookingId ?? ""}`;
+
+    if (!routeRoomId && !routeBookingId) {
+      return;
+    }
+
+    if (!roomsWithUnread.length || appliedRouteSelectionRef.current === routeSelectionKey) {
+      return;
+    }
+
+    const targetRoom = routeRoomId
+      ? roomsWithUnread.find((room) => room.id === routeRoomId)
+      : roomsWithUnread.find((room) => room.bookingId === routeBookingId);
+
+    if (!targetRoom) {
+      return;
+    }
+
+    setSelectedConversationId(targetRoom.id);
+    appliedRouteSelectionRef.current = routeSelectionKey;
+  }, [roomsWithUnread, searchParams]);
 
   useEffect(() => {
     if (!activeRoomId || !notificationsByRoom?.[activeRoomId]?.length) {

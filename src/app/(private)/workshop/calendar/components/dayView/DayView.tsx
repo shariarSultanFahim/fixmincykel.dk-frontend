@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { formatDate, isToday } from "@/lib/date";
 import { cn } from "@/lib/utils";
 
@@ -87,8 +89,8 @@ export function DayView({ data }: DayViewProps) {
               {booking.status === "upcoming" && (
                 <>
                   <StartBookingDialog booking={booking} currency={data.currency} />
-                  <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-                    Message
+                  <Button asChild size="sm" className="bg-primary text-white hover:bg-primary/90">
+                    <Link href={`/workshop/messages?bookingId=${booking.id}`}>Message</Link>
                   </Button>
                   <RescheduleBookingDialog booking={booking} currency={data.currency} />
                 </>
