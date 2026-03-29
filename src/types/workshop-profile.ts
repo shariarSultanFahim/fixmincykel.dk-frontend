@@ -15,10 +15,19 @@ export interface WorkshopMeCategory {
   updatedAt: string;
 }
 
+export type WorkshopWeekDay =
+  | "SUNDAY"
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY";
+
 export interface WorkshopMeOpeningHour {
   id: string;
   workshopId: string;
-  day: string;
+  day: WorkshopWeekDay;
   openTime: string | null;
   closeTime: string | null;
   isClosed: boolean;
@@ -111,23 +120,58 @@ export interface WorkshopCategoryMutationResponse {
   data: WorkshopCategoryItem;
 }
 
-export interface WorkshopOpeningHours {
-  weekdaysStart: string;
-  weekdaysEnd: string;
-  saturdayStart: string;
-  saturdayEnd: string;
+export interface WorkshopOpeningHourFormValue {
+  day: WorkshopWeekDay;
+  openTime: string;
+  closeTime: string;
+  isClosed: boolean;
 }
 
-export interface WorkshopNotifications {
-  email: boolean;
-  sms: boolean;
-  inApp: boolean;
+export interface WorkshopOpeningHourItem {
+  id: string;
+  workshopId: string;
+  day: WorkshopWeekDay;
+  openTime: string;
+  closeTime: string;
+  isClosed: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkshopOpeningHourListResponse {
+  success: boolean;
+  message: string;
+  data: WorkshopOpeningHourItem[];
+}
+
+export interface CreateWorkshopOpeningHourPayload {
+  workshopId: string;
+  day: WorkshopWeekDay;
+  openTime: string;
+  closeTime: string;
+  isClosed: boolean;
+}
+
+export interface UpdateWorkshopOpeningHourPayload {
+  openTime: string;
+  closeTime: string;
+  isClosed: boolean;
+}
+
+export interface UpdateWorkshopOpeningHourInput {
+  openingHourId: string;
+  data: UpdateWorkshopOpeningHourPayload;
+}
+
+export interface WorkshopOpeningHourMutationResponse {
+  success: boolean;
+  message: string;
+  data: WorkshopOpeningHourItem;
 }
 
 export interface WorkshopServiceSettings {
   serviceCategories: string[];
-  openingHours: WorkshopOpeningHours;
-  notifications: WorkshopNotifications;
+  openingHours: WorkshopOpeningHourFormValue[];
 }
 
 export interface WorkshopProfileData {

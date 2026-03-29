@@ -2,13 +2,23 @@
 
 import { Settings } from "lucide-react";
 
-import { getTimeByDay, useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
+import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WorkshopProfileData } from "@/types";
 
 import { WorkshopProfileForm } from "./components/form/profile.form";
 import { WorkshopServiceForm } from "./components/form/service.form";
+
+const WORKSHOP_DAYS = [
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY"
+] as const;
 
 function ProfilePageSkeleton() {
   return (
@@ -50,17 +60,12 @@ export default function ProfilePage() {
     },
     service: {
       serviceCategories: [],
-      openingHours: {
-        weekdaysStart: getTimeByDay(workshop?.workshopOpeningHours ?? [], "TUESDAY").open,
-        weekdaysEnd: getTimeByDay(workshop?.workshopOpeningHours ?? [], "TUESDAY").close,
-        saturdayStart: getTimeByDay(workshop?.workshopOpeningHours ?? [], "SATURDAY").open,
-        saturdayEnd: getTimeByDay(workshop?.workshopOpeningHours ?? [], "SATURDAY").close
-      },
-      notifications: {
-        email: true,
-        sms: false,
-        inApp: true
-      }
+      openingHours: WORKSHOP_DAYS.map((day) => ({
+        day,
+        openTime: "09:00",
+        closeTime: "18:00",
+        isClosed: false
+      }))
     }
   };
 

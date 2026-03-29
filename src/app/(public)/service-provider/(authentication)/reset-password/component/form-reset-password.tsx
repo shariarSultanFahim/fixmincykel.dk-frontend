@@ -9,7 +9,7 @@ import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useResetPassword } from "@/lib/actions/auth/reset-password";
+import { useWorkshopResetPassword } from "@/lib/actions/auth/reset-password.workshop";
 
 import {
   Button,
@@ -27,7 +27,7 @@ import { createResetPasswordSchema, type ResetPasswordFormValues } from "./reset
 export function FormResetPassword() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const resetPasswordMutation = useResetPassword();
+  const resetPasswordMutation = useWorkshopResetPassword();
   const token = searchParams.get("token")?.trim() ?? "";
   const hasToken = token.length > 0;
 

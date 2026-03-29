@@ -23,9 +23,9 @@ export type {
   ApiResponse,
   ChatMessage,
   ChatMessageEntity,
+  ChatMessageStatus,
   ChatMessagesMeta,
   ChatMessagesPage,
-  ChatMessageStatus,
   ChatNotification,
   ChatRoom,
   ChatRoomBooking,
@@ -45,10 +45,10 @@ export type {
   WorkshopInvoiceItem
 } from "./invoice-report";
 export type {
-  CreatedJob,
   CreateJobCategoryInput,
   CreateJobInput,
   CreateJobResponse,
+  CreatedJob,
   JobCategoryListPayload,
   JobCategoryListResponse,
   JobCategoryOption
@@ -99,6 +99,9 @@ export type {
   UserRepairQueryParams
 } from "./user-repair";
 export type {
+  CreateWorkshopOpeningHourPayload,
+  UpdateWorkshopOpeningHourInput,
+  UpdateWorkshopOpeningHourPayload,
   UpdateWorkshopProfileInput,
   UpdateWorkshopProfilePayload,
   WorkshopCategoryItem,
@@ -107,11 +110,14 @@ export type {
   WorkshopCategoryMutationResponse,
   WorkshopMeData,
   WorkshopMeResponse,
-  WorkshopNotifications,
-  WorkshopOpeningHours,
+  WorkshopOpeningHourFormValue,
+  WorkshopOpeningHourItem,
+  WorkshopOpeningHourListResponse,
+  WorkshopOpeningHourMutationResponse,
   WorkshopProfileData,
   WorkshopProfileFormProps,
   WorkshopProfileInfo,
   WorkshopServiceFormProps,
-  WorkshopServiceSettings
+  WorkshopServiceSettings,
+  WorkshopWeekDay
 } from "./workshop-profile";

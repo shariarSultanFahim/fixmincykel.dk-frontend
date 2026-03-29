@@ -3,12 +3,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type {
+  CreateWorkshopOpeningHourPayload,
+  UpdateWorkshopOpeningHourInput,
   UpdateWorkshopProfileInput,
   WorkshopCategoryListResponse,
   WorkshopCategoryMutationPayload,
   WorkshopCategoryMutationResponse,
-  WorkshopMeData,
-  WorkshopMeResponse
+  WorkshopMeResponse,
+  WorkshopOpeningHourListResponse,
+  WorkshopOpeningHourMutationResponse
 } from "@/types/workshop-profile";
 
 import { api as instance } from "@/lib/api";
@@ -108,15 +111,53 @@ export const useRemoveWorkshopCategory = () => {
   });
 };
 
-export const getTimeByDay = (
-  openingHours: WorkshopMeData["workshopOpeningHours"],
-  day: string
-): { open: string; close: string } => {
-  const item = openingHours.find((hour) => hour.day === day);
+export const useGetWorkshopOpeningHours = (workshopId?: string, enabled = true) => {
+  return useQuery({
+    queryKey: ["workshop-opening-hours", workshopId],
+    enabled: enabled && Boolean(workshopId),
+    queryFn: async () => {
+      const response = await instance.get<WorkshopOpeningHourListResponse>(
+        `/workshop-opening-hour/workshop/${workshopId}`
+      );
+      return response.data;
+    }
+  });
+};
 
-  if (!item || item.isClosed || !item.openTime || !item.closeTime) {
-    return { open: "09:00", close: "18:00" };
-  }
+export const useCreateWorkshopOpeningHour = () => {
+  const queryClient = useQueryClient();
 
-  return { open: item.openTime.slice(0, 5), close: item.closeTime.slice(0, 5) };
+  return useMutation({
+    mutationFn: async (payload: CreateWorkshopOpeningHourPayload) => {
+      const response = await instance.post<WorkshopOpeningHourMutationResponse>(
+        "/workshop-opening-hour",
+        payload
+      );
+      return response.data;
+    },
+    onSuccess: async (_, payload) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["workshop-opening-hours", payload.workshopId]
+      });
+      await queryClient.invalidateQueries({ queryKey: ["workshop-profile", "me"] });
+    }
+  });
+};
+
+export const useUpdateWorkshopOpeningHour = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: UpdateWorkshopOpeningHourInput) => {
+      const response = await instance.patch<WorkshopOpeningHourMutationResponse>(
+        `/workshop-opening-hour/${payload.openingHourId}`,
+        payload.data
+      );
+      return response.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["workshop-opening-hours"] });
+      await queryClient.invalidateQueries({ queryKey: ["workshop-profile", "me"] });
+    }
+  });
 };

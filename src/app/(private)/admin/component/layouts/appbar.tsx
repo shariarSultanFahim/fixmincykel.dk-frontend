@@ -9,7 +9,6 @@ import {
   BriefcaseBusiness,
   CircleFadingPlus,
   ClipboardList,
-  CreditCard,
   Folder,
   LayoutDashboard,
   LogOut,
@@ -69,11 +68,11 @@ const data = {
           url: "/admin/bookings",
           icon: Folder
         },
-        {
-          title: "Payments & Fees",
-          url: "/admin/payments",
-          icon: CreditCard
-        },
+        // {
+        //   title: "Payments & Fees",
+        //   url: "/admin/payments",
+        //   icon: CreditCard
+        // },
         {
           title: "Review Moderation",
           url: "/admin/reviews",
