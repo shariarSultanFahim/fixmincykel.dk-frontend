@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { Resolver, useForm } from "react-hook-form";
 
-import type { CreateJobInput } from "@/types/job-create";
+import { BikeType, type CreateJobInput } from "@/types/job-create";
 import { AUTH_SESSION_COOKIE } from "@/constants/auth";
 
 import { useCreateJob } from "@/lib/actions/jobs/create.job";
@@ -110,22 +110,13 @@ const toPreferredTimeIso = (preferredDate: Date, preferredTime: string, customTi
 
 const resolveBikeType = (bikeType: string): CreateJobInput["bikeType"] => {
   const normalized = bikeType.trim().toUpperCase().replace(/\s+/g, "_");
-  const allowedBikeTypes: CreateJobInput["bikeType"][] = [
-    "ROAD",
-    "MOUNTAIN",
-    "HYBRID",
-    "ELECTRIC",
-    "BMX",
-    "GRAVEL",
-    "CRUISER",
-    "OTHER"
-  ];
+  const allowedBikeTypes = Object.values(BikeType);
 
   if (allowedBikeTypes.includes(normalized as CreateJobInput["bikeType"])) {
     return normalized as CreateJobInput["bikeType"];
   }
 
-  return "OTHER";
+  return BikeType.OTHER;
 };
 
 const hasAuthenticatedSession = () => {
