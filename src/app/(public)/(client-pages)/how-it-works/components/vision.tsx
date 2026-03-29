@@ -2,14 +2,30 @@
 
 import Image from "next/image";
 
-import { HOW_IT_WORKS_STATS } from "@/constants/how-it-works";
-
 import VisionImage from "@/assets/images/yellow-cycle.jpg";
+import { useGetVisionStatistics } from "@/lib/actions/vision-statistics/get-vision-statistics";
 
 import { useCopy } from "@/hooks/use-copy";
 
 export default function Vision() {
   const { t } = useCopy("HowItWorksVision");
+  const { data: visionStatisticsResponse } = useGetVisionStatistics();
+  const statistics = visionStatisticsResponse?.data;
+
+  const statItems = [
+    {
+      value: statistics?.totalApprovedWorkshops ?? 0,
+      label: t("stats.workshops.label")
+    },
+    {
+      value: statistics?.totalJobsCompleted ?? 0,
+      label: t("stats.repairs.label")
+    },
+    {
+      value: statistics?.totalReviews ?? 0,
+      label: t("stats.reviews.label")
+    }
+  ];
 
   return (
     <section className="bg-[#F9FFFE] py-10 md:py-14">
@@ -37,15 +53,15 @@ export default function Vision() {
             <p className="text-base leading-relaxed text-navy/80 md:text-lg">{t("body")}</p>
 
             <div className="i mt-4 grid grid-cols-3 justify-items-center gap-4">
-              {HOW_IT_WORKS_STATS.map((item) => (
+              {statItems.map((item, index) => (
                 <div
-                  key={item.valueKey}
+                  key={index}
                   className="flex flex-col gap-1 border-primary/30 sm:border-l sm:pl-4 sm:first:border-l-0 sm:first:pl-0"
                 >
                   <span className="text-xl font-bold text-primary md:text-2xl">
-                    {t(item.valueKey)}
+                    {item.value.toLocaleString()}
                   </span>
-                  <span className="text-sm font-semibold text-navy/70">{t(item.labelKey)}</span>
+                  <span className="text-sm font-semibold text-navy/70">{item.label}</span>
                 </div>
               ))}
             </div>

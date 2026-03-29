@@ -52,6 +52,27 @@ export interface UserReviewsApiResponse {
   data: UserReviewApiItem[];
 }
 
+export interface PublicReviewApiItem {
+  id: string;
+  rating: number;
+  comment: string;
+  isFlagged: boolean;
+  isHidden: boolean;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+}
+
+export interface PublicReviewsApiResponse {
+  success: boolean;
+  message: string;
+  data: PublicReviewApiItem[];
+}
+
 export interface ReviewCreatePayload {
   bookingId: string;
   userId: string;
