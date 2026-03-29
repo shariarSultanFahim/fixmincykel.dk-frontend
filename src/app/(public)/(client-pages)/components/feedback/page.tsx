@@ -29,7 +29,7 @@ export default function Feedback() {
   }, [publicReviewsResponse]);
 
   if (!isLoading && feedbacks.length === 0) {
-    return <div />;
+    return <div className="" />;
   }
 
   return (
