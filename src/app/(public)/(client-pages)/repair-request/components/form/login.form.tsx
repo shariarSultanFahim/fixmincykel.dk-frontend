@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import type { LoginErrorResponse } from "@/types/auth";
 import { AUTH_SESSION_COOKIE } from "@/constants/auth";
 
 import { buildSessionFromLoginResponse, useLogin } from "@/lib/actions/auth/login";
 import { useRegister } from "@/lib/actions/auth/register";
-import { buildSessionFromVerifyUserResponse, useResendOTP, useVerifyUser } from "@/lib/actions/auth/verify-user";
+import {
+  buildSessionFromVerifyUserResponse,
+  useResendOTP,
+  useVerifyUser
+} from "@/lib/actions/auth/verify-user";
 import { cookie } from "@/lib/cookie-client";
 
 import { useToast } from "@/hooks";

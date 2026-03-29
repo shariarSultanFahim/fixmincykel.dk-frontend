@@ -140,7 +140,7 @@ export function PhotoForm({ form }: PhotoFormProps) {
                     className="hidden"
                   />
 
-                    {photoCount === 0 ? (
+                  {photoCount === 0 ? (
                     <>
                       <div className="rounded-full bg-primary/10 p-6">
                         <Upload className="h-12 w-12 text-primary" />

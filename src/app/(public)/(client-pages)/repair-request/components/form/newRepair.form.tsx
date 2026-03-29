@@ -209,10 +209,9 @@ export function NewRepairForm() {
 
       const payload: CreateJobInput = {
         title: data.details.repairIssue?.trim() || fallbackTitle,
-        description:
-          data.dateTime.additionalNotes?.trim()
-            ? `${descriptionSections} | Notes: ${data.dateTime.additionalNotes.trim()}`
-            : descriptionSections,
+        description: data.dateTime.additionalNotes?.trim()
+          ? `${descriptionSections} | Notes: ${data.dateTime.additionalNotes.trim()}`
+          : descriptionSections,
         address,
         city: city.trim() || "Kobenhavn",
         postalCode: postalCode.trim() || "0000",
