@@ -2,6 +2,8 @@
 
 import { UseFormReturn } from "react-hook-form";
 
+import { useGetCategories } from "@/lib/actions/jobs/get.categories";
+
 import { Calendar } from "@/components/ui";
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -40,8 +42,13 @@ const TIME_SLOTS = {
 
 export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
   // const [openDatePicker, setOpenDatePicker] = useState(false);
+  const { data: categoriesResponse } = useGetCategories();
 
   const formData = form.getValues();
+  const selectedCategoryId = formData.details.categories?.[0]?.categoryId;
+  const selectedCategoryName =
+    categoriesResponse?.data.data.find((category) => category.id === selectedCategoryId)?.name ||
+    "Not selected";
 
   return (
     <div className="space-y-8">
@@ -54,9 +61,7 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
           <div className="space-y-3 text-sm">
             <div>
               <span className="font-semibold text-navy">Category:</span>{" "}
-              <span className="text-gray-700">
-                {formData.details.categories?.[0]?.category || "Not selected"}
-              </span>
+              <span className="text-gray-700">{selectedCategoryName}</span>
             </div>
             <div>
               <span className="font-semibold text-navy">Photos:</span>{" "}
@@ -174,7 +179,7 @@ export function ReviewSubmitForm({ form }: ReviewSubmitFormProps) {
                         placeholder="Enter time: HH:MM AM/PM"
                         className="border-gray-200 bg-white text-navy"
                         onChange={(e) => {
-                          field.onChange(e);
+                          field.onChange(e.target.value);
                           if (e.target.value) {
                             form.setValue("dateTime.preferredTime", "");
                           }
