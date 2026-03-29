@@ -6,6 +6,8 @@ import type { JobOffer } from "@/types/jobs-manage";
 
 import { useGetJobOffers } from "@/lib/actions/jobs/offers.job";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { OfferCard } from "./offer-card";
 
 interface Offer {
@@ -98,10 +100,9 @@ export function OffersGrid({ jobId }: OffersGridProps) {
   if (jobId && isLoading) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, index) => {
-          const { Skeleton } = require("@/components/ui/skeleton");
-          return <Skeleton key={index} className="h-64" />;
-        })}
+        {[...Array(6)].map((_, index) => (
+          <Skeleton key={index} className="h-64" />
+        ))}
       </div>
     );
   }

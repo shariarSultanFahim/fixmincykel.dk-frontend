@@ -14,10 +14,7 @@ import { api as instance } from "@/lib/api";
 export const useCreatePlatformCategory = () => {
   return useMutation({
     mutationFn: async (payload: CreatePlatformCategoryPayload) => {
-      const response = await instance.post<
-        PlatformCategoryMutationResponse,
-        CreatePlatformCategoryPayload
-      >("/category", payload);
+      const response = await instance.post<PlatformCategoryMutationResponse>("/category", payload);
 
       return response.data;
     }
@@ -39,10 +36,7 @@ export const useDeletePlatformCategory = () => {
 export const useUpdatePlatformData = () => {
   return useMutation({
     mutationFn: async (payload: UpdatePlatformDataPayload) => {
-      const response = await instance.patch<PlatformDataResponse, UpdatePlatformDataPayload>(
-        "/platform-data",
-        payload
-      );
+      const response = await instance.patch<PlatformDataResponse>("/platform-data", payload);
 
       return response.data;
     }

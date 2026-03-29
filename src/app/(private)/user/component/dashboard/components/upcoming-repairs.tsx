@@ -16,6 +16,7 @@ export function UpcomingRepairs() {
   const [isOpen, setIsOpen] = React.useState(false);
   const repairs = [
     {
+      bookingId: "booking-demo-1",
       time: "Tomorrow, 09:00",
       service: "Brake Repair",
       workshop: "Copenhagen Bike Repair",
@@ -64,6 +65,7 @@ export function UpcomingRepairs() {
                 </DialogTrigger>
                 <DialogContent className="border-0">
                   <RescheduleForm
+                    bookingId={repair.bookingId}
                     bookingTitle={repair.service}
                     onCompleted={() => setIsOpen(false)}
                   />

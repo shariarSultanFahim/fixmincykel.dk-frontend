@@ -23,16 +23,15 @@ export type {
   ApiResponse,
   ChatMessage,
   ChatMessageEntity,
-  ChatMessageStatus,
   ChatMessagesMeta,
   ChatMessagesPage,
+  ChatMessageStatus,
   ChatNotification,
   ChatRoom,
   ChatRoomBooking,
   ChatRoomUser,
   ChatRoomWorkshop,
-  SendMessageInput,
-  SendMessageVariables
+  SendMessageInput
 } from "./chat";
 export type { DataTableProps } from "./data-table";
 export type { FaqItem } from "./faq-item";
@@ -46,10 +45,10 @@ export type {
   WorkshopInvoiceItem
 } from "./invoice-report";
 export type {
+  CreatedJob,
   CreateJobCategoryInput,
   CreateJobInput,
   CreateJobResponse,
-  CreatedJob,
   JobCategoryListPayload,
   JobCategoryListResponse,
   JobCategoryOption

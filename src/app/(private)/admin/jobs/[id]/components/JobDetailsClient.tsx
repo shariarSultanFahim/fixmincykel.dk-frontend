@@ -28,7 +28,7 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
   }
 
   const job = jobResponse.data;
-  const offers = offersResponse?.data ?? [];
+  const offers = offersResponse?.data?.data ?? [];
 
   return (
     <div className="space-y-6">
