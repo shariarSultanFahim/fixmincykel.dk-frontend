@@ -1,5 +1,4 @@
 import GetStarted from "./components/get-started";
-import RegisterService from "./components/register";
 import Requirements from "./components/requirements";
 
 export default function ServiceExplore() {
@@ -7,7 +6,7 @@ export default function ServiceExplore() {
     <section className="container">
       <GetStarted />
       <Requirements />
-      <RegisterService />
+      {/* <RegisterService /> */}
     </section>
   );
 }

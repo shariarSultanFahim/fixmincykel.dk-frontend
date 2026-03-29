@@ -9,7 +9,7 @@ import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useForgetPassword } from "@/lib/actions/auth/forget-password";
+import { useWorkshopForgetPassword } from "@/lib/actions/auth/forget-password.workshop";
 
 import {
   Button,
@@ -29,7 +29,7 @@ import {
 
 export function FormForgetPassword() {
   const [successMessage, setSuccessMessage] = useState("");
-  const forgetPasswordMutation = useForgetPassword();
+  const forgetPasswordMutation = useWorkshopForgetPassword();
 
   const form = useForm<ForgetPasswordFormValues>({
     resolver: zodResolver(createForgetPasswordSchema()),
