@@ -6,6 +6,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { DashboardThemeProvider, UserChatRealtimeProvider } from "@/providers";
 
 import { UserAppBar } from "./component/layouts/appbar";
+import { UserNotificationPopover } from "./component/layouts/user-notification-popover";
 
 function UserLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +22,9 @@ function UserLayout({ children }: { children: React.ReactNode }) {
                 className="mr-2 bg-primary data-[orientation=vertical]:h-4"
               />
               <DynamicBreadcrumb />
+              <div className="ml-auto">
+                <UserNotificationPopover />
+              </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 overflow-y-hidden bg-background p-4">
               {children}

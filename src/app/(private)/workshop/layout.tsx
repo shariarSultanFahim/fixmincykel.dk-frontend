@@ -6,6 +6,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { DashboardThemeProvider, WorkshopChatRealtimeProvider } from "@/providers";
 
 import { WorkshopAppBar } from "./component/layouts/appbar";
+import { WorkshopNotificationPopover } from "./component/layouts/workshop-notification-popover";
 
 function WorkshopLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +22,9 @@ function WorkshopLayout({ children }: { children: React.ReactNode }) {
                 className="mr-2 bg-primary data-[orientation=vertical]:h-4"
               />
               <DynamicBreadcrumb />
+              <div className="ml-auto">
+                <WorkshopNotificationPopover />
+              </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 overflow-y-hidden bg-background p-4">
               {children}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { ChevronLeft, Chrome, Facebook } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -132,23 +132,6 @@ export function FormLogin() {
               </Button>
             </form>
           </Form>
-
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            <span>{tLogin("orContinue")}</span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
-            <Button variant="outline" className="gap-2">
-              <Chrome className="size-4" />
-              {tLogin("google")}
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Facebook className="size-4" />
-              {tLogin("facebook")}
-            </Button>
-          </div>
 
           <p className="text-center text-sm text-muted-foreground">
             {tLogin("newTo")}{" "}

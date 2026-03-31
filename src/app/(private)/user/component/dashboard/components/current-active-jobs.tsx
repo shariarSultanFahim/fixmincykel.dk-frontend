@@ -43,11 +43,7 @@ export function CurrentActiveJobs() {
         <h2 className="flex items-center gap-2 text-lg font-semibold text-navy">
           <span>⚙️</span> Current Active Jobs
         </h2>
-        <div className="space-y-4">
-          {Array.from({ length: 2 }).map((_, idx) => (
-            <Skeleton key={idx} className="h-32 w-full rounded" />
-          ))}
-        </div>
+        <Skeleton className="h-32 w-full rounded" />
       </div>
     );
   }

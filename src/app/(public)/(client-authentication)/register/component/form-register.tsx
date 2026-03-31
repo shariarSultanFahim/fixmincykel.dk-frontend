@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Check, ChevronLeft, Chrome, Facebook } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -182,23 +182,6 @@ export function FormRegister() {
               </Button>
             </form>
           </Form>
-
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            <span>{tRegister("orContinue")}</span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
-            <Button variant="outline" className="gap-2">
-              <Chrome className="size-4" />
-              {tRegister("google")}
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Facebook className="size-4" />
-              {tRegister("facebook")}
-            </Button>
-          </div>
 
           <div className="rounded-2xl bg-muted/60 p-4 text-sm text-navy">
             <p className="mb-3 font-light">{tRegister("nextStepsTitle")}</p>

@@ -3,8 +3,7 @@ import {
   QuickActions,
   QuickStatusCards,
   RecentActivity,
-  RecentOffers,
-  UpcomingRepairs
+  RecentOffers
 } from "./component/dashboard/components";
 
 export default function DashboardPage() {
@@ -20,7 +19,7 @@ export default function DashboardPage() {
         {/* Left Column */}
         <div className="space-y-8 lg:col-span-2">
           <CurrentActiveJobs />
-          <UpcomingRepairs />
+          {/* <UpcomingRepairs /> */}
         </div>
 
         {/* Right Column */}

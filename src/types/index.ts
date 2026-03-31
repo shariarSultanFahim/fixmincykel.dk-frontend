@@ -53,6 +53,7 @@ export type {
   JobCategoryListResponse,
   JobCategoryOption
 } from "./job-create";
+export type { Notification, NotificationEventType } from "./notification";
 export type { PartnerBenefit } from "./partner-benefit";
 export type {
   CreatePlatformCategoryPayload,
