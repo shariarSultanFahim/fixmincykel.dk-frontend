@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
         hostname: "10.10.7.111",
         port: "4000",
         pathname: "/**"
+      },
+      {
+        protocol: "http",
+        hostname: "187.77.23.76",
+        port: "4000",
+        pathname: "/**"
+
       }
     ]
   },
