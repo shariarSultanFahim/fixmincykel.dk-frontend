@@ -9,14 +9,14 @@ const controlItems = [
     label: "Delete Review",
     description: "Permanently remove from the platform"
   },
-  {
-    label: "Flag User",
-    description: "Mark user for further investigation"
-  },
-  {
-    label: "View Booking Context",
-    description: "See full booking details related to the review"
-  }
+  // {
+  //   label: "Flag User",
+  //   description: "Mark user for further investigation"
+  // },
+  // {
+  //   label: "View Booking Context",
+  //   description: "See full booking details related to the review"
+  // }
 ];
 
 export default function AdminControls() {
