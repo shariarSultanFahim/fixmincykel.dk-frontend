@@ -346,12 +346,6 @@ export function FormRegister() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
-            <span>Already applied?</span>
-            <Link href="/service-provider/application-status" className="text-navy hover:underline">
-              Check status
-            </Link>
-            <span>•</span>
-            <span>Existing partner?</span>
             <Link href="/service-provider/login" className="text-navy hover:underline">
               Log in
             </Link>
