@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-
 import bundleAnalyzer from "@next/bundle-analyzer";
 import type { RuleSetRule } from "webpack";
 
@@ -10,6 +9,18 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   htmlLimitedBots: /.*/,
+
+  // 1. ADD THE REWRITE HERE
+  async rewrites() {
+    return [
+      {
+        // When you call '/api-proxy/login', it goes here:
+        source: '/api-proxy/:path*',
+        destination: 'http://187.77.23.76/api/v1/:path*',
+      },
+    ];
+  },
+
   turbopack: {
     rules: {
       "*.svg": {
@@ -35,6 +46,13 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "10.10.7.111",
         port: "4000",
+        pathname: "/**"
+      },
+      // Added your dev IP here just in case you need to load images from it too
+      {
+        protocol: "http",
+        hostname: "187.77.23.76",
+        port: "",
         pathname: "/**"
       }
     ]
