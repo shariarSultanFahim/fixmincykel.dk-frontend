@@ -16,7 +16,7 @@ export default function NewsTipsMaintenance() {
       <div className="flex flex-col items-center gap-3 text-center">
         <Title title="News, tips & maintenance" subtitle="" />
         <Link
-          href="/news"
+          href="/explore"
           className="inline-flex items-center gap-2 text-sm font-semibold text-navy"
           aria-label="See all news, tips & maintenance articles"
         >
