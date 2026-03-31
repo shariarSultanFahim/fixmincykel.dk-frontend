@@ -1,54 +1,46 @@
+"use client";
+
+import { useMemo } from "react";
+
+import type { PublicReviewApiItem } from "@/types/review";
+
+import { useGetPublicReviews } from "@/lib/actions/reviews/public-reviews";
+
 import Title from "../section-title";
 import { FeedbackCarousel } from "./carousel";
 
 export default function Feedback() {
-  const feedbacks = [
-    {
-      id: 1,
-      name: "John Doe",
-      title: "Cyclist",
-      feedback: "Great service! My bike was fixed in no time. Highly recommend FixMinCykel.dk!",
-      avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=JohnDoe"
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      title: "Commuter",
-      feedback:
-        "I love how easy it is to book a repair. Highly recommend! My bike is running smoothly again.",
-      avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=JaneSmith"
-    },
-    {
-      id: 3,
-      name: "Mike Johnson",
-      title: "Mountain Biker",
-      feedback:
-        "The mechanics are very skilled. My bike rides like new again.  Thank you, FixMinCykel.dk!",
-      avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=MikeJohnson"
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      title: "Road Cyclist",
-      feedback:
-        "Fast and reliable service. I won't go anywhere else for bike repairs.  FixMinCykel.dk is the best!",
-      avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=EmilyDavis"
-    },
-    {
-      id: 5,
-      name: "David Wilson",
-      title: "Casual Rider",
-      feedback:
-        "Affordable prices and great customer service. I'm very satisfied. FixMinCykel.dk is my go-to for bike repairs!",
-      avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=DavidWilson"
-    }
-  ];
+  const { data: publicReviewsResponse, isLoading } = useGetPublicReviews();
+
+  const feedbacks = useMemo(() => {
+    const reviews = publicReviewsResponse?.data ?? [];
+
+    return reviews
+      .filter((review: PublicReviewApiItem) => !review.isHidden && !review.isFlagged)
+      .map((review: PublicReviewApiItem, index: number) => ({
+        id: index + 1,
+        name: review.user?.name || "Anonymous Rider",
+        title: "Verified Rider",
+        feedback: review.comment,
+        avatar:
+          review.user?.avatar ||
+          `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(review.user?.name || "Anonymous")}`
+      }));
+  }, [publicReviewsResponse]);
+
+  if (!isLoading && feedbacks.length === 0) {
+    return <div className="" />;
+  }
 
   return (
     <section className="container py-20">
       <div className="flex flex-col items-center space-y-5">
         <Title title="Builders love FixMinCykel.dk" subtitle="" />
-        <FeedbackCarousel feedbacks={feedbacks} />
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading feedback...</p>
+        ) : (
+          <FeedbackCarousel feedbacks={feedbacks} />
+        )}
       </div>
     </section>
   );

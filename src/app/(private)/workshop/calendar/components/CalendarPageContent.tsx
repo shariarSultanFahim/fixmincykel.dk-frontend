@@ -8,10 +8,12 @@ import { ListView } from "./listView/ListView";
 import { WeekView } from "./weekView/WeekView";
 
 interface CalendarPageContentProps {
-  data: CalendarData;
+  weekData: CalendarData;
+  dayData: CalendarData;
+  listData: CalendarData;
 }
 
-export function CalendarPageContent({ data }: CalendarPageContentProps) {
+export function CalendarPageContent({ weekData, dayData, listData }: CalendarPageContentProps) {
   return (
     <Tabs defaultValue="week" className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -37,13 +39,13 @@ export function CalendarPageContent({ data }: CalendarPageContentProps) {
         </TabsList>
       </div>
       <TabsContent value="week">
-        <WeekView data={data} />
+        <WeekView data={weekData} />
       </TabsContent>
       <TabsContent value="day">
-        <DayView data={data} />
+        <DayView data={dayData} />
       </TabsContent>
       <TabsContent value="list">
-        <ListView data={data} />
+        <ListView data={listData} />
       </TabsContent>
     </Tabs>
   );

@@ -1,7 +1,7 @@
-import { UserConversation } from "@/types/conversation";
+import { ChatRoom } from "@/types";
 
 interface MobileAvatarsListProps {
-  conversations: UserConversation[];
+  conversations: ChatRoom[];
   selectedId?: string;
   onSelect: (id: string) => void;
   searchQuery: string;
@@ -15,10 +15,10 @@ export function MobileAvatarsList({
 }: MobileAvatarsListProps) {
   const searchLower = searchQuery.toLowerCase();
   const filteredConversations = conversations.filter(
-    (conv) =>
-      conv.workshopName.toLowerCase().includes(searchLower) ||
-      conv.jobId.toLowerCase().includes(searchLower) ||
-      conv.lastMessage.toLowerCase().includes(searchLower)
+    (conversation) =>
+      conversation.workshop.workshopName.toLowerCase().includes(searchLower) ||
+      conversation.bookingId.toLowerCase().includes(searchLower) ||
+      (conversation.lastMessage?.content ?? "").toLowerCase().includes(searchLower)
   );
 
   const getInitials = (name: string) => {
@@ -32,27 +32,29 @@ export function MobileAvatarsList({
 
   return (
     <div className="scrollbar-hide flex gap-3 overflow-x-auto p-2">
-      {filteredConversations.map((conv) => (
+      {filteredConversations.map((conversation) => (
         <button
-          key={conv.id}
-          onClick={() => onSelect(conv.id)}
+          key={conversation.id}
+          onClick={() => onSelect(conversation.id)}
           className="flex shrink-0 flex-col items-center gap-2"
         >
-          <div
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-semibold text-white transition-all ${
-              selectedId === conv.id
-                ? "bg-primary ring-2 ring-primary ring-offset-2"
-                : "bg-secondary text-navy hover:bg-primary/80"
-            }`}
-          >
-            {getInitials(conv.workshopName)}
+          <div className="relative">
+            <div
+              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-semibold text-white transition-all ${
+                selectedId === conversation.id
+                  ? "bg-primary ring-2 ring-primary ring-offset-2"
+                  : "bg-secondary text-navy hover:bg-primary/80"
+              }`}
+            >
+              {getInitials(conversation.workshop.workshopName)}
+            </div>
+            {conversation.unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-white bg-primary" />
+            )}
           </div>
           <span className="max-w-12.5 truncate text-xs text-gray-700">
-            {conv.workshopName.split(" ")[0]}
+            {conversation.workshop.workshopName.split(" ")[0]}
           </span>
-          {conv.isUnread && (
-            <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-primary" />
-          )}
         </button>
       ))}
     </div>

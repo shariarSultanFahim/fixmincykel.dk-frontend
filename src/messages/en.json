@@ -87,6 +87,7 @@
     "navAbout": "About us",
     "navFaq": "Contact us",
     "login": "Login",
+    "logout": "Logout",
     "menuLabel": "Open menu"
   },
   "PublicNav": {
@@ -106,9 +107,6 @@
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot Password?",
     "submit": "Log In",
-    "orContinue": "Or continue with",
-    "google": "Google",
-    "facebook": "Facebook",
     "newTo": "New to FixMinCykel.dk?",
     "createAccount": "Create an account"
   },
@@ -127,14 +125,13 @@
     "emailPlaceholder": "Enter your email",
     "phoneLabel": "Phone Number",
     "phonePlaceholder": "Enter your phone number",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Enter your address",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Create a password",
     "confirmPasswordLabel": "Confirm Password",
     "confirmPasswordPlaceholder": "Re-enter your password",
     "submit": "Create Account",
-    "orContinue": "Or continue with",
-    "google": "Google",
-    "facebook": "Facebook",
     "alreadyHaveAccount": "Already have an account?",
     "loginHere": "Log in here",
     "nextStepsTitle": "Next Steps:",
@@ -147,7 +144,24 @@
     "emailInvalid": "Please enter a valid email address",
     "phoneInvalid": "Please enter a valid phone number",
     "passwordMin": "Password must be at least 6 characters",
+    "addressMin": "Address must be at least 2 characters",
     "confirmPasswordMatch": "Passwords must match"
+  },
+  "VerifyOTP": {
+    "backToHome": "Back to Home",
+    "brand": "FixMinCykel.dk",
+    "title": "Verify Your Email",
+    "subtitle": "Enter the 6-digit code sent to your email",
+    "otpLabel": "Verification Code",
+    "otpPlaceholder": "Enter 6-digit code",
+    "submit": "Verify Email",
+    "resendOTP": "Resend Code",
+    "resendHint": "Didn't receive the code?",
+    "success": "Email verified successfully!"
+  },
+  "VerifyOTPSchema": {
+    "otpInvalid": "Please enter a valid 6-digit code",
+    "otpMin": "Code must be exactly 6 digits"
   },
   "Hero": {
     "title": "Upload your bike issue. Get offers. Book repair.",

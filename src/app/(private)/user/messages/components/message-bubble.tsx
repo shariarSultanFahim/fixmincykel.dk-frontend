@@ -1,10 +1,13 @@
+import { ChatMessageStatus } from "@/types";
+
 interface MessageBubbleProps {
   sender: "user" | "customer";
   text: string;
   timestamp: string;
+  status?: ChatMessageStatus;
 }
 
-export function MessageBubble({ sender, text, timestamp }: MessageBubbleProps) {
+export function MessageBubble({ sender, text, timestamp, status = "sent" }: MessageBubbleProps) {
   const isUser = sender === "user";
 
   return (
@@ -15,7 +18,10 @@ export function MessageBubble({ sender, text, timestamp }: MessageBubbleProps) {
         }`}
       >
         <p className="text-sm">{text}</p>
-        <p className={`mt-1 text-xs ${isUser ? "opacity-70" : "opacity-60"}`}>{timestamp}</p>
+        <p className={`mt-1 text-xs ${isUser ? "opacity-70" : "opacity-60"}`}>
+          {timestamp}
+          {isUser && status !== "sent" ? ` • ${status}` : ""}
+        </p>
       </div>
     </div>
   );

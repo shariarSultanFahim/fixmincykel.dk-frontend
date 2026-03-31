@@ -1,12 +1,21 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { Plus, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
+import { useGetPlatformCategories, useGetPlatformData } from "@/lib/actions/settings/get.settings";
+import {
+  useCreatePlatformCategory,
+  useDeletePlatformCategory,
+  useUpdatePlatformData
+} from "@/lib/actions/settings/manage.settings";
 import { cn } from "@/lib/utils";
+
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
@@ -27,20 +36,46 @@ import {
   InputGroupText
 } from "@/components/ui/input-group";
 
-import { settingsDefaults } from "../../data/settings";
 import { settingsSchema, type SettingsFormValues } from "../schemas/settings-schema";
 
+const SETTINGS_DEFAULTS: SettingsFormValues = {
+  platformFeePercentage: 0,
+  maxJobRadius: 1,
+  newCategory: ""
+};
+
 export default function SettingsForm() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const maxCategoryLength = 20;
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
-    defaultValues: settingsDefaults
+    defaultValues: SETTINGS_DEFAULTS
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "serviceCategories"
-  });
+  const { data: platformDataResponse, isFetching: isPlatformDataFetching } = useGetPlatformData();
+  const { data: categoriesResponse, isFetching: isCategoriesFetching } = useGetPlatformCategories();
+  const { mutate: createCategory, isPending: isCreatingCategory } = useCreatePlatformCategory();
+  const { mutate: deleteCategory, isPending: isDeletingCategory } = useDeletePlatformCategory();
+  const { mutate: updatePlatformData, isPending: isSavingSettings } = useUpdatePlatformData();
+
+  const categories = useMemo(
+    () => categoriesResponse?.data?.data ?? [],
+    [categoriesResponse?.data?.data]
+  );
+
+  useEffect(() => {
+    const platformData = platformDataResponse?.data;
+    if (!platformData) {
+      return;
+    }
+
+    form.reset({
+      platformFeePercentage: platformData.platformFee,
+      maxJobRadius: platformData.maximumJobRadius,
+      newCategory: ""
+    });
+  }, [form, platformDataResponse?.data]);
 
   const handleAddCategory = useCallback(() => {
     const newCategory = form.getValues("newCategory")?.trim();
@@ -57,21 +92,80 @@ export default function SettingsForm() {
       return;
     }
 
-    const exists = fields.some((field) => field.name.toLowerCase() === newCategory.toLowerCase());
+    const exists = categories.some(
+      (category) => category.name.toLowerCase() === newCategory.toLowerCase()
+    );
 
     if (exists) {
       form.setValue("newCategory", "");
       return;
     }
 
-    append({ name: newCategory });
-    form.setValue("newCategory", "");
-    form.clearErrors("newCategory");
-  }, [append, fields, form, maxCategoryLength]);
+    createCategory(
+      { name: newCategory },
+      {
+        onSuccess: (result) => {
+          toast({ title: result.message });
+          queryClient.invalidateQueries({ queryKey: ["platform-categories"] });
+          form.setValue("newCategory", "");
+          form.clearErrors("newCategory");
+        },
+        onError: () => {
+          toast({
+            title: "Failed to add category",
+            description: "Please try again.",
+            variant: "destructive"
+          });
+        }
+      }
+    );
+  }, [categories, createCategory, form, maxCategoryLength, queryClient, toast]);
+
+  const handleRemoveCategory = (categoryId: string) => {
+    deleteCategory(categoryId, {
+      onSuccess: (result) => {
+        toast({ title: result.message });
+        queryClient.invalidateQueries({ queryKey: ["platform-categories"] });
+      },
+      onError: () => {
+        toast({
+          title: "Failed to delete category",
+          description: "Please try again.",
+          variant: "destructive"
+        });
+      }
+    });
+  };
 
   const handleSubmit = (values: SettingsFormValues) => {
-    void values;
+    updatePlatformData(
+      {
+        platformFee: values.platformFeePercentage,
+        maximumJobRadius: values.maxJobRadius
+      },
+      {
+        onSuccess: (result) => {
+          toast({ title: result.message });
+          queryClient.invalidateQueries({ queryKey: ["platform-data"] });
+          form.reset({
+            platformFeePercentage: result.data.platformFee,
+            maxJobRadius: result.data.maximumJobRadius,
+            newCategory: ""
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Failed to save settings",
+            description: "Please try again.",
+            variant: "destructive"
+          });
+        }
+      }
+    );
   };
+
+  const isFormBusy = isPlatformDataFetching || isSavingSettings;
+  const isCategoryBusy = isCategoriesFetching || isCreatingCategory || isDeletingCategory;
 
   return (
     <Form {...form}>
@@ -93,6 +187,7 @@ export default function SettingsForm() {
                       inputMode="decimal"
                       {...field}
                       value={field.value ?? ""}
+                      disabled={isFormBusy}
                       onChange={(event) => field.onChange(event.target.valueAsNumber)}
                     />
                     <InputGroupAddon align="inline-end">
@@ -122,6 +217,7 @@ export default function SettingsForm() {
                       inputMode="numeric"
                       {...field}
                       value={field.value ?? ""}
+                      disabled={isFormBusy}
                       onChange={(event) => field.onChange(event.target.valueAsNumber)}
                     />
                     <InputGroupAddon align="inline-end">
@@ -137,13 +233,13 @@ export default function SettingsForm() {
 
           <FormField
             control={form.control}
-            name="serviceCategories"
+            name="newCategory"
             render={() => (
               <FormItem>
                 <FormLabel>Service Categories</FormLabel>
                 <FormControl>
                   <div className="flex flex-wrap gap-2">
-                    {fields.map((category, index) => (
+                    {categories.map((category) => (
                       <div
                         key={category.id}
                         className={cn(
@@ -153,14 +249,18 @@ export default function SettingsForm() {
                         <span>{category.name}</span>
                         <button
                           type="button"
-                          onClick={() => remove(index)}
+                          onClick={() => handleRemoveCategory(category.id)}
                           className="text-muted-foreground transition hover:text-foreground"
                           aria-label={`Remove ${category.name}`}
+                          disabled={isCategoryBusy}
                         >
                           <X className="h-3 w-3" />
                         </button>
                       </div>
                     ))}
+                    {!isCategoriesFetching && categories.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No categories found.</p>
+                    )}
                   </div>
                 </FormControl>
                 <FormDescription>Manage the categories available to users.</FormDescription>
@@ -182,6 +282,7 @@ export default function SettingsForm() {
                       placeholder="Add new category..."
                       maxLength={maxCategoryLength}
                       className="border border-border"
+                      disabled={isCategoryBusy}
                       onChange={(event) => {
                         field.onChange(event.target.value);
                         if (form.formState.errors.newCategory) {
@@ -195,7 +296,12 @@ export default function SettingsForm() {
                         }
                       }}
                     />
-                    <Button type="button" onClick={handleAddCategory} className="sm:w-auto">
+                    <Button
+                      type="button"
+                      onClick={handleAddCategory}
+                      className="sm:w-auto"
+                      disabled={isCategoryBusy}
+                    >
                       <Plus className="mr-2 h-4 w-4" />
                       Add
                     </Button>
@@ -208,7 +314,9 @@ export default function SettingsForm() {
         </CardContent>
 
         <CardFooter className="justify-end">
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit" disabled={isFormBusy}>
+            {isSavingSettings ? "Saving..." : "Save Changes"}
+          </Button>
         </CardFooter>
       </form>
     </Form>

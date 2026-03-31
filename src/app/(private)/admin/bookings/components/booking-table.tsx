@@ -1,7 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import type { BookingManagePaymentStatus, BookingManageStatus } from "@/types/booking-manage";
+
+import { useGetBookings } from "@/lib/actions/bookings/get.bookings";
+
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,8 +18,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/widgets";
 
-import type { Booking, Payment, Status } from "../data/bookings";
 import BookingActions from "./booking-actions";
 import ExportCSVButton from "./booking-export-csv-button";
 import FilterButton from "./booking-filter-button";
@@ -21,55 +27,50 @@ import PaymentBadge from "./booking-payment-badge";
 import StatusBadge from "./booking-status-badge";
 import SearchBar from "./search-bar";
 
-interface BookingTableProps {
-  initialBookings: Booking[];
-}
+const PAGE_SIZE = 10;
 
 const currencyFormatter = new Intl.NumberFormat("da-DK", {
   style: "currency",
   currency: "DKK"
 });
 
-export default function BookingTable({ initialBookings }: BookingTableProps) {
+export default function BookingTable() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([
-    "booked",
-    "completed",
-    "cancle"
-  ]);
-  const [selectedPayments, setSelectedPayments] = useState<Payment[]>([
-    "paid",
-    "unpaid",
-    "refunded"
-  ]);
+  const [searchInput, setSearchInput] = useState("");
+  const searchQuery = useDebouncedValue(searchInput, 700);
+  const [page, setPage] = useState(1);
+  const [selectedStatus, setSelectedStatus] = useState<BookingManageStatus | undefined>(undefined);
+  const [selectedPayment, setSelectedPayment] = useState<BookingManagePaymentStatus | undefined>(
+    undefined
+  );
 
-  const filteredBookings = useMemo(() => {
-    return initialBookings.filter((booking) => {
-      if (!selectedStatuses.includes(booking.status)) return false;
-      if (!selectedPayments.includes(booking.payment)) return false;
+  const { data, isLoading, isError } = useGetBookings({
+    page,
+    limit: PAGE_SIZE,
+    searchTerm: searchQuery || undefined,
+    status: selectedStatus,
+    paymentStatus: selectedPayment
+  });
 
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        return (
-          booking.bookingID.toLowerCase().includes(query) ||
-          booking.user.toLowerCase().includes(query) ||
-          booking.workshop.toLowerCase().includes(query)
-        );
-      }
+  const bookings = data?.data.data ?? [];
+  const meta = data?.data.meta;
+  const total = meta?.total ?? 0;
+  const totalPages = Math.max(1, Number(meta?.totalPage ?? 1));
+  const currentPage = Math.min(page, totalPages);
 
-      return true;
-    });
-  }, [initialBookings, searchQuery, selectedPayments, selectedStatuses]);
-
-  const handleStatusChange = (status: Status, checked: boolean) => {
-    setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)));
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    setPage(1);
   };
 
-  const handlePaymentChange = (payment: Payment, checked: boolean) => {
-    setSelectedPayments((prev) =>
-      checked ? [...prev, payment] : prev.filter((p) => p !== payment)
-    );
+  const handleStatusChange = (status?: BookingManageStatus) => {
+    setSelectedStatus(status);
+    setPage(1);
+  };
+
+  const handlePaymentChange = (paymentStatus?: BookingManagePaymentStatus) => {
+    setSelectedPayment(paymentStatus);
+    setPage(1);
   };
 
   const handleView = (id: string) => {
@@ -80,16 +81,20 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
     <div className="space-y-4">
       <Card className="flex flex-col gap-3 border-none sm:flex-row sm:items-center sm:justify-between">
         <CardContent className="flex-1">
-          <SearchBar value={searchQuery} onSearch={setSearchQuery} />
+          <SearchBar value={searchInput} onSearch={handleSearchChange} />
         </CardContent>
         <CardContent className="flex gap-2">
           <FilterButton
-            selectedStatuses={selectedStatuses}
-            selectedPayments={selectedPayments}
+            selectedStatus={selectedStatus}
+            selectedPayment={selectedPayment}
             onStatusChange={handleStatusChange}
             onPaymentChange={handlePaymentChange}
           />
-          <ExportCSVButton bookings={filteredBookings} />
+          <ExportCSVButton
+            searchTerm={searchQuery || undefined}
+            status={selectedStatus}
+            paymentStatus={selectedPayment}
+          />
         </CardContent>
       </Card>
 
@@ -108,31 +113,53 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredBookings.length > 0 ? (
-              filteredBookings.map((booking) => (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+                  Loading bookings...
+                </TableCell>
+              </TableRow>
+            ) : isError ? (
+              <TableRow>
+                <TableCell colSpan={8} className="py-8 text-center text-gray-500">
+                  Failed to load bookings. Please try again.
+                </TableCell>
+              </TableRow>
+            ) : bookings.length > 0 ? (
+              bookings.map((booking) => (
                 <TableRow
-                  key={booking.bookingID}
+                  key={booking.id}
                   className="cursor-pointer border-border hover:bg-gray-50"
-                  onClick={() => handleView(booking.bookingID)}
+                  onClick={() => handleView(booking.id)}
                 >
-                  <TableCell className="font-medium">{booking.bookingID}</TableCell>
-                  <TableCell>{booking.user}</TableCell>
-                  <TableCell>{booking.workshop}</TableCell>
+                  <TableCell className="font-medium">{booking.id}</TableCell>
+                  <TableCell
+                  // className="hover:underline"
+                  // onClick={() => router.push(`/admin/users/${booking.userId}`)}
+                  >
+                    {booking.user?.name ?? booking.userId}
+                  </TableCell>
+                  <TableCell
+                  // className="hover:underline"
+                  // onClick={() => router.push(`/admin/workshops/${booking.workshopId}`)}
+                  >
+                    {booking.workshop?.workshopName ?? booking.workshopId}
+                  </TableCell>
                   <TableCell className="">
                     <StatusBadge status={booking.status} />
                   </TableCell>
                   <TableCell className="">
-                    <PaymentBadge payment={booking.payment} />
+                    <PaymentBadge paymentStatus={booking.paymentStatus} />
                   </TableCell>
-                  <TableCell>{new Date(booking.date).toLocaleDateString("da-DK")}</TableCell>
-                  <TableCell className="">{currencyFormatter.format(booking.amount)}</TableCell>
+                  <TableCell>
+                    {new Date(booking.scheduleStart).toLocaleDateString("da-DK")}
+                  </TableCell>
+                  <TableCell className="">
+                    {currencyFormatter.format(booking.offer?.price ?? 0)}
+                  </TableCell>
                   <TableCell className="">
                     <div onClick={(e) => e.stopPropagation()}>
-                      <BookingActions
-                        bookingId={booking.bookingID}
-                        status={booking.status}
-                        onView={handleView}
-                      />
+                      <BookingActions bookingId={booking.id} onView={handleView} />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -148,8 +175,11 @@ export default function BookingTable({ initialBookings }: BookingTableProps) {
         </Table>
       </Card>
 
-      <div className="text-sm text-gray-600">
-        Showing {filteredBookings.length} of {initialBookings.length} bookings
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">
+          Showing {bookings.length} of {total} bookings
+        </p>
+        <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

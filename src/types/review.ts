@@ -5,6 +5,87 @@ export interface ReviewSummaryStats {
   helpfulVotes: number;
 }
 
+export interface PendingReviewApiItem {
+  id: string;
+  jobId: string;
+  offerId: string;
+  userId: string;
+  workshopId: string;
+  scheduleStart: string;
+  scheduleEnd: string;
+  status: string;
+  paymentStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  workshop: {
+    workshopName: string;
+  };
+}
+
+export interface PendingReviewApiResponse {
+  success: boolean;
+  message: string;
+  data: PendingReviewApiItem[];
+}
+
+export interface UserReviewApiItem {
+  id: string;
+  bookingId: string;
+  userId: string;
+  rating: number;
+  comment: string;
+  isFlagged: boolean;
+  isHidden: boolean;
+  createdAt: string;
+  updatedAt: string;
+  booking?: {
+    id: string;
+    jobId?: string;
+    workshopId?: string;
+    scheduleStart?: string;
+  };
+}
+
+export interface UserReviewsApiResponse {
+  success: boolean;
+  message: string;
+  data: UserReviewApiItem[];
+}
+
+export interface PublicReviewApiItem {
+  id: string;
+  rating: number;
+  comment: string;
+  isFlagged: boolean;
+  isHidden: boolean;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
+}
+
+export interface PublicReviewsApiResponse {
+  success: boolean;
+  message: string;
+  data: PublicReviewApiItem[];
+}
+
+export interface ReviewCreatePayload {
+  bookingId: string;
+  userId: string;
+  rating: number;
+  comment: string;
+}
+
+export interface ReviewCreateResponse {
+  success: boolean;
+  message: string;
+  data: UserReviewApiItem;
+}
+
 export interface ReviewItem {
   id: string;
   workshopName: string;
@@ -18,6 +99,7 @@ export interface ReviewItem {
 
 export interface PendingReview {
   id: string;
+  bookingId: string;
   workshopName: string;
   jobTitle: string;
   scheduledFor: string;
@@ -29,11 +111,10 @@ export interface ReviewFormValues {
   comment: string;
 }
 
-export type ReviewFormMode = "pending" | "edit";
+export type ReviewFormMode = "pending";
 
 export interface ReviewFormDialogState {
   mode: ReviewFormMode;
-  review?: ReviewItem;
   pendingReview?: PendingReview;
 }
 
@@ -55,7 +136,6 @@ export interface RatingStarsProps {
 
 export interface ReviewCardProps {
   review: ReviewItem;
-  onEdit: (review: ReviewItem) => void;
 }
 
 export interface PendingReviewCardProps {
@@ -70,5 +150,7 @@ export interface ReviewSummaryBarProps {
 export interface ReviewFormDialogProps {
   state: ReviewFormDialogState | null;
   open: boolean;
+  isSubmitting?: boolean;
+  onSubmit: (values: ReviewFormValues) => void;
   onOpenChange: (open: boolean) => void;
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import { CalendarClockIcon, MessageSquareTextIcon } from "lucide-react";
+import { CalendarClockIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
+import { useRescheduleBooking } from "@/lib/actions/bookings/reschedule-booking";
 
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,45 +24,74 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/widgets/date-time-picker";
 import type { RescheduleForm } from "@/types";
 
 import { rescheduleFormSchema } from "./reschedule-form.schema";
 
 interface RescheduleFormProps {
+  bookingId: string;
   bookingTitle: string;
   onCompleted?: () => void;
 }
 
-export function RescheduleForm({ bookingTitle, onCompleted }: RescheduleFormProps) {
+export function RescheduleForm({ bookingId, bookingTitle, onCompleted }: RescheduleFormProps) {
   const { toast } = useToast();
+  const { mutate: rescheduleBooking, isPending } = useRescheduleBooking();
 
   const form = useForm<RescheduleForm>({
     resolver: zodResolver(rescheduleFormSchema),
     defaultValues: {
-      note: ""
+      scheduleStart: undefined,
+      scheduleEnd: undefined
     }
   });
 
-  const handleSubmit = () => {
-    console.log("Reschedule request submitted:", form.getValues());
-    toast({
-      title: "Reschedule request sent",
-      description: `We will confirm a new time for ${bookingTitle}.`
-    });
-
-    form.reset({ note: "" });
-    onCompleted?.();
+  const handleSubmit = async (values: RescheduleForm) => {
+    try {
+      rescheduleBooking(
+        {
+          bookingId,
+          payload: {
+            scheduleStart: values.scheduleStart.toISOString(),
+            scheduleEnd: values.scheduleEnd.toISOString()
+          }
+        },
+        {
+          onSuccess: () => {
+            toast({
+              title: "Success",
+              description: "Booking rescheduled successfully."
+            });
+            form.reset();
+            onCompleted?.();
+          },
+          onError: (error) => {
+            const errorMessage =
+              error instanceof Error ? error.message : "Failed to reschedule booking";
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: errorMessage
+            });
+          }
+        }
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to reschedule booking";
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage
+      });
+    }
   };
 
   return (
     <div className="space-y-6">
       <DialogHeader>
         <DialogTitle>Reschedule booking</DialogTitle>
-        <DialogDescription>
-          Pick a new time and add a short note for the workshop.
-        </DialogDescription>
+        <DialogDescription>Select a new start and end time for your booking.</DialogDescription>
       </DialogHeader>
 
       <div className="flex items-center gap-3 rounded-[20px] bg-secondary/60 px-4 py-3">
@@ -71,7 +100,7 @@ export function RescheduleForm({ bookingTitle, onCompleted }: RescheduleFormProp
         </div>
         <div className="space-y-1">
           <p className="text-sm font-medium text-navy">{bookingTitle}</p>
-          <p className="text-xs text-muted-foreground">We will notify you once approved.</p>
+          <p className="text-xs text-muted-foreground">Confirm your new booking time.</p>
         </div>
       </div>
 
@@ -79,15 +108,15 @@ export function RescheduleForm({ bookingTitle, onCompleted }: RescheduleFormProp
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="dateTime"
+            name="scheduleStart"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New date and time</FormLabel>
+                <FormLabel>Start date and time</FormLabel>
                 <FormControl>
                   <DateTimePicker
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Select date and time"
+                    placeholder="Select start date and time"
                   />
                 </FormControl>
                 <FormMessage />
@@ -96,16 +125,15 @@ export function RescheduleForm({ bookingTitle, onCompleted }: RescheduleFormProp
           />
           <FormField
             control={form.control}
-            name="note"
+            name="scheduleEnd"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message for the workshop</FormLabel>
+                <FormLabel>End date and time</FormLabel>
                 <FormControl>
-                  <Textarea
-                    {...field}
-                    rows={3}
-                    placeholder="Let the workshop know what works for you."
-                    className={cn("resize-none")}
+                  <DateTimePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select end date and time"
                   />
                 </FormControl>
                 <FormMessage />
@@ -119,9 +147,8 @@ export function RescheduleForm({ bookingTitle, onCompleted }: RescheduleFormProp
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">
-              <MessageSquareTextIcon className="size-4" />
-              Send request
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Rescheduling..." : "Reschedule"}
             </Button>
           </DialogFooter>
         </form>

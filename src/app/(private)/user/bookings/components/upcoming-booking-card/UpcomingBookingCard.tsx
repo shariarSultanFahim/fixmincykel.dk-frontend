@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 
 import {
   CalendarClockIcon,
@@ -99,9 +100,11 @@ export function UpcomingBookingCard({ booking }: UpcomingBookingCardProps) {
           </div>
 
           <div className="flex w-full flex-col gap-2 lg:w-auto">
-            <Button className={cn("w-full lg:w-auto")}>
-              <MessageCircleIcon className="size-4" />
-              Message workshop
+            <Button asChild className={cn("w-full lg:w-auto")}>
+              <Link href={`/user/messages?bookingId=${booking.id}`}>
+                <MessageCircleIcon className="size-4" />
+                Message workshop
+              </Link>
             </Button>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
@@ -110,7 +113,11 @@ export function UpcomingBookingCard({ booking }: UpcomingBookingCardProps) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="border-0">
-                <RescheduleForm bookingTitle={booking.title} onCompleted={() => setIsOpen(false)} />
+                <RescheduleForm
+                  bookingId={booking.id}
+                  bookingTitle={booking.title}
+                  onCompleted={() => setIsOpen(false)}
+                />
               </DialogContent>
             </Dialog>
           </div>

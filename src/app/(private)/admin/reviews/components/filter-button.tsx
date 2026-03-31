@@ -17,10 +17,11 @@ interface FilterButtonProps {
   onStatusChange: (status: ReviewModerationStatus, checked: boolean) => void;
 }
 
-const statusOptions: ReviewModerationStatus[] = ["visible", "flagged"];
+const statusOptions: ReviewModerationStatus[] = ["visible", "flagged", "hidden"];
 const statusLabels: Record<ReviewModerationStatus, string> = {
   visible: "Visible",
-  flagged: "Flagged"
+  flagged: "Flagged",
+  hidden: "Hidden"
 };
 
 export default function FilterButton({ selectedStatuses, onStatusChange }: FilterButtonProps) {

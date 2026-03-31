@@ -1,3 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import type { UserJob, UserJobStatus } from "@/types/users-manage";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,28 +15,39 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-import type { Job, JobStatus } from "../../data/users";
-
 interface JobHistoryProps {
-  jobs: Job[];
+  jobs: UserJob[];
 }
 
-function getJobStatusColor(status: JobStatus): "default" | "secondary" | "destructive" | "outline" {
+function getJobStatusVariant(
+  status: UserJobStatus
+): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return "default";
-    case "pending":
+    case "PENDING":
       return "secondary";
-    case "in-progress":
+    case "IN_PROGRESS":
       return "outline";
-    case "cancelled":
+    case "CANCELLED":
       return "destructive";
     default:
       return "outline";
   }
 }
 
+const jobStatusLabels: Record<UserJobStatus, string> = {
+  PENDING: "Pending",
+  OPEN: "Open",
+  COMPLETED: "Completed",
+  IN_PROGRESS: "In Progress",
+  CANCELLED: "Cancelled",
+  EXPIRED: "Expired"
+};
+
 export default function JobHistory({ jobs }: JobHistoryProps) {
+  const router = useRouter();
+
   return (
     <Card className="gap-2 border-border pt-4 pb-0">
       <CardHeader className="px-4">
@@ -40,8 +57,8 @@ export default function JobHistory({ jobs }: JobHistoryProps) {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
-              <TableHead>Job ID</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead>Job Title</TableHead>
+              <TableHead>Urgency</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created</TableHead>
             </TableRow>
@@ -49,15 +66,19 @@ export default function JobHistory({ jobs }: JobHistoryProps) {
           <TableBody>
             {jobs.length > 0 ? (
               jobs.map((job) => (
-                <TableRow key={job.id} className="border-border">
-                  <TableCell className="font-medium text-primary">{job.id}</TableCell>
-                  <TableCell>{job.category}</TableCell>
+                <TableRow
+                  key={job.id}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => router.push(`/admin/jobs/${job.id}`)}
+                >
+                  <TableCell className="font-medium text-primary">{job.title || job.id}</TableCell>
+                  <TableCell>{job.urgency}</TableCell>
                   <TableCell>
-                    <Badge variant={getJobStatusColor(job.status)}>
-                      {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    <Badge variant={getJobStatusVariant(job.status)}>
+                      {jobStatusLabels[job.status]}
                     </Badge>
                   </TableCell>
-                  <TableCell>{job.created}</TableCell>
+                  <TableCell>{new Date(job.createdAt).toLocaleDateString("da-DK")}</TableCell>
                 </TableRow>
               ))
             ) : (

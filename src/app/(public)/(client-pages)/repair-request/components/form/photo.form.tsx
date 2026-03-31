@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 import { Upload, X } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-
-import { post } from "@/lib/api";
+import { UseFormReturn, useWatch } from "react-hook-form";
 
 import { useToast } from "@/hooks";
 
@@ -18,57 +16,54 @@ interface PhotoFormProps {
   form: UseFormReturn<NewRepair>;
 }
 
-interface UploadResponse {
-  urls: string[];
-}
-
 export function PhotoForm({ form }: PhotoFormProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
-  const photos = form.watch("photos.photos") || [];
+  const watchedPhotos = useWatch({
+    control: form.control,
+    name: "photos.photos"
+  });
 
-  const handleUpload = async (files: FileList) => {
+  const previewPhotos = useMemo(
+    () =>
+      (watchedPhotos ?? []).map((photo) => ({
+        file: photo,
+        preview: URL.createObjectURL(photo)
+      })),
+    [watchedPhotos]
+  );
+
+  const photoCount = watchedPhotos?.length ?? 0;
+
+  useEffect(() => {
+    return () => {
+      previewPhotos.forEach((photo) => {
+        URL.revokeObjectURL(photo.preview);
+      });
+    };
+  }, [previewPhotos]);
+
+  const handleUpload = (files: FileList) => {
     if (!files || files.length === 0) return;
 
-    setIsLoading(true);
+    const incomingPhotos = Array.from(files);
+    const currentPhotos = form.getValues("photos.photos") || [];
+    const combinedPhotos = [...currentPhotos, ...incomingPhotos].slice(0, 5);
 
-    const formData = new FormData();
-    Array.from(files).forEach((file) => {
-      formData.append("files", file);
-    });
-
-    try {
-      const response = await post<UploadResponse>("/api/repairs/upload-photos", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
-
-      if (response.urls && response.urls.length > 0) {
-        const currentPhotos = form.getValues("photos.photos") || [];
-        form.setValue("photos.photos", [...currentPhotos, ...response.urls]);
-
-        toast({
-          title: "Success",
-          description: `${response.urls.length} photo(s) uploaded successfully.`
-        });
-
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
+    if (currentPhotos.length + incomingPhotos.length > 5) {
       toast({
-        title: "Error",
-        description: "Failed to upload photos. Please try again.",
+        title: "Photo limit reached",
+        description: "You can upload up to 5 photos.",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
+    }
+
+    form.setValue("photos.photos", combinedPhotos, { shouldValidate: true });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -98,11 +93,12 @@ export function PhotoForm({ form }: PhotoFormProps) {
     }
   };
 
-  const removePhoto = (url: string) => {
+  const removePhoto = (indexToRemove: number) => {
     const currentPhotos = form.getValues("photos.photos") || [];
     form.setValue(
       "photos.photos",
-      currentPhotos.filter((photo: string) => photo !== url)
+      currentPhotos.filter((_, index) => index !== indexToRemove),
+      { shouldValidate: true, shouldDirty: true, shouldTouch: true }
     );
   };
 
@@ -144,7 +140,7 @@ export function PhotoForm({ form }: PhotoFormProps) {
                     className="hidden"
                   />
 
-                  {photos.length === 0 ? (
+                  {photoCount === 0 ? (
                     <>
                       <div className="rounded-full bg-primary/10 p-6">
                         <Upload className="h-12 w-12 text-primary" />
@@ -154,23 +150,24 @@ export function PhotoForm({ form }: PhotoFormProps) {
                   ) : (
                     <div className="w-full p-6">
                       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                        {photos.map((photo: string, index: number) => (
+                        {previewPhotos.map((photo, index) => (
                           <div
-                            key={`${photo}-${index}`}
+                            key={`${photo.file.name}-${index}`}
                             className="group relative overflow-hidden rounded-lg bg-gray-100"
                           >
                             <Image
-                              src={photo}
+                              src={photo.preview}
                               alt={`Repair photo ${index + 1}`}
                               width={100}
                               height={100}
+                              unoptimized
                               className="h-24 w-full object-cover"
                             />
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                removePhoto(photo);
+                                removePhoto(index);
                               }}
                               className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition group-hover:opacity-100"
                             >
@@ -185,7 +182,7 @@ export function PhotoForm({ form }: PhotoFormProps) {
 
                 {/* Photo Counter */}
                 <p className="text-center text-sm text-gray-600">
-                  {photos.length} of 5 photos uploaded (minimum 1 required)
+                  {photoCount} of 5 photos uploaded (minimum 1 required)
                 </p>
               </div>
             </FormControl>

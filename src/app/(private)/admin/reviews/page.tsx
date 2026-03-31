@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import Header from "../component/layouts/header";
 import { AdminControls, ReviewTable } from "./components";
 import { AdminControlsSkeleton, ReviewTableSkeleton } from "./components/skeletons";
-import { reviewModerationData } from "./data/reviews";
 
 export default function ReviewsManagementPage() {
   return (
@@ -11,7 +10,7 @@ export default function ReviewsManagementPage() {
       <Header title="Review Moderation" subtitle="Monitor and moderate user reviews" />
 
       <Suspense fallback={<ReviewTableSkeleton />}>
-        <ReviewTable reviews={reviewModerationData} />
+        <ReviewTable />
       </Suspense>
 
       <Suspense fallback={<AdminControlsSkeleton />}>

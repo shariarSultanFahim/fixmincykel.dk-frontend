@@ -1,4 +1,6 @@
+import type { JobOffer, OfferStatus } from "@/types/jobs-manage";
 import { currencyFormatter } from "@/constants/currency-formatter";
+import { datetimeFormatter } from "@/constants/date-formatter";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,21 +13,19 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-import type { Offer, OfferStatus } from "../../data/jobs";
-
 interface OffersReceivedProps {
-  offers: Offer[];
+  offers: JobOffer[];
 }
 
 function getOfferStatusColor(
   status: OfferStatus
 ): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case "accepted":
+    case "ACCEPTED":
       return "default";
-    case "pending":
+    case "PENDING":
       return "secondary";
-    case "rejected":
+    case "REJECTED":
       return "destructive";
     default:
       return "outline";
@@ -42,9 +42,10 @@ export default function OffersReceived({ offers }: OffersReceivedProps) {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
-              <TableHead className="pl-6">Workshop</TableHead>
+              <TableHead className="pl-6">Workshop ID</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Estimated Time</TableHead>
               <TableHead>Message</TableHead>
             </TableRow>
           </TableHeader>
@@ -52,21 +53,20 @@ export default function OffersReceived({ offers }: OffersReceivedProps) {
             {offers.length > 0 ? (
               offers.map((offer) => (
                 <TableRow key={offer.id} className="border-border">
-                  <TableCell className="pl-6 font-medium">{offer.workshop}</TableCell>
+                  <TableCell className="pl-6 font-medium">{offer.workshopId}</TableCell>
                   <TableCell className="font-medium">
                     {currencyFormatter.format(offer.price)}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getOfferStatusColor(offer.status)}>
-                      {offer.status.charAt(0).toUpperCase() + offer.status.slice(1)}
-                    </Badge>
+                    <Badge variant={getOfferStatusColor(offer.status)}>{offer.status}</Badge>
                   </TableCell>
+                  <TableCell>{datetimeFormatter.format(new Date(offer.estimatedTime))}</TableCell>
                   <TableCell className="text-sm text-gray-600">{offer.message}</TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="py-8 text-center text-gray-500">
+                <TableCell colSpan={5} className="py-8 text-center text-gray-500">
                   No offers received
                 </TableCell>
               </TableRow>

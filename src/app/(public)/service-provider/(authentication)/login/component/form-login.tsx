@@ -1,11 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { ChevronLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import type { LoginErrorResponse } from "@/types/auth";
+import { AUTH_SESSION_COOKIE, ROLE_HOME_PATHS } from "@/constants/auth";
+
+import {
+  buildSessionFromLoginResponse,
+  useLogin as useWorkshopLogin
+} from "@/lib/actions/auth/login.workshop";
+import { cookie } from "@/lib/cookie-client";
 
 import {
   Button,
@@ -21,16 +32,42 @@ import {
 import { createLoginSchema, type LoginFormValues } from "./login.schema";
 
 export function FormLogin() {
+  const router = useRouter();
+  const loginMutation = useWorkshopLogin();
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(createLoginSchema()),
     defaultValues: { email: "", password: "" }
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    toast("", {
-      description: <pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>,
-      duration: 5000
-    });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      const response = await loginMutation.mutateAsync(values);
+
+      const status =
+        response.data?.user?.approvalStatus?.toUpperCase() ??
+        response.data?.user?.status?.toUpperCase();
+
+      if (status === "PENDING") {
+        toast.info("Your workshop is waiting for approval. Please check back in a day.");
+        return;
+      }
+
+      const session = buildSessionFromLoginResponse(response);
+
+      cookie.set(AUTH_SESSION_COOKIE, JSON.stringify(session));
+
+      toast.success(response.message || "Login successful.");
+      router.replace(ROLE_HOME_PATHS[session.role]);
+    } catch (error) {
+      const message = isAxiosError<LoginErrorResponse>(error)
+        ? error.response?.data?.message || error.message
+        : error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.";
+
+      toast.error(message);
+    }
   });
 
   return (
@@ -94,16 +131,16 @@ export function FormLogin() {
                   />
                   Remember me
                 </label>
-                <Link href="/service-provider/reset-password" className="text-navy hover:underline">
+                <Link
+                  href="/service-provider/forget-password"
+                  className="text-navy hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
-              {/* NOTE: This is for example.  */}
-              <Link href="/workshop">
-                <Button type="submit" className="w-full bg-navy">
-                  Log In to Dashboard
-                </Button>
-              </Link>
+              <Button type="submit" className="w-full bg-navy" disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? "Logging in..." : "Log In to Dashboard"}
+              </Button>
             </form>
           </Form>
 

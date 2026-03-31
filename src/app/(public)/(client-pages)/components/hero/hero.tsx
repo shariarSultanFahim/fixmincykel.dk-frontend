@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import type { MessageDictionary } from "@/types/messages";
 
 import HeroImage from "@/assets/images/hero-image.png";
+import { useGetVisionStatistics } from "@/lib/actions/vision-statistics/get-vision-statistics";
 import { getMessage } from "@/helpers/messages";
 import messages from "@/messages/en.json";
 
@@ -11,6 +14,14 @@ import { Button } from "@/components/ui";
 
 export default function Hero() {
   const copy = messages as MessageDictionary;
+  const { data: visionStatisticsResponse } = useGetVisionStatistics();
+  const statistics = visionStatisticsResponse?.data;
+
+  const jobsCompleted = statistics?.totalJobsCompleted ?? 0;
+  const verifiedWorkshops = statistics?.totalApprovedWorkshops ?? 0;
+  const averageRating = statistics?.averageRating ?? 0;
+  const serviceRequests = statistics?.avgJobRequestsPerYear ?? 0;
+
   return (
     <section className="md:py-10">
       <div className="container flex flex-col-reverse justify-between md:flex-row">
@@ -49,9 +60,7 @@ export default function Hero() {
             unoptimized
           />
           <div>
-            <span className="text-2xl font-bold text-navy">
-              {getMessage(copy, "Stats.jobsCompleted")}
-            </span>
+            <span className="text-2xl font-bold text-navy">{jobsCompleted.toLocaleString()}</span>
             <p className="text-sm text-navy">{getMessage(copy, "Stats.jobsCompletedText")}</p>
           </div>
         </div>
@@ -65,7 +74,7 @@ export default function Hero() {
           />
           <div>
             <span className="text-2xl font-bold text-navy">
-              {getMessage(copy, "Stats.verifiedWorkshops")}
+              {verifiedWorkshops.toLocaleString()}
             </span>
             <p className="text-sm text-navy">{getMessage(copy, "Stats.verifiedWorkshopsText")}</p>
           </div>
@@ -73,9 +82,7 @@ export default function Hero() {
         <div className="flex items-center gap-3 p-6">
           <Image src="/rating.svg" width={50} height={50} alt="Rating Icon" unoptimized />
           <div>
-            <span className="text-2xl font-bold text-navy">
-              {getMessage(copy, "Stats.averageRating")}
-            </span>
+            <span className="text-2xl font-bold text-navy">{averageRating.toFixed(1)}/5</span>
             <p className="text-sm text-navy">{getMessage(copy, "Stats.averageRatingText")}</p>
           </div>
         </div>
@@ -88,9 +95,7 @@ export default function Hero() {
             unoptimized
           />
           <div>
-            <span className="text-2xl font-bold text-navy">
-              {getMessage(copy, "Stats.serviceRequests")}
-            </span>
+            <span className="text-2xl font-bold text-navy">{serviceRequests.toLocaleString()}</span>
             <p className="text-sm text-navy">{getMessage(copy, "Stats.serviceRequestsText")}</p>
           </div>
         </div>

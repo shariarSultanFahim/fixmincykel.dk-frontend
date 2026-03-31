@@ -1,15 +1,15 @@
 import { AlertCircle } from "lucide-react";
 
+import type { AdminBooking } from "@/types/booking-manage";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { BookingDetails } from "../../data/bookings";
-
 interface ServiceDetailsProps {
-  details?: BookingDetails;
+  booking: AdminBooking;
 }
 
-export default function ServiceDetails({ details }: ServiceDetailsProps) {
-  if (!details) {
+export default function ServiceDetails({ booking }: ServiceDetailsProps) {
+  if (!booking.job && !booking.offer) {
     return null;
   }
 
@@ -22,7 +22,9 @@ export default function ServiceDetails({ details }: ServiceDetailsProps) {
         <div>
           <p className="mb-2 text-sm font-medium text-gray-700">Service Description</p>
           <div className="rounded-lg bg-gray-50 p-4">
-            <p className="text-gray-900">{details.serviceDescription}</p>
+            <p className="text-gray-900">
+              {booking.job?.description ?? "No description available"}
+            </p>
           </div>
         </div>
 
@@ -32,7 +34,7 @@ export default function ServiceDetails({ details }: ServiceDetailsProps) {
             <p className="text-sm font-medium text-gray-700">Notes</p>
           </div>
           <div className="rounded-lg bg-amber-50 p-4">
-            <p className="text-gray-900">{details.serviceNotes}</p>
+            <p className="text-gray-900">{booking.offer?.message ?? "No notes provided"}</p>
           </div>
         </div>
       </CardContent>

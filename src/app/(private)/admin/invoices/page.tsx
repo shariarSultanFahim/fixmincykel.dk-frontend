@@ -1,37 +1,19 @@
 import { Suspense } from "react";
 
 import Header from "../component/layouts/header";
-import { ReportSummary, ReportToolbar, StatusLegend, WorkshopInvoiceList } from "./components";
-import {
-  ReportSummarySkeleton,
-  ReportToolbarSkeleton,
-  StatusLegendSkeleton,
-  WorkshopInvoiceListSkeleton
-} from "./components/skeletons";
-import { invoiceDetails, reportSummary, workshopInvoiceList } from "./data/invoices";
+import InvoicePayoutManagement from "./components/InvoicePayoutManagement";
+import { InvoicePayoutManagementSkeleton } from "./components/skeletons";
 
 export default function InvoicesPage() {
   return (
     <div className="space-y-6">
       <Header
         title="Monthly Workshop Invoices & Payouts"
-        subtitle="Generate one invoice per workshop for all completed jobs in a selected month."
+        subtitle="Manage monthly invoices, platform fees, and payouts in one place."
       />
 
-      <Suspense fallback={<ReportToolbarSkeleton />}>
-        <ReportToolbar />
-      </Suspense>
-
-      <Suspense fallback={<ReportSummarySkeleton />}>
-        <ReportSummary summary={reportSummary} />
-      </Suspense>
-
-      <Suspense fallback={<WorkshopInvoiceListSkeleton />}>
-        <WorkshopInvoiceList items={workshopInvoiceList} invoiceDetails={invoiceDetails} />
-      </Suspense>
-
-      <Suspense fallback={<StatusLegendSkeleton />}>
-        <StatusLegend />
+      <Suspense fallback={<InvoicePayoutManagementSkeleton />}>
+        <InvoicePayoutManagement />
       </Suspense>
     </div>
   );

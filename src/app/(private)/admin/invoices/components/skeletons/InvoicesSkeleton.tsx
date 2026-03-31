@@ -110,3 +110,26 @@ export function StatusLegendSkeleton() {
     </Card>
   );
 }
+
+export function InvoicePayoutManagementSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Card className="border-border">
+        <CardContent className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-10 w-56" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-10 w-16" />
+            <Skeleton className="h-10 w-20" />
+            <Skeleton className="h-10 w-16" />
+            <Skeleton className="h-10 w-44" />
+          </div>
+        </CardContent>
+      </Card>
+
+      <WorkshopInvoiceListSkeleton />
+    </div>
+  );
+}

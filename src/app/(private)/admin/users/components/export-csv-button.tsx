@@ -1,54 +1,55 @@
+"use client";
+
 import { Download } from "lucide-react";
+
+import type { UserManageQueryParams, UserManageStatus } from "@/types/users-manage";
+
+import { useExportUsers } from "@/lib/actions/analytics/export.users";
+
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 
-import type { User } from "../data/users";
-
 interface ExportCSVButtonProps {
-  users: User[];
+  searchTerm?: string;
+  status?: UserManageStatus;
 }
 
-export default function ExportCSVButton({ users }: ExportCSVButtonProps) {
+export default function ExportCSVButton({ searchTerm, status }: ExportCSVButtonProps) {
+  const { mutate: exportUsers, isPending } = useExportUsers();
+  const { toast } = useToast();
+
   const handleExport = () => {
-    if (users.length === 0) return;
+    const params: UserManageQueryParams = {};
+    if (searchTerm) params.searchTerm = searchTerm;
+    if (status) params.status = status;
 
-    // Define CSV headers
-    const headers = ["Name", "Email", "Phone", "Jobs Created", "Status", "Registered"];
-
-    // Map data to CSV rows
-    const rows = users.map((user) => [
-      user.name,
-      user.email,
-      user.phone,
-      user.jobsCreated,
-      user.status,
-      user.registered
-    ]);
-
-    // Create CSV content
-    const csvContent = [
-      headers.join(","),
-      ...rows.map((row) => row.map((col) => `"${col}"`).join(","))
-    ].join("\n");
-
-    // Create blob and download
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-
-    link.setAttribute("href", url);
-    link.setAttribute("download", `users-${new Date().toISOString().split("T")[0]}.csv`);
-    link.style.visibility = "hidden";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    exportUsers(params, {
+      onSuccess: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `users-${new Date().toISOString().split("T")[0]}.csv`;
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      onError: () => {
+        toast({
+          title: "Export failed",
+          description: "Could not export users. Please try again.",
+          variant: "destructive"
+        });
+      }
+    });
   };
 
   return (
-    <Button onClick={handleExport}>
+    <Button onClick={handleExport} disabled={isPending}>
       <Download className="mr-2 h-4 w-4" />
-      Export CSV
+      {isPending ? "Exporting..." : "Export CSV"}
     </Button>
   );
 }

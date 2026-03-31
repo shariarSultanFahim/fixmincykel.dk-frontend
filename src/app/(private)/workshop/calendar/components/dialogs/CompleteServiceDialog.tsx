@@ -1,5 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
+import { toast } from "sonner";
+
+import { useCompleteWorkshopBooking } from "@/lib/actions/bookings/update-workshop-booking-status";
+
 import { Button } from "@/components/ui";
 import {
   Dialog,
@@ -10,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import type { CalendarBooking } from "@/types";
 
 interface CompleteServiceDialogProps {
@@ -27,11 +32,25 @@ const formatCurrency = (amount: number, currency: string) => {
 };
 
 export function CompleteServiceDialog({ booking, currency }: CompleteServiceDialogProps) {
+  const [open, setOpen] = useState(false);
+  const { mutateAsync: completeBooking, isPending } = useCompleteWorkshopBooking();
+
+  const handleCompleteBooking = async () => {
+    try {
+      const response = await completeBooking(booking.id);
+      toast.success(response.message || "Booking completed successfully.");
+      setOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to complete booking.";
+      toast.error(message);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-          Complete
+          Complete Job
         </Button>
       </DialogTrigger>
       <DialogContent className="space-y-5">
@@ -45,36 +64,20 @@ export function CompleteServiceDialog({ booking, currency }: CompleteServiceDial
           </p>
           <p className="text-xs text-muted-foreground">{booking.serviceName}</p>
         </div>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Split Payment</span>
-            <button type="button" className="text-primary hover:text-primary/80">
-              + Add Person
-            </button>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-navy">Enter amount</p>
-              <Input placeholder="Amount" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-navy">%</p>
-              <Input placeholder="50" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-navy">Amount</p>
-              <Input placeholder={formatCurrency(booking.price, currency)} />
-            </div>
-          </div>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-            Total percentage: 68% (should be 100%)
-          </div>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          This will mark the booking as completed and update payment status based on backend rules.
+        </p>
         <DialogFooter>
           <DialogClose asChild>
-            <Button className="bg-primary text-white hover:bg-primary/90">Cancel</Button>
+            <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button className="bg-primary text-white hover:bg-primary/90">Confirm & Complete</Button>
+          <Button
+            className="bg-primary text-white hover:bg-primary/90"
+            onClick={handleCompleteBooking}
+            disabled={isPending}
+          >
+            {isPending ? "Completing..." : "Confirm & Complete"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

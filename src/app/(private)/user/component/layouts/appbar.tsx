@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 import {
   CalendarHeartIcon,
-  GitCompare,
   Home,
   LayoutDashboard,
   ListTodo,
@@ -17,7 +16,9 @@ import {
   User2
 } from "lucide-react";
 
-import { Separator } from "@/components/ui";
+import { useLogout } from "@/hooks/use-logout";
+
+import { Button, Separator } from "@/components/ui";
 import {
   Sidebar,
   SidebarContent,
@@ -52,11 +53,6 @@ const data = {
           icon: ListTodo
         },
         {
-          title: "Compare Offers",
-          url: `/user/offers`,
-          icon: GitCompare
-        },
-        {
           title: "My Bookings",
           url: `/user/bookings`,
           icon: CalendarHeartIcon
@@ -83,6 +79,7 @@ const data = {
 
 export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { logout } = useLogout();
   const isItemActive = (itemUrl: string) => {
     if (itemUrl === "/user") {
       return pathname === "/user";
@@ -150,15 +147,13 @@ export function UserAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </Link>
             </SidebarMenuButton>
             <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
-              <Link
-                href="/login"
-                className="h-10 w-full border border-secondary bg-transparent group-data-[collapsible=icon]:p-0 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:backdrop-blur-sm"
+              <Button
+                onClick={() => logout()}
+                className="flex h-10 w-full items-center justify-center gap-2 border-none"
               >
-                <button className="flex w-full items-center justify-center gap-2 border-none">
-                  <LogOut className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
-                  <span className="group-data-[collapsible=icon]:hidden">Sign Out</span>
-                </button>
-              </Link>
+                <LogOut className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
+                <span className="group-data-[collapsible=icon]:hidden">Sign Out</span>
+              </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

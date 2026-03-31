@@ -7,7 +7,8 @@ export function createRegisterSchema(t: (key: string) => string) {
       email: z.email(t("emailInvalid")),
       phone: z.string().min(11, t("phoneInvalid")),
       password: z.string().min(6, t("passwordMin")),
-      confirmPassword: z.string().min(6, t("confirmPasswordMin"))
+      confirmPassword: z.string().min(6, t("passwordMin")),
+      address: z.string().min(2, t("addressMin"))
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("confirmPasswordMatch")

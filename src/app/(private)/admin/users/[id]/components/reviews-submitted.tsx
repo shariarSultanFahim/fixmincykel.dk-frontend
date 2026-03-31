@@ -1,11 +1,11 @@
 import { Star } from "lucide-react";
 
+import type { UserReview } from "@/types/users-manage";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { Review } from "../../data/users";
-
 interface ReviewsSubmittedProps {
-  reviews: Review[];
+  reviews: UserReview[];
 }
 
 export default function ReviewsSubmitted({ reviews }: ReviewsSubmittedProps) {
@@ -31,13 +31,15 @@ export default function ReviewsSubmitted({ reviews }: ReviewsSubmittedProps) {
       </CardHeader>
       <CardContent className="space-y-4 px-0">
         {reviews.length > 0 ? (
-          reviews.map((review, idx) => (
-            <div key={idx} className="border-b border-border px-6 pb-4 last:border-0">
+          reviews.map((review) => (
+            <div key={review.id} className="border-b border-border px-6 pb-4 last:border-0">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{review.workshop}</h4>
+                  <h4 className="font-medium text-gray-900">{review.workshopName}</h4>
                   <p className="mt-1 text-sm text-gray-600">{review.comment}</p>
-                  <p className="mt-2 text-xs text-gray-500">{review.date}</p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString("da-DK")}
+                  </p>
                 </div>
                 <div className="shrink-0">{renderStars(review.rating)}</div>
               </div>

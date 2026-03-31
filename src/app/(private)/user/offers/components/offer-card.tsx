@@ -1,14 +1,19 @@
 "use client";
 
 import { CheckCircle2, Clock, MapPin, Star } from "lucide-react";
-import { toast } from "sonner";
 
+import type { JobOffer } from "@/types/jobs-manage";
 import { currencyFormatter } from "@/constants/currency-formatter";
+
+import { useAcceptOffer } from "@/lib/actions/jobs/accept-offer.job";
+
+import { toast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 interface OfferCardProps {
+  offerId: string;
   workshop: string;
   rating: number;
   reviewCount: number;
@@ -17,10 +22,13 @@ interface OfferCardProps {
   duration: string;
   availability: string;
   price: number;
+  status?: JobOffer["status"];
+  canBook?: boolean;
   isBestValue?: boolean;
 }
 
 export function OfferCard({
+  offerId,
   workshop,
   rating,
   reviewCount,
@@ -29,21 +37,36 @@ export function OfferCard({
   duration,
   availability,
   price,
+  status,
+  canBook = false,
   isBestValue = false
 }: OfferCardProps) {
-  const handleBooking = () => {
-    // Simulate API call
-    const isSuccess = Math.random() > 0.3; // 70% success rate for demo
+  const { mutate: acceptOffer, isPending: isAccepting } = useAcceptOffer();
 
-    if (isSuccess) {
-      toast.success("Booking confirmed!", {
-        description: `Your appointment with ${workshop} has been successfully booked.`
-      });
-    } else {
-      toast.error("Booking failed", {
-        description: "Unable to process your booking. Please try again later."
-      });
+  const isPendingOffer = status ? status === "PENDING" : true;
+  const isDisabled = !canBook || !isPendingOffer || isAccepting;
+
+  const handleBooking = () => {
+    if (!canBook) {
+      return;
     }
+
+    acceptOffer(offerId, {
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: `Your booking with ${workshop} has been created successfully.`
+        });
+      },
+      onError: (error) => {
+        const errorMessage = error instanceof Error ? error.message : "Failed to create booking";
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: errorMessage
+        });
+      }
+    });
   };
 
   return (
@@ -100,8 +123,14 @@ export function OfferCard({
         </div>
 
         {/* CTA Button */}
-        <Button onClick={handleBooking} className="w-full">
-          Select & Book
+        <Button onClick={handleBooking} disabled={isDisabled} className="w-full">
+          {isAccepting
+            ? "Booking..."
+            : !canBook
+              ? "Unavailable"
+              : !isPendingOffer
+                ? "Already Processed"
+                : "Select & Book"}
         </Button>
       </div>
     </Card>

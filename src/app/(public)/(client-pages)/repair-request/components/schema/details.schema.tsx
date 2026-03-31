@@ -5,7 +5,7 @@ export const detailsSchema = z.object({
   categories: z
     .array(
       z.object({
-        category: z.string().min(1, "Category is required"),
+        categoryId: z.string().min(1, "Category is required"),
         description: z.string().max(500, "Description must be less than 500 characters").optional()
       })
     )

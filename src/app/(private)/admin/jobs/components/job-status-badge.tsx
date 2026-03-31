@@ -1,26 +1,41 @@
+import type { JobStatus } from "@/types/jobs-manage";
+
 import { Badge } from "@/components/ui/badge";
 
-import type { Status } from "../data/jobs";
-
 interface JobStatusBadgeProps {
-  status: Status;
+  status: JobStatus;
 }
 
 const statusConfig = {
-  pending: {
+  PENDING: {
     variant: "secondary" as const,
     label: "Pending",
+    icon: "⏱"
+  },
+  OPEN: {
+    variant: "outline" as const,
+    label: "Open",
     icon: "⏳"
   },
-  booked: {
+  IN_PROGRESS: {
     variant: "default" as const,
-    label: "Booked",
+    label: "In Progress",
     icon: "✓"
   },
-  completed: {
-    variant: "outline" as const,
+  COMPLETED: {
+    variant: "secondary" as const,
     label: "Completed",
     icon: "✓✓"
+  },
+  CANCELLED: {
+    variant: "outline" as const,
+    label: "Cancelled",
+    icon: "✕"
+  },
+  EXPIRED: {
+    variant: "destructive" as const,
+    label: "Expired",
+    icon: "⌛"
   }
 };
 

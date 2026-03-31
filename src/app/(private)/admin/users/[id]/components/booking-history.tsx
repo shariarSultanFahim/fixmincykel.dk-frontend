@@ -1,3 +1,9 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import type { UserBooking, UserBookingStatus } from "@/types/users-manage";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,30 +15,36 @@ import {
   TableRow
 } from "@/components/ui/table";
 
-import type { Booking, BookingStatus } from "../../data/users";
-
 interface BookingHistoryProps {
-  bookings: Booking[];
+  bookings: UserBooking[];
 }
 
-function getBookingStatusColor(
-  status: BookingStatus
+function getBookingStatusVariant(
+  status: UserBookingStatus
 ): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
-    case "completed":
+    case "COMPLETED":
       return "default";
-    case "booked":
+    case "CONFIRMED":
       return "secondary";
-    case "cancelled":
+    case "CANCELLED":
       return "destructive";
-    case "no-show":
-      return "outline";
     default:
       return "outline";
   }
 }
 
+const bookingStatusLabels: Record<UserBookingStatus, string> = {
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  IN_PROGRESS: "In Progress",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled"
+};
+
 export default function BookingHistory({ bookings }: BookingHistoryProps) {
+  const router = useRouter();
+
   return (
     <Card className="gap-2 border-border pt-4 pb-0">
       <CardHeader className="px-4">
@@ -42,26 +54,28 @@ export default function BookingHistory({ bookings }: BookingHistoryProps) {
         <Table>
           <TableHeader>
             <TableRow className="border-border">
-              <TableHead>Booking ID</TableHead>
+              <TableHead>Booking Title</TableHead>
               <TableHead>Workshop</TableHead>
               <TableHead>Date/Time</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bookings.length > 0 ? (
+            {bookings?.length > 0 ? (
               bookings.map((booking) => (
-                <TableRow key={booking.id} className="border-border">
-                  <TableCell className="font-medium text-primary">{booking.id}</TableCell>
-                  <TableCell>{booking.workshop}</TableCell>
-                  <TableCell>{booking.dateTime}</TableCell>
+                <TableRow
+                  key={booking.id}
+                  className="cursor-pointer border-border hover:bg-gray-50"
+                  onClick={() => router.push(`/admin/bookings/${booking.id}`)}
+                >
+                  <TableCell className="font-medium text-primary">{booking.job.title}</TableCell>
+                  <TableCell>{booking.workshop.workshopName}</TableCell>
+                  <TableCell>{new Date(booking.createdAt).toLocaleDateString("da-DK")}</TableCell>
                   <TableCell>
-                    <Badge variant={getBookingStatusColor(booking.status)}>
-                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    <Badge variant={getBookingStatusVariant(booking.status)}>
+                      {bookingStatusLabels[booking.status]}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-medium">{booking.amount}</TableCell>
                 </TableRow>
               ))
             ) : (

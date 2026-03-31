@@ -36,12 +36,7 @@ export function SendOfferDialog({ jobId, category, trigger }: SendOfferDialogPro
           <p>Job ID: {jobId}</p>
           <p>Category: {category}</p>
         </div>
-        <SendOfferForm
-          formId={formId}
-          jobId={jobId}
-          category={category}
-          onSuccess={() => setOpen(false)}
-        />
+        <SendOfferForm formId={formId} jobId={jobId} onSuccess={() => setOpen(false)} />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

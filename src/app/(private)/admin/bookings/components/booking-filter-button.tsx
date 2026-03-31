@@ -1,9 +1,10 @@
 import { Filter } from "lucide-react";
 
+import type { BookingManagePaymentStatus, BookingManageStatus } from "@/types/booking-manage";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -11,79 +12,87 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { Payment, Status } from "../data/bookings";
-
 interface FilterButtonProps {
-  selectedStatuses: Status[];
-  selectedPayments: Payment[];
-  onStatusChange: (status: Status, checked: boolean) => void;
-  onPaymentChange: (payment: Payment, checked: boolean) => void;
+  selectedStatus?: BookingManageStatus;
+  selectedPayment?: BookingManagePaymentStatus;
+  onStatusChange: (status?: BookingManageStatus) => void;
+  onPaymentChange: (paymentStatus?: BookingManagePaymentStatus) => void;
 }
 
-const statuses: Status[] = ["booked", "completed", "cancle"];
-const statusLabels: Record<Status, string> = {
-  booked: "Booked",
-  completed: "Completed",
-  cancle: "Canceled"
+const statuses: BookingManageStatus[] = [
+  "PENDING",
+  "CONFIRMED",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "CANCELLED"
+];
+const statusLabels: Record<BookingManageStatus, string> = {
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  IN_PROGRESS: "In Progress",
+  COMPLETED: "Completed",
+  CANCELLED: "Canceled"
 };
 
-const payments: Payment[] = ["paid", "unpaid", "refunded"];
-const paymentLabels: Record<Payment, string> = {
-  paid: "Paid",
-  unpaid: "Unpaid",
-  refunded: "Refunded"
+const payments: BookingManagePaymentStatus[] = ["PENDING", "PAID", "FAILED", "REFUNDED"];
+const paymentLabels: Record<BookingManagePaymentStatus, string> = {
+  PENDING: "Pending",
+  PAID: "Paid",
+  FAILED: "Failed",
+  REFUNDED: "Refunded"
 };
 
 export default function FilterButton({
-  selectedStatuses,
-  selectedPayments,
+  selectedStatus,
+  selectedPayment,
   onStatusChange,
   onPaymentChange
 }: FilterButtonProps) {
-  const activeFilters = selectedStatuses.length + selectedPayments.length;
-  const allFilters = statuses.length + payments.length;
+  const activeFilters = Number(Boolean(selectedStatus)) + Number(Boolean(selectedPayment));
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="border-border">
           <Filter className="mr-2 h-4 w-4" />
-          Filter {activeFilters < allFilters && `(${activeFilters})`}
+          Filter {activeFilters > 0 && `(${activeFilters})`}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => onStatusChange(undefined)}>All Statuses</DropdownMenuItem>
         {statuses.map((status) => (
-          <DropdownMenuCheckboxItem
+          <DropdownMenuItem
             key={status}
-            checked={selectedStatuses.includes(status)}
-            onCheckedChange={(checked) => onStatusChange(status, checked)}
+            className={selectedStatus === status ? "font-medium" : undefined}
+            onClick={() => onStatusChange(status)}
           >
             {statusLabels[status]}
-          </DropdownMenuCheckboxItem>
+          </DropdownMenuItem>
         ))}
 
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Filter by Payment</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => onPaymentChange(undefined)}>All Payments</DropdownMenuItem>
         {payments.map((payment) => (
-          <DropdownMenuCheckboxItem
+          <DropdownMenuItem
             key={payment}
-            checked={selectedPayments.includes(payment)}
-            onCheckedChange={(checked) => onPaymentChange(payment, checked)}
+            className={selectedPayment === payment ? "font-medium" : undefined}
+            onClick={() => onPaymentChange(payment)}
           >
             {paymentLabels[payment]}
-          </DropdownMenuCheckboxItem>
+          </DropdownMenuItem>
         ))}
 
-        {(selectedStatuses.length > 0 || selectedPayments.length > 0) && (
+        {(selectedStatus || selectedPayment) && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                selectedStatuses.forEach((status) => onStatusChange(status, false));
-                selectedPayments.forEach((payment) => onPaymentChange(payment, false));
+                onStatusChange(undefined);
+                onPaymentChange(undefined);
               }}
             >
               Clear all filters

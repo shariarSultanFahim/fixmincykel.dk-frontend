@@ -15,8 +15,12 @@ import {
   User
 } from "lucide-react";
 
-import { Separator } from "@/components/ui";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
+
+import { useLogout } from "@/hooks/use-logout";
+
+import { Button, Separator } from "@/components/ui";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -32,10 +36,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const data = {
-  info: {
-    title: "Copenhagen Bike Repair",
-    subtitle: "Workshop Portal"
-  },
   navMain: [
     {
       title: "",
@@ -77,6 +77,13 @@ const data = {
 
 export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { logout } = useLogout();
+  const { data: workshopResponse } = useGetMyWorkshopProfile();
+
+  const workshopName = workshopResponse?.data?.workshopName || "Workshop";
+  const workshopAvatar = workshopResponse?.data?.avatar || undefined;
+  const workshopInitial = workshopName.trim().charAt(0).toUpperCase() || "W";
+
   const isItemActive = (itemUrl: string) => {
     if (itemUrl === "/workshop") {
       return pathname === "/workshop";
@@ -92,15 +99,16 @@ export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/workshop">
-                <div className="text-sidebar-primary-foreground hidden aspect-square size-8 items-center justify-center rounded-full group-data-[collapsible=icon]:flex">
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-full">
                   <Avatar size="sm" className="rounded-full">
-                    <AvatarFallback>C</AvatarFallback>
+                    <AvatarImage src={workshopAvatar} alt={workshopName} />
+                    <AvatarFallback>{workshopInitial}</AvatarFallback>
                   </Avatar>
                 </div>
                 <div className="grid flex-1 text-sm leading-tight">
-                  <span className="truncate text-lg font-bold">{data.info.title}</span>
+                  <span className="truncate text-lg font-bold">{workshopName}</span>
                   <span className="text-sidebar-foreground/60 truncate text-xs font-semibold">
-                    {data.info.subtitle}
+                    Workshop Portal
                   </span>
                 </div>
               </Link>
@@ -146,15 +154,13 @@ export function WorkshopAppBar({ ...props }: React.ComponentProps<typeof Sidebar
               </Link>
             </SidebarMenuButton>
             <SidebarMenuButton asChild className="group-data-[collapsible=icon]:w-full">
-              <Link
-                href="/service-provider/login"
-                className="h-10 w-full border border-secondary bg-transparent group-data-[collapsible=icon]:p-0 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:backdrop-blur-sm"
+              <Button
+                onClick={() => logout()}
+                className="flex h-10 w-full items-center justify-center gap-2 border-none"
               >
-                <button className="flex w-full items-center justify-center gap-2 border-none">
-                  <LogOut className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
-                  <span className="group-data-[collapsible=icon]:hidden">Sign Out</span>
-                </button>
-              </Link>
+                <LogOut className="size-4 group-data-[collapsible=icon]:h-5 group-data-[collapsible=icon]:w-5" />
+                <span className="group-data-[collapsible=icon]:hidden">Sign Out</span>
+              </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,23 +1,33 @@
+import type { BookingManageStatus } from "@/types/booking-manage";
+
 import { Badge } from "@/components/ui/badge";
 
-import type { Status } from "../data/bookings";
-
 interface StatusBadgeProps {
-  status: Status;
+  status: BookingManageStatus;
 }
 
 const statusConfig = {
-  booked: {
+  PENDING: {
     variant: "secondary" as const,
-    label: "Booked",
+    label: "Pending",
+    icon: "-"
+  },
+  CONFIRMED: {
+    variant: "secondary" as const,
+    label: "Confirmed",
     icon: "✓"
   },
-  completed: {
+  IN_PROGRESS: {
+    variant: "secondary" as const,
+    label: "In Progress",
+    icon: "~"
+  },
+  COMPLETED: {
     variant: "default" as const,
     label: "Completed",
     icon: "✓✓"
   },
-  cancle: {
+  CANCELLED: {
     variant: "destructive" as const,
     label: "Canceled",
     icon: "x"

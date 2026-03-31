@@ -1,14 +1,24 @@
-import { Suspense } from "react";
+"use client";
 
 import { Settings } from "lucide-react";
 
-import profileData from "@/data/profile.json";
+import { useGetMyWorkshopProfile } from "@/lib/actions/workshops/profile.workshop";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WorkshopProfileData } from "@/types";
 
 import { WorkshopProfileForm } from "./components/form/profile.form";
 import { WorkshopServiceForm } from "./components/form/service.form";
+
+const WORKSHOP_DAYS = [
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY"
+] as const;
 
 function ProfilePageSkeleton() {
   return (
@@ -36,7 +46,28 @@ function ProfilePageSkeleton() {
 }
 
 export default function ProfilePage() {
-  const workshopProfile = profileData as WorkshopProfileData;
+  const { data: workshopResponse, isLoading, isError } = useGetMyWorkshopProfile();
+
+  const workshop = workshopResponse?.data;
+
+  const workshopProfile: WorkshopProfileData = {
+    profile: {
+      workshopId: workshop?.id,
+      workshopName: workshop?.workshopName ?? "",
+      address: workshop?.address ?? "",
+      cvrNumber: workshop?.cvrNumber ?? "",
+      description: workshop?.description ?? ""
+    },
+    service: {
+      serviceCategories: [],
+      openingHours: WORKSHOP_DAYS.map((day) => ({
+        day,
+        openTime: "09:00",
+        closeTime: "18:00",
+        isClosed: false
+      }))
+    }
+  };
 
   return (
     <div className="space-y-6 py-8">
@@ -45,12 +76,21 @@ export default function ProfilePage() {
         <h1 className="text-lg font-semibold">Profile Settings</h1>
       </header>
 
-      <Suspense fallback={<ProfilePageSkeleton />}>
-        <div className="space-y-6">
-          <WorkshopProfileForm initialValues={workshopProfile.profile} />
-          <WorkshopServiceForm initialValues={workshopProfile.service} />
+      {isLoading ? (
+        <ProfilePageSkeleton />
+      ) : isError ? (
+        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+          Failed to load workshop profile. Please refresh and try again.
         </div>
-      </Suspense>
+      ) : (
+        <div className="space-y-6">
+          <WorkshopProfileForm
+            initialValues={workshopProfile.profile}
+            avatarUrl={workshop?.avatar}
+          />
+          <WorkshopServiceForm initialValues={workshopProfile.service} workshopId={workshop?.id} />
+        </div>
+      )}
     </div>
   );
 }

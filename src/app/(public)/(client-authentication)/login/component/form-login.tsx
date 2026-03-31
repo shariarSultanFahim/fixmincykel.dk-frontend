@@ -1,11 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { ChevronLeft, Chrome, Facebook } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import type { LoginErrorResponse } from "@/types/auth";
+import { AUTH_SESSION_COOKIE, ROLE_HOME_PATHS } from "@/constants/auth";
+
+import { buildSessionFromLoginResponse, useLogin } from "@/lib/actions/auth/login";
+import { cookie } from "@/lib/cookie-client";
 
 import { useCopy } from "@/hooks";
 
@@ -23,19 +31,34 @@ import {
 import { createLoginSchema, type LoginFormValues } from "./login.schema";
 
 export function FormLogin() {
+  const router = useRouter();
   const { t: tLogin } = useCopy("Login");
   const { t: tSchema } = useCopy("LoginSchema");
+  const loginMutation = useLogin();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(createLoginSchema(tSchema)),
     defaultValues: { email: "", password: "" }
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    toast("", {
-      description: <pre className="text-xs">{JSON.stringify(data, null, 2)}</pre>,
-      duration: 5000
-    });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      const response = await loginMutation.mutateAsync(values);
+      const session = buildSessionFromLoginResponse(response);
+
+      cookie.set(AUTH_SESSION_COOKIE, JSON.stringify(session));
+
+      toast.success(response.message || "Login successful.");
+      router.replace(ROLE_HOME_PATHS[session.role]);
+    } catch (error) {
+      const message = isAxiosError<LoginErrorResponse>(error)
+        ? error.response?.data?.message || error.message
+        : error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.";
+
+      toast.error(message);
+    }
   });
 
   return (
@@ -99,36 +122,16 @@ export function FormLogin() {
                   />
                   {tLogin("rememberMe")}
                 </label>
-                <Link href="/reset-password" className="text-primary hover:underline">
+                <Link href="/forget-password" className="text-primary hover:underline">
                   {tLogin("forgotPassword")}
                 </Link>
               </div>
 
-              {/* NOTE: This is for example.  */}
-              <Link href="/user">
-                <Button type="submit" className="w-full">
-                  Log In to Dashboard
-                </Button>
-              </Link>
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? "Logging in..." : "Log In to Dashboard"}
+              </Button>
             </form>
           </Form>
-
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            <span>{tLogin("orContinue")}</span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
-            <Button variant="outline" className="gap-2">
-              <Chrome className="size-4" />
-              {tLogin("google")}
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Facebook className="size-4" />
-              {tLogin("facebook")}
-            </Button>
-          </div>
 
           <p className="text-center text-sm text-muted-foreground">
             {tLogin("newTo")}{" "}

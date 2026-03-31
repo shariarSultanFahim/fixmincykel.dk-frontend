@@ -8,11 +8,8 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import type { Status } from "../data/bookings";
-
 interface BookingActionsProps {
   bookingId: string;
-  status: Status;
   onView?: (id: string) => void;
 }
 

@@ -1,9 +1,9 @@
-import type { JobBreakdownStat } from "@/types/dashboard";
+import type { DashboardJobBreakdownStat } from "@/types/admin-analytics";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface JobsBreakdownCardProps {
-  stats: JobBreakdownStat[];
+  stats: DashboardJobBreakdownStat[];
 }
 
 export default function JobsBreakdownCard({ stats }: JobsBreakdownCardProps) {

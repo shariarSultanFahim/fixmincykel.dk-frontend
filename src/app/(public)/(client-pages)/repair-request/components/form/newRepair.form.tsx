@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { Resolver, useForm } from "react-hook-form";
+
+import { BikeType, type CreateJobInput } from "@/types/job-create";
+import { AUTH_SESSION_COOKIE } from "@/constants/auth";
+
+import { useCreateJob } from "@/lib/actions/jobs/create.job";
+import { parseAuthSession } from "@/lib/auth/session";
+import { cookie } from "@/lib/cookie-client";
 
 import { useToast } from "@/hooks";
 
@@ -28,13 +36,107 @@ const FORM_STEPS: Step[] = [
   { id: 4, title: "Review", description: "Review and submit" }
 ];
 
+const DEFAULT_LATITUDE = 55.6761;
+const DEFAULT_LONGITUDE = 12.5683;
+const DEFAULT_RADIUS_KM = 25;
+
+const parseAddress = (rawAddress: string) => {
+  const normalizedAddress = rawAddress.trim();
+  const postalCityMatch = normalizedAddress.match(/(?:,\s*)?(\d{4})\s+([^,]+)$/);
+
+  if (postalCityMatch) {
+    const postalCode = postalCityMatch[1];
+    const city = postalCityMatch[2].trim();
+    const matchStartIndex = postalCityMatch.index ?? normalizedAddress.length;
+    const address = normalizedAddress.slice(0, matchStartIndex).replace(/,\s*$/, "").trim();
+
+    return {
+      address,
+      postalCode,
+      city
+    };
+  }
+
+  const segments = normalizedAddress
+    .split(",")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+
+  const lastSegment = segments.at(-1) ?? "";
+  const secondLastSegment = segments.at(-2) ?? "";
+  const looksLikeCountry = /^(denmark|danmark)$/i.test(lastSegment);
+  const fallbackCity = looksLikeCountry ? secondLastSegment : lastSegment;
+
+  return {
+    address: normalizedAddress,
+    postalCode: "",
+    city: fallbackCity
+  };
+};
+
+const parseTimeString = (timeStr: string): { hours: number; minutes: number } => {
+  if (timeStr.includes(":") && !timeStr.includes("AM") && !timeStr.includes("PM")) {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    return { hours, minutes };
+  }
+
+  const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) {
+    throw new Error("Invalid time format");
+  }
+
+  let hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const period = match[3].toUpperCase();
+
+  if (period === "PM" && hours !== 12) {
+    hours += 12;
+  } else if (period === "AM" && hours === 12) {
+    hours = 0;
+  }
+
+  return { hours, minutes };
+};
+
+const toPreferredTimeIso = (preferredDate: Date, preferredTime: string, customTime?: string) => {
+  const selectedTime = customTime?.trim() || preferredTime;
+  const { hours, minutes } = parseTimeString(selectedTime);
+
+  const dateTime = new Date(preferredDate);
+  dateTime.setHours(hours, minutes, 0, 0);
+
+  return dateTime.toISOString();
+};
+
+const resolveBikeType = (bikeType: string): CreateJobInput["bikeType"] => {
+  const normalized = bikeType.trim().toUpperCase().replace(/\s+/g, "_");
+  const allowedBikeTypes = Object.values(BikeType);
+
+  if (allowedBikeTypes.includes(normalized as CreateJobInput["bikeType"])) {
+    return normalized as CreateJobInput["bikeType"];
+  }
+
+  return BikeType.OTHER;
+};
+
+const hasAuthenticatedSession = () => {
+  const rawSession = cookie.get(AUTH_SESSION_COOKIE);
+
+  if (!rawSession) {
+    return false;
+  }
+
+  return Boolean(parseAuthSession(rawSession));
+};
+
 export function NewRepairForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const createJob = useCreateJob();
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(hasAuthenticatedSession);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const form = useForm<NewRepair>({
     resolver: zodResolver(newRepairSchema) as unknown as Resolver<NewRepair>,
@@ -67,22 +169,73 @@ export function NewRepairForm() {
   });
 
   async function onSubmit(data: NewRepair) {
-    setIsSubmitting(true);
-
-    try {
-      console.log("Submitting repair request:", data);
-      // Save repair request data to localStorage
-      localStorage.setItem("pendingRepairRequest", JSON.stringify(data));
-    } catch (error) {
-      console.error("Submission error:", error);
+    if (!hasAuthenticatedSession()) {
+      setShowLoginModal(true);
       toast({
-        title: "Error",
-        description: "Failed to submit repair request. Please try again.",
+        title: "Login required",
+        description: "Please login or sign up to submit your repair request.",
         variant: "destructive"
       });
-    } finally {
-      setIsSubmitting(false);
-      setShowSuccessModal(true);
+
+      return;
+    }
+
+    try {
+      const mappedCategories = data.details.categories.map((category) => ({
+        categoryId: category.categoryId,
+        description: category.description?.trim() || "No additional details provided"
+      }));
+
+      const { address, city, postalCode } = parseAddress(data.location.address);
+      const preferredTime = toPreferredTimeIso(
+        data.dateTime.preferredDate,
+        data.dateTime.preferredTime || "",
+        data.dateTime.customTime
+      );
+
+      const fallbackTitle = "Bike repair request";
+      const descriptionSections = data.details.categories
+        .map((category) => category.description?.trim() || "No additional details provided")
+        .join(" | ");
+
+      const payload: CreateJobInput = {
+        title: data.details.repairIssue?.trim() || fallbackTitle,
+        description: data.dateTime.additionalNotes?.trim()
+          ? `${descriptionSections} | Notes: ${data.dateTime.additionalNotes.trim()}`
+          : descriptionSections,
+        address,
+        city: city.trim() || "Kobenhavn",
+        postalCode: postalCode.trim() || "0000",
+        latitude: data.location.latitude ?? DEFAULT_LATITUDE,
+        longitude: data.location.longitude ?? DEFAULT_LONGITUDE,
+        radius: DEFAULT_RADIUS_KM,
+        bikeName: data.information.whichBike.trim(),
+        bikeType: resolveBikeType(data.information.bikeType),
+        bikeBrand: data.information.bikeBrand?.trim() || "Unknown",
+        preferredTime,
+        categories: mappedCategories,
+        photos: data.photos.photos
+      };
+
+      const createResponse = await createJob.mutateAsync(payload);
+
+      form.reset();
+      toast({
+        title: "Success",
+        description: "Your repair request has been submitted successfully."
+      });
+      router.push(`/user/repairs/${createResponse.data.id}`);
+    } catch (error) {
+      const errorMessage = isAxiosError(error)
+        ? (error.response?.data as { message?: string } | undefined)?.message ||
+          "Failed to submit repair request."
+        : "Failed to submit repair request. Please try again.";
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
     }
   }
 
@@ -99,10 +252,13 @@ export function NewRepairForm() {
         break;
       case 3:
         fieldsToValidate = ["location"];
-        // Show login modal before moving to next step
         const locationIsValid = await form.trigger(fieldsToValidate);
         if (locationIsValid) {
-          setShowLoginModal(true);
+          if (isAuthenticated || hasAuthenticatedSession()) {
+            setCurrentStep(4);
+          } else {
+            setShowLoginModal(true);
+          }
         }
         return;
       case 4:
@@ -133,8 +289,8 @@ export function NewRepairForm() {
   };
 
   const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
     setShowLoginModal(false);
-    // Move to step 4 (review) after successful login
     setCurrentStep(4);
   };
 
@@ -192,10 +348,10 @@ export function NewRepairForm() {
             {currentStep === FORM_STEPS.length && (
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={createJob.isPending}
                 className="flex-1 items-center gap-2 bg-primary text-white hover:bg-primary/90"
               >
-                {isSubmitting ? "Submitting..." : "Submit your task"}
+                {createJob.isPending ? "Submitting..." : "Submit your task"}
               </Button>
             )}
           </div>
@@ -206,46 +362,18 @@ export function NewRepairForm() {
       {showLoginModal && (
         <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <LoginForm onLoginSuccess={handleLoginSuccess} isLoading={isSubmitting} />
+            <LoginForm onLoginSuccess={handleLoginSuccess} isLoading={createJob.isPending} />
             <Button
               type="button"
               variant="outline"
-              onClick={() => setShowLoginModal(false)}
+              onClick={() => {
+                setShowLoginModal(false);
+                setIsAuthenticated(hasAuthenticatedSession());
+              }}
               className="mt-4 w-full"
             >
               Cancel
             </Button>
-          </div>
-        </div>
-      )}
-
-      {showSuccessModal && (
-        <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-lg">
-            <h2 className="mb-4 text-2xl font-semibold">Success!</h2>
-            <p className="mb-6">Your repair request has been submitted successfully.</p>
-            <div className="flex flex-row items-center justify-center gap-2">
-              <Button
-                type="button"
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  router.push("/user");
-                }}
-                className="bg-primary text-white hover:bg-primary/90"
-              >
-                Go to Dashboard
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  router.push("/");
-                }}
-                className="bg-primary text-white hover:bg-primary/90"
-              >
-                Go to Home
-              </Button>
-            </div>
           </div>
         </div>
       )}

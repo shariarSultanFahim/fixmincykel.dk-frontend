@@ -1,53 +1,31 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { ArrowLeft, CalendarDays, Clock } from "lucide-react";
 
+import { useGetBlogs } from "@/lib/actions/blogs/get.blogs";
+
 import { Button } from "@/components/ui/button";
 
-import { blogsData, getBlogBySlug } from "../data/blogs";
+export default function BlogDetailPage() {
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug;
+  const { data, isLoading } = useGetBlogs({ page: 1, limit: 100 });
 
-interface BlogDetailPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
+  const blog = data?.data.data.find((item) => item.slug === slug);
 
-export async function generateStaticParams() {
-  return blogsData.map((blog) => ({
-    slug: blog.slug
-  }));
-}
-
-export async function generateMetadata(props: BlogDetailPageProps) {
-  const params = await props.params;
-  const blog = getBlogBySlug(params.slug);
-
-  if (!blog) {
-    return {
-      title: "Blog Not Found"
-    };
+  if (isLoading) {
+    return <div className="container py-20 text-center text-gray-500">Loading article...</div>;
   }
 
-  return {
-    title: blog.title,
-    description: blog.description,
-    openGraph: {
-      title: blog.title,
-      description: blog.description,
-      images: [blog.image]
-    }
-  };
-}
-
-export default async function BlogDetailPage(props: BlogDetailPageProps) {
-  const params = await props.params;
-  const blog = getBlogBySlug(params.slug);
-
   if (!blog) {
-    notFound();
+    return <div className="container py-20 text-center text-gray-500">Article not found.</div>;
   }
+
+  const imageUrl = blog.images[0] ?? "/black-cycle.jpg";
 
   return (
     <article className="bg-white py-12 md:py-20">
@@ -66,7 +44,14 @@ export default async function BlogDetailPage(props: BlogDetailPageProps) {
         {/* Hero Section */}
         <div className="mb-10 overflow-hidden rounded-3xl border border-navy/10 shadow-lg">
           <div className="relative h-64 w-full md:h-96">
-            <Image src={blog.image} alt={blog.imageAlt} fill className="object-cover" priority />
+            <Image
+              src={imageUrl}
+              alt={blog.title}
+              fill
+              className="object-cover"
+              priority
+              unoptimized
+            />
           </div>
         </div>
 
@@ -74,33 +59,33 @@ export default async function BlogDetailPage(props: BlogDetailPageProps) {
         <div className="space-y-4 border-b border-navy/10 pb-8">
           <div className="flex flex-wrap items-center gap-4">
             <span className="inline-flex rounded-full bg-secondary/60 px-3 py-1 text-xs font-semibold text-navy">
-              {blog.tag}
+              {blog.category.name}
             </span>
           </div>
 
           <h1 className="text-3xl font-bold text-navy md:text-4xl">{blog.title}</h1>
 
-          <p className="text-lg text-navy/70">{blog.description}</p>
+          <p className="text-lg text-navy/70">{blog.subTitle}</p>
 
           <div className="flex flex-wrap items-center gap-6 text-sm font-semibold text-navy/60">
             <span className="inline-flex items-center gap-2">
               <Clock className="size-4 text-primary" aria-hidden="true" />
-              {blog.readTime}
+              {new Date(blog.readTime).toLocaleDateString("da-DK")}
             </span>
             <span className="inline-flex items-center gap-2">
               <CalendarDays className="size-4 text-primary" aria-hidden="true" />
-              {blog.date}
+              {new Date(blog.createdAt).toLocaleDateString("da-DK")}
             </span>
           </div>
         </div>
 
         {/* Content Sections */}
         <div className="space-y-10 py-10">
-          {blog.sections.map((section, index) => (
+          {blog.contents.map((section, index) => (
             <section key={index} className="space-y-4">
-              <h2 className="text-2xl font-bold text-navy">{section.title}</h2>
+              <h2 className="text-2xl font-bold text-navy">{section.heading}</h2>
               <p className="text-base leading-relaxed whitespace-pre-wrap text-navy/80">
-                {section.content}
+                {section.details}
               </p>
             </section>
           ))}

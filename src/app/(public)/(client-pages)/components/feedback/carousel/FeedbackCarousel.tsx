@@ -87,7 +87,7 @@ export function FeedbackCarousel({ feedbacks }: { feedbacks: FeedbackCarouselPro
                     </Avatar>
                     <div>
                       <h3>{feedback.name}</h3>
-                      <p>{feedback.title}</p>
+                      {/* <p>{feedback.title}</p> */}
                     </div>
                   </div>
                 </CardContent>

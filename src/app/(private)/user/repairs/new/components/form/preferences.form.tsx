@@ -3,7 +3,6 @@
 import { UseFormReturn } from "react-hook-form";
 
 import DenmarkAddressInput from "@/components/map/DenmarkAddressInput";
-import { Checkbox } from "@/components/ui";
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,9 +13,40 @@ interface PreferencesFormProps {
   form: UseFormReturn<NewRepair>;
 }
 
+const extractPostalCode = (address: string) => {
+  const match = address.match(/(?:,\s*)?(\d{4})\s+[^,]+$/);
+  return match?.[1] ?? "";
+};
+
 export function PreferencesForm({ form }: PreferencesFormProps) {
-  const handleAddressSelect = ({ address }: { address: string }) => {
+  const handleAddressSelect = ({
+    address,
+    latitude,
+    longitude
+  }: {
+    address: string;
+    latitude?: number;
+    longitude?: number;
+  }) => {
     form.setValue("preferences.address", address, { shouldValidate: true });
+    const postalCode = extractPostalCode(address);
+
+    if (postalCode) {
+      form.setValue("preferences.postalCode", postalCode, { shouldValidate: true });
+    }
+
+    form.setValue("preferences.maximumDistance", "5", { shouldValidate: true });
+
+    if (typeof latitude === "number" && typeof longitude === "number") {
+      form.setValue(
+        "location",
+        {
+          latitude,
+          longitude
+        },
+        { shouldValidate: true }
+      );
+    }
   };
   return (
     <Card className="border-0 bg-white p-6 shadow-sm">
@@ -49,6 +79,26 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
 
         <FormField
           control={form.control}
+          name="preferences.postalCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium text-navy">Postal Code</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter 4-digit postal code"
+                  {...field}
+                  inputMode="numeric"
+                  maxLength={4}
+                  className="mt-1 border-gray-200 bg-white text-navy placeholder-gray-400 shadow-sm"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* <FormField
+          control={form.control}
           name="preferences.maximumDistance"
           render={({ field }) => (
             <FormItem>
@@ -64,27 +114,7 @@ export function PreferencesForm({ form }: PreferencesFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
-
-        <FormField
-          control={form.control}
-          name="preferences.receiveSmsNotifications"
-          render={({ field }) => (
-            <FormItem className="flex items-start space-y-0 space-x-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <FormControl>
-                <Checkbox checked={field.value} onCheckedChange={field.onChange} className="mt-1" />
-              </FormControl>
-              <div className="grow">
-                <FormLabel className="cursor-pointer text-sm font-medium text-navy">
-                  Receive SMS notifications
-                </FormLabel>
-                <p className="text-xs text-gray-600">
-                  Get updates about offers and booking confirmations
-                </p>
-              </div>
-            </FormItem>
-          )}
-        />
+        /> */}
       </div>
     </Card>
   );

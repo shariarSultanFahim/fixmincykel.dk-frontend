@@ -2,10 +2,16 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { Resolver, useForm } from "react-hook-form";
+
+import type { CreateJobInput } from "@/types/job-create";
+
+import { useCreateJob } from "@/lib/actions/jobs/create.job";
 
 import { useToast } from "@/hooks";
 
@@ -35,18 +41,88 @@ const FORM_STEPS: Step[] = [
   { id: 4, title: "Preferences", description: "Location & distance" }
 ];
 
+const parseAddress = (rawAddress: string) => {
+  const normalizedAddress = rawAddress.trim();
+  const postalCityMatch = normalizedAddress.match(/(?:,\s*)?(\d{4})\s+([^,]+)$/);
+
+  if (postalCityMatch) {
+    const postalCode = postalCityMatch[1];
+    const city = postalCityMatch[2].trim();
+    const matchStartIndex = postalCityMatch.index ?? normalizedAddress.length;
+    const address = normalizedAddress.slice(0, matchStartIndex).replace(/,\s*$/, "").trim();
+
+    return {
+      address,
+      postalCode,
+      city
+    };
+  }
+
+  const segments = normalizedAddress
+    .split(",")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+
+  const lastSegment = segments.at(-1) ?? "";
+  const secondLastSegment = segments.at(-2) ?? "";
+  const looksLikeCountry = /^(denmark|danmark)$/i.test(lastSegment);
+  const fallbackCity = looksLikeCountry ? secondLastSegment : lastSegment;
+
+  return {
+    address: normalizedAddress,
+    postalCode: "",
+    city: fallbackCity
+  };
+};
+
+const parseTimeString = (timeStr: string): { hours: number; minutes: number } => {
+  if (timeStr.includes(":") && !timeStr.includes("AM") && !timeStr.includes("PM")) {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    return { hours, minutes };
+  }
+
+  const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) {
+    throw new Error("Invalid time format");
+  }
+
+  let hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const period = match[3].toUpperCase();
+
+  if (period === "PM" && hours !== 12) {
+    hours += 12;
+  } else if (period === "AM" && hours === 12) {
+    hours = 0;
+  }
+
+  return { hours, minutes };
+};
+
+const toPreferredTimeIso = (preferredDate: Date, preferredTime: string, customTime?: string) => {
+  const selectedTime = customTime?.trim() || preferredTime;
+  const { hours, minutes } = parseTimeString(selectedTime);
+
+  const dateTime = new Date(preferredDate);
+  dateTime.setHours(hours, minutes, 0, 0);
+
+  return dateTime.toISOString();
+};
+
 export function NewRepairForm() {
+  const router = useRouter();
   const { toast } = useToast();
+  const createJob = useCreateJob();
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<NewRepair>({
     resolver: zodResolver(newRepairSchema) as unknown as Resolver<NewRepair>,
     defaultValues: {
       details: {
         repairIssue: "",
-        categories: [],
-        urgency: "Medium"
+        repairDescription: "",
+        categories: []
       },
       information: {
         whichBike: "",
@@ -63,39 +139,66 @@ export function NewRepairForm() {
       },
       preferences: {
         address: "",
-        maximumDistance: "",
-        receiveSmsNotifications: false
+        postalCode: "",
+        maximumDistance: ""
       },
       location: {
-        latitude: 0,
-        longitude: 0
+        latitude: 55.6761,
+        longitude: 12.5683
       }
     }
   });
 
   async function onSubmit(data: NewRepair) {
-    setIsSubmitting(true);
-
     try {
-      console.log("Repair Request Data:", data);
+      const { address, city } = parseAddress(data.preferences.address);
+      const postalCode = data.preferences.postalCode.trim();
+
+      const preferredTime = toPreferredTimeIso(
+        data.dateTime.preferredDate,
+        data.dateTime.preferredTime || "",
+        data.dateTime.customTime
+      );
+
+      const payload: CreateJobInput = {
+        title: data.details.repairIssue.trim(),
+        description: data.details.repairDescription.trim(),
+        address,
+        city: city.trim(),
+        postalCode,
+        latitude: data.location.latitude,
+        longitude: data.location.longitude,
+        radius: Number(data.preferences.maximumDistance),
+        bikeName: data.information.whichBike.trim(),
+        bikeType: data.information.bikeType as CreateJobInput["bikeType"],
+        bikeBrand: data.information.bikeBrand.trim(),
+        preferredTime,
+        categories: data.details.categories.map((category) => ({
+          categoryId: category.categoryId,
+          description: category.description.trim()
+        })),
+        photos: data.photos.photos
+      };
+
+      const createResponse = await createJob.mutateAsync(payload);
 
       toast({
         title: "Success",
-        description: "Your repair request has been submitted successfully!"
+        description: "Your repair request has been submitted successfully."
       });
-
-      // Reset form after successful submission
       form.reset();
-      setCurrentStep(1);
+      router.push(`/user/repairs/${createResponse.data.id}`);
     } catch (error) {
-      console.error("Submission error:", error);
+      const errorMessage = isAxiosError(error)
+        ? (error.response?.data as { message?: string } | undefined)?.message ||
+          "Failed to submit repair request."
+        : "Failed to submit repair request. Please try again.";
+
       toast({
         title: "Error",
-        description: "Failed to submit repair request. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -204,10 +307,10 @@ export function NewRepairForm() {
             {currentStep === FORM_STEPS.length && (
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={createJob.isPending}
                 className="flex-1 items-center gap-2 bg-primary text-white hover:bg-primary/90"
               >
-                {isSubmitting ? "Submitting..." : "Submit Repair Request"}
+                {createJob.isPending ? "Submitting..." : "Submit Repair Request"}
               </Button>
             )}
           </div>

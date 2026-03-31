@@ -14,9 +14,9 @@ export function PendingReviewCard({ pendingReview, onOpen }: PendingReviewCardPr
     event.stopPropagation();
     handleOpen();
   };
-  const handleActionClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-  };
+  // const handleActionClick = (event: MouseEvent<HTMLButtonElement>) => {
+  //   event.stopPropagation();
+  // };
 
   return (
     <Card className="border-0 bg-[#FEFCE8]">
@@ -37,15 +37,6 @@ export function PendingReviewCard({ pendingReview, onOpen }: PendingReviewCardPr
         <div className="flex flex-wrap items-center gap-2">
           <Button type="button" size="sm" className="shadow-none" onClick={handleLeaveReviewClick}>
             Leave Review
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            className="border-white bg-white"
-            onClick={handleActionClick}
-          >
-            Remind Me Later
           </Button>
         </div>
       </CardContent>

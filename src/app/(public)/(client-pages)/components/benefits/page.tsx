@@ -35,7 +35,7 @@ export default function Benefits() {
   ];
 
   return (
-    <div className="flex flex-col items-center space-y-5">
+    <div className="flex flex-col items-center space-y-5 py-20">
       <Title
         title="Benefits of getting bike repair quotes online"
         subtitle="71% of Danish bike owners have no idea what a bike repair actually costs."

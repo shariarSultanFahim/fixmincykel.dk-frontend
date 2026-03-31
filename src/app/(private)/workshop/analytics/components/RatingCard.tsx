@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { Star } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +8,7 @@ interface RatingProps {
   reportUrl: string;
 }
 
-export function RatingCard({ score, reviews, reportUrl }: RatingProps) {
+export function RatingCard({ score, reviews }: RatingProps) {
   return (
     <Card className="border-0 shadow-md">
       <CardContent className="space-y-2">
@@ -23,9 +21,9 @@ export function RatingCard({ score, reviews, reportUrl }: RatingProps) {
           </div>
         </div>
         <p className="text-sm text-navy/70">Based on {reviews} reviews</p>
-        <Link href={reportUrl} className="text-sm font-medium text-primary hover:underline">
+        {/* <Link href={reportUrl} className="text-sm font-medium text-primary hover:underline">
           View Full Report →
-        </Link>
+        </Link> */}
       </CardContent>
     </Card>
   );

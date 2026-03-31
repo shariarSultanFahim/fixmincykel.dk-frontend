@@ -97,7 +97,7 @@ export default function LeafletMap({ showMap = true, onLocationSelect }: MapProp
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-start">
-        <Button onClick={handleLocateMe} disabled={loading}>
+        <Button type="button" onClick={handleLocateMe} disabled={loading}>
           {loading ? "Locating..." : "📍 Use My GPS"}
         </Button>
       </div>

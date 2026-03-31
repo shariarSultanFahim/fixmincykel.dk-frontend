@@ -9,9 +9,15 @@ interface HideReviewDialogProps {
   review: ReviewModerationItem;
   onClose: () => void;
   onConfirm: (id: string) => void;
+  isLoading?: boolean;
 }
 
-export default function HideReviewDialog({ review, onClose, onConfirm }: HideReviewDialogProps) {
+export default function HideReviewDialog({
+  review,
+  onClose,
+  onConfirm,
+  isLoading = false
+}: HideReviewDialogProps) {
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="space-y-4 border-border sm:max-w-lg">
@@ -35,14 +41,15 @@ export default function HideReviewDialog({ review, onClose, onConfirm }: HideRev
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onClose()}>
+          <Button variant="outline" onClick={() => onClose()} disabled={isLoading}>
             Cancel
           </Button>
           <Button
             className="bg-orange-500 text-white hover:bg-orange-600"
+            disabled={isLoading}
             onClick={() => onConfirm(review.id)}
           >
-            Hide Review
+            {isLoading ? "Hiding..." : "Hide Review"}
           </Button>
         </div>
       </DialogContent>

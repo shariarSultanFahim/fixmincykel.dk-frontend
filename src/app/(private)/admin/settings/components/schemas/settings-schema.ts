@@ -9,13 +9,6 @@ export const settingsSchema = z.object({
     .number()
     .min(1, "Radius must be at least 1 km")
     .max(50, "Radius must be 50 km or lower"),
-  serviceCategories: z
-    .array(
-      z.object({
-        name: z.string().min(1, "Category name is required")
-      })
-    )
-    .min(1, "Add at least one service category"),
   newCategory: z.string().max(20, "Category name must be 20 characters or less").optional()
 });
 

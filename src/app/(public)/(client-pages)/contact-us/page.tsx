@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 
 import { BadgeDollarSign, CreditCard, Mail, Package, Tag, Truck } from "lucide-react";
@@ -9,6 +9,7 @@ import PaperPlaneIcon from "@/assets/icons/paper-plane.svg";
 import Underline from "@/assets/icons/underline.svg";
 import faqHeroImage from "@/assets/images/client-faq-bg.jpg";
 import contactIllustration from "@/assets/images/kontakt.png";
+import { post } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 import { useCopy } from "@/hooks/use-copy";
@@ -64,21 +65,39 @@ const FORM_FIELDS = [
 export default function GetInTouchPage() {
   const { t, rich } = useCopy("GetInTouch");
   const { t: tClientFaq } = useCopy("ClientFaq");
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [sucessModalOpen, setSuccessModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    console.log("Form submitted", {
-      fullName: formData.get("full-name"),
-      address: formData.get("address"),
-      email: formData.get("email"),
-      phone: formData.get("phone")
-    });
-    setSuccessModalOpen(true);
 
-    e.currentTarget.reset();
+    if (isSubmitting) {
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      fullName: String(formData.get("full-name") ?? "").trim(),
+      address: String(formData.get("address") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      phoneNumber: String(formData.get("phone") ?? "").trim(),
+      message: String(formData.get("message") ?? "").trim()
+    };
+
+    try {
+      setIsSubmitting(true);
+      setSubmitError(null);
+      await post("/contact", payload);
+      setSuccessModalOpen(true);
+      formRef.current?.reset();
+    } catch {
+      setSubmitError("Failed to send your message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <section className="space-y-10 bg-white py-10 md:space-y-20">
@@ -103,7 +122,7 @@ export default function GetInTouchPage() {
         </header>
 
         <section className="grid gap-8 rounded-[14px] border border-navy/10 bg-white p-6 shadow-lg md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:p-8">
-          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          <form ref={formRef} className="flex flex-col gap-5" onSubmit={handleSubmit}>
             {FORM_FIELDS.map((field) => (
               <div key={field.id} className="flex flex-col gap-2">
                 <label htmlFor={field.id} className="text-sm font-semibold text-navy">
@@ -131,9 +150,10 @@ export default function GetInTouchPage() {
                 )}
               />
             </div>
-            <Button className="h-10 w-full rounded-md" type="submit">
-              {t("form.submit")}
+            <Button className="h-10 w-full rounded-md" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : t("form.submit")}
             </Button>
+            {submitError && <p className="text-sm text-destructive">{submitError}</p>}
           </form>
 
           <div className="relative flex flex-col items-center justify-between overflow-hidden rounded-2xl bg-white p-6 text-center">

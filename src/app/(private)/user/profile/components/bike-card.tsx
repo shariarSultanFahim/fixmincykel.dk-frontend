@@ -1,10 +1,15 @@
 import { cn } from "@/lib/utils";
 
-import type { BikeCardProps } from "@/types";
+import type { BikeCardProps, UserBikeFormValues } from "@/types";
 
 import { EditBikeDialog } from "./dialog";
 
-export function BikeCard({ bike, variant }: BikeCardProps) {
+interface BikeCardWithActionProps extends BikeCardProps {
+  hasPrimaryBike: boolean;
+  onEditBike: (bikeId: string, values: UserBikeFormValues) => Promise<void>;
+}
+
+export function BikeCard({ bike, variant, hasPrimaryBike, onEditBike }: BikeCardWithActionProps) {
   return (
     <div
       className={cn(
@@ -19,7 +24,7 @@ export function BikeCard({ bike, variant }: BikeCardProps) {
           </p>
           <p className="text-xs text-muted-foreground">{bike.name}</p>
         </div>
-        <EditBikeDialog bike={bike} />
+        <EditBikeDialog bike={bike} hasPrimaryBike={hasPrimaryBike} onSubmit={onEditBike} />
       </div>
       <div className="mt-3 grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
         <p>
@@ -29,7 +34,10 @@ export function BikeCard({ bike, variant }: BikeCardProps) {
           <span className="font-semibold text-navy">Year:</span> {bike.year}
         </p>
         <p>
-          <span className="font-semibold text-navy">Frame Size:</span> {bike.frameSize}
+          <span className="font-semibold text-navy">Brand:</span> {bike.brand}
+        </p>
+        <p>
+          <span className="font-semibold text-navy">Model:</span> {bike.model}
         </p>
         <p>
           <span className="font-semibold text-navy">Color:</span> {bike.color}

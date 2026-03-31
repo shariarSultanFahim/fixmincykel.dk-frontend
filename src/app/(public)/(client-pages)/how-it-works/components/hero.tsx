@@ -42,7 +42,9 @@ export default function HowItWorksHero() {
                 size="sm"
                 className="border border-white bg-transparent text-[12px] text-white hover:border-primary/40 hover:bg-primary hover:text-white md:text-[15px]"
               >
-                <Link href="/service-home">{getMessage(copy, "HowItWorksHero.ctaSecondary")}</Link>
+                <Link href="/service-provider/register">
+                  {getMessage(copy, "HowItWorksHero.ctaSecondary")}
+                </Link>
               </Button>
             </div>
           </div>
