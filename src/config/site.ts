@@ -2,7 +2,7 @@ import type { SiteConfig } from "@/types/site-config";
 import { env } from "@/env";
 
 export const siteConfig: SiteConfig = {
-  name: "FixMinCykel.dk",
+  name: "FixMinCykel",
   description:
     "Your trusted partner for bike repairs and maintenance. We offer expert services to keep your bike in top condition, ensuring a smooth and enjoyable ride every time.",
   url: env.NEXT_PUBLIC_SITE_URL,

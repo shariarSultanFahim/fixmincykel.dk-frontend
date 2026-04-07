@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 
 import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
 
+import { env } from "@/env";
+
 import { Input } from "@/components/ui/input";
 
 interface AddressSelection {
@@ -36,7 +38,7 @@ export default function DenmarkAddressInput({
   }, [controlledValue]);
 
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const apiKey = env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     if (!apiKey) {
       return;

@@ -6,12 +6,16 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: z.url(),
     NEXT_PUBLIC_API_URL: z.url(),
     NEXT_PUBLIC_API_WS_URL: z.url().optional(),
-    NEXT_PUBLIC_GA_ID: z.string().optional()
+    NEXT_PUBLIC_GA_ID: z.string().optional(),
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
+    NEXT_PUBLIC_GOOGLE_PROJECT_ID: z.string().optional()
   },
   runtimeEnv: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_API_WS_URL: process.env.NEXT_PUBLIC_API_WS_URL,
-    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID
+    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    NEXT_PUBLIC_GOOGLE_PROJECT_ID: process.env.NEXT_PUBLIC_GOOGLE_PROJECT_ID
   }
 });

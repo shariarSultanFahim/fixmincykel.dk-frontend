@@ -10,6 +10,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   htmlLimitedBots: /.*/,
+  output: "standalone",
   turbopack: {
     rules: {
       "*.svg": {
@@ -42,7 +43,6 @@ const nextConfig: NextConfig = {
         hostname: "187.77.23.76",
         port: "4000",
         pathname: "/**"
-
       }
     ]
   },
