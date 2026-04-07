@@ -2,6 +2,8 @@
 
 import { CheckCircle2, Clock, Zap } from "lucide-react";
 
+import { useGetUserAnalytics } from "@/lib/actions/analytics/get-analytics";
+
 interface StatusCard {
   icon: React.ReactNode;
   value: number;
@@ -10,26 +12,29 @@ interface StatusCard {
 }
 
 export function QuickStatusCards() {
+  const { data: analyticsResponse } = useGetUserAnalytics();
+  const analyticsData = analyticsResponse?.data;
+
   const cards: StatusCard[] = [
     {
       icon: <Zap className="size-6" />,
-      value: 2,
+      value: analyticsData?.totalJobs || 0,
       label: "Active Requests"
     },
     {
       icon: <Clock className="size-6" />,
-      value: 3,
+      value: analyticsData?.totalBookings || 0,
       label: "Offers Received"
     },
     {
       icon: <Clock className="size-6" />,
-      value: 1,
+      value: analyticsData?.totalBookings || 0,
       label: "Upcoming Repairs",
       subLabel: "Tomorrow"
     },
     {
       icon: <CheckCircle2 className="size-6" />,
-      value: 6,
+      value: analyticsData?.totalCompletedBookings || 0,
       label: "Total Completed"
     }
   ];

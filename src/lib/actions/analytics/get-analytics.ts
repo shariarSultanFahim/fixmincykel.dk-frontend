@@ -39,12 +39,25 @@ export interface WorkshopActivityItem {
   };
 }
 
+interface UserAnalyticsData {
+  totalJobs: number;
+  totalBookings: number;
+  totalCompletedBookings: number;
+  totalSpent: number;
+  reviewsGiven: number;
+}
+
 interface GetAnalyticsResponse {
   success: boolean;
   message: string;
   data: WorkshopAnalyticsData;
 }
 
+interface GetUserAnalyticsResponse {
+  success: boolean;
+  message: string;
+  data: UserAnalyticsData;
+}
 interface GetWeeklyBookingsResponse {
   success: boolean;
   message: string;
@@ -84,6 +97,16 @@ export const useGetWorkshopActivities = () => {
       const response = await instance.get<GetWorkshopActivitiesResponse>(
         "/activity/workshop-activities"
       );
+      return response.data;
+    }
+  });
+};
+
+export const useGetUserAnalytics = () => {
+  return useQuery({
+    queryKey: ["analytics", "user"],
+    queryFn: async () => {
+      const response = await instance.get<GetUserAnalyticsResponse>("/analytics/user");
       return response.data;
     }
   });
