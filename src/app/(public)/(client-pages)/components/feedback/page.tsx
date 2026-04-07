@@ -22,9 +22,7 @@ export default function Feedback() {
         name: review.user?.name || "Anonymous Rider",
         title: "Verified Rider",
         feedback: review.comment,
-        avatar:
-          review.user?.avatar ||
-          `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(review.user?.name || "Anonymous")}`
+        avatar: review.user?.avatar || null
       }));
   }, [publicReviewsResponse]);
 

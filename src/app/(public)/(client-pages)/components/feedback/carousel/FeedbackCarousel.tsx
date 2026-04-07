@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/carousel";
 
 type FeedbackCarouselProps = {
-  feedbacks: Array<{ id: number; name: string; title: string; feedback: string; avatar: string }>;
+  feedbacks: Array<{ id: number; name: string; title: string; feedback: string; avatar: string | null }>;
 };
 
 export function FeedbackCarousel({ feedbacks }: { feedbacks: FeedbackCarouselProps["feedbacks"] }) {
@@ -73,11 +73,13 @@ export function FeedbackCarousel({ feedbacks }: { feedbacks: FeedbackCarouselPro
                   <p className="p-2">{feedback.feedback}</p>
                   <div className="flex items-center justify-start gap-2">
                     <Avatar className="h-15 w-15 md:h-20 md:w-20">
-                      <AvatarImage
-                        className="h-15 w-15 md:h-20 md:w-20"
-                        src={feedback.avatar}
-                        alt={feedback.name}
-                      />
+                      {feedback.avatar && (
+                        <AvatarImage
+                          className="h-15 w-15 md:h-20 md:w-20"
+                          src={feedback.avatar}
+                          alt={feedback.name}
+                        />
+                      )}
                       <AvatarFallback>
                         {feedback.name
                           .split(" ")
