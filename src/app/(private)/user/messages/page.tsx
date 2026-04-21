@@ -9,7 +9,6 @@ import { useGetMyProfile } from "@/lib/actions/users/profile.user";
 import { getSocketClient } from "@/lib/socket";
 
 import {
-  chatRoomsQueryKey,
   useChatNotificationRooms,
   useChatRooms,
   useIsMobile,
@@ -29,7 +28,7 @@ export default function MessagesPage() {
   const [selectedConversationId, setSelectedConversationId] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const searchParams = useSearchParams();
-  const appliedRouteSelectionRef = useRef("");
+  const pendingReadNotificationIdsRef = useRef(new Set<string>());
 
   const isMobile = useIsMobile();
 
@@ -37,15 +36,13 @@ export default function MessagesPage() {
   const currentUserId = profileData?.data?.id ?? "";
 
   const { data: roomsResponse, isLoading: isRoomsLoading } = useChatRooms();
-  const rooms = roomsResponse?.data ?? [];
+  const rooms = useMemo(() => roomsResponse?.data ?? [], [roomsResponse?.data]);
   const roomIds = rooms.map((room) => room.id);
   const queryClient = useQueryClient();
   const markNotificationAsReadMutation = useMarkChatNotificationAsRead();
   const { data: notificationsByRoom } = useChatNotificationRooms(roomIds);
 
   const socket = useMemo(() => getSocketClient(), []);
-
-  const activeRoomId = selectedConversationId || rooms[0]?.id || "";
 
   const roomsWithUnread = useMemo(() => {
     if (!notificationsByRoom) {
@@ -89,32 +86,23 @@ export default function MessagesPage() {
     });
   }, [notificationsByRoom, rooms]);
 
-  const selectedRoom = roomsWithUnread.find((room) => room.id === activeRoomId);
-
-  useEffect(() => {
+  const routeSelectedConversationId = useMemo(() => {
     const routeRoomId = searchParams.get("roomId");
     const routeBookingId = searchParams.get("bookingId");
-    const routeSelectionKey = `${routeRoomId ?? ""}|${routeBookingId ?? ""}`;
 
     if (!routeRoomId && !routeBookingId) {
-      return;
-    }
-
-    if (!roomsWithUnread.length || appliedRouteSelectionRef.current === routeSelectionKey) {
-      return;
+      return "";
     }
 
     const targetRoom = routeRoomId
       ? roomsWithUnread.find((room) => room.id === routeRoomId)
       : roomsWithUnread.find((room) => room.bookingId === routeBookingId);
 
-    if (!targetRoom) {
-      return;
-    }
-
-    setSelectedConversationId(targetRoom.id);
-    appliedRouteSelectionRef.current = routeSelectionKey;
+    return targetRoom?.id ?? "";
   }, [roomsWithUnread, searchParams]);
+
+  const activeRoomId = selectedConversationId || routeSelectedConversationId || rooms[0]?.id || "";
+  const selectedRoom = roomsWithUnread.find((room) => room.id === activeRoomId);
 
   useEffect(() => {
     if (!activeRoomId || !notificationsByRoom?.[activeRoomId]?.length) {
@@ -124,25 +112,48 @@ export default function MessagesPage() {
     const unreadNotifications = notificationsByRoom[activeRoomId].filter(
       (notification) => !notification.isRead
     );
+    const unreadNotificationIds = unreadNotifications.map((notification) => notification.id);
+    const unreadNotificationIdSet = new Set(unreadNotificationIds);
 
-    if (!unreadNotifications.length) {
+    for (const trackedNotificationId of pendingReadNotificationIdsRef.current) {
+      if (!unreadNotificationIdSet.has(trackedNotificationId)) {
+        pendingReadNotificationIdsRef.current.delete(trackedNotificationId);
+      }
+    }
+
+    const unreadNotificationIdsToMark = unreadNotificationIds.filter(
+      (notificationId) => !pendingReadNotificationIdsRef.current.has(notificationId)
+    );
+
+    if (!unreadNotificationIdsToMark.length) {
       return;
     }
+
+    unreadNotificationIdsToMark.forEach((notificationId) =>
+      pendingReadNotificationIdsRef.current.add(notificationId)
+    );
 
     let isMounted = true;
 
     const markAsRead = async () => {
-      await Promise.all(
-        unreadNotifications.map((notification) =>
-          markNotificationAsReadMutation.mutateAsync(notification.id)
-        )
-      );
+      try {
+        await Promise.all(
+          unreadNotificationIdsToMark.map((notificationId) =>
+            markNotificationAsReadMutation.mutateAsync(notificationId)
+          )
+        );
+      } catch {
+        unreadNotificationIdsToMark.forEach((notificationId) =>
+          pendingReadNotificationIdsRef.current.delete(notificationId)
+        );
+
+        return;
+      }
 
       if (!isMounted) {
         return;
       }
 
-      await queryClient.invalidateQueries({ queryKey: chatRoomsQueryKey });
       await queryClient.invalidateQueries({ queryKey: ["chat-notifications", "rooms"] });
     };
 
@@ -164,7 +175,7 @@ export default function MessagesPage() {
 
     console.log("[MessagesPage] Joining room", { activeRoomId, socketConnected: socket.connected });
 
-    socket.emit("join_room", { roomId: activeRoomId }, (acknowledgment: any) => {
+    socket.emit("join_room", { roomId: activeRoomId }, (acknowledgment: unknown) => {
       console.log("[MessagesPage] join_room acknowledged", { activeRoomId, acknowledgment });
     });
 
