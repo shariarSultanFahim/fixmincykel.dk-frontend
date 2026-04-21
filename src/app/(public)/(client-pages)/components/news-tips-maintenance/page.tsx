@@ -75,13 +75,13 @@ export default function NewsTipsMaintenance() {
                 quick home checks, and when it’s safer to book a workshop.
               </p>
             </div>
-            <Link
+            {/* <Link
               href="/news/brake-problems-explained"
               className="inline-flex items-center gap-2 text-sm font-semibold text-navy"
             >
               <span>Read more</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            </Link> */}
           </div>
         </div>
 
@@ -121,12 +121,12 @@ export default function NewsTipsMaintenance() {
                 costly repairs, and choose the right service level for your riding style.
               </p>
             </div>
-            <Link
+            {/* <Link
               href="/news/brake-problems-explained"
               className="inline-flex items-center gap-2 text-sm font-semibold text-white"
             >
               <ArrowRight className="h-10 w-10" aria-hidden="true" />
-            </Link>
+            </Link> */}
           </div>
         </div>
 

@@ -36,7 +36,7 @@ export default function ServiceHero() {
           </div>
         </div>
         <div className="flex items-center justify-end md:w-1/2">
-          <Image src={HeroImage} alt="Hero Image" style={{ objectFit: "cover" }} />
+          <Image src={HeroImage} alt="Hero Image" style={{ objectFit: "cover" }} priority />
         </div>
       </div>
     </section>

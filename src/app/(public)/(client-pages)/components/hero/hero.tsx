@@ -47,6 +47,7 @@ export default function Hero() {
             src={HeroImage}
             alt={getMessage(copy, "Hero.imageAlt")}
             style={{ objectFit: "cover" }}
+            priority
           />
         </div>
       </div>
