@@ -14,6 +14,7 @@ export interface Booking {
   scheduledAt: string;
   priceDkk: number;
   workshop: BookingWorkshop;
+  oldPrice: number | null;
   status: BookingStatus;
   priceChangeNote?: string;
 }

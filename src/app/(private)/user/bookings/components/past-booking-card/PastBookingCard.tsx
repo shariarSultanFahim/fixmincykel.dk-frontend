@@ -30,8 +30,14 @@ export function PastBookingCard({ booking }: PastBookingCardProps) {
               day: "numeric"
             })}
           </p>
+          {booking.oldPrice && (
+            <p className="text-sm font-semibold text-navy">
+              Old Price:{" "}
+              <span className="text-red-500 line-through">{currencyFormatter.format(booking.oldPrice)}</span>
+            </p>
+          )}
           <p className="text-sm font-semibold text-navy">
-            {currencyFormatter.format(booking.priceDkk)}
+            {booking.oldPrice ? "New Price: " : "Price: "} {currencyFormatter.format(booking.priceDkk)}
           </p>
           {booking.priceChangeNote && (
             <p className="text-sm text-muted-foreground">Note: {booking.priceChangeNote}</p>

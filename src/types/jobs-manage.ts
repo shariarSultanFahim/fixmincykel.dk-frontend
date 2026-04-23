@@ -27,6 +27,7 @@ export interface JobBooking {
   status: BookingStatus;
   paymentStatus: PaymentStatus;
   priceChangeNote?: string;
+  oldPrice: number | null;
   createdAt: string;
   updatedAt: string;
   workshop: {

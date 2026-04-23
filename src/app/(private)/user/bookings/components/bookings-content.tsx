@@ -27,6 +27,7 @@ function formatBookingFromJobBooking(jobBooking: JobBooking): Booking {
       phone: jobBooking.workshop.phone,
       email: jobBooking.workshop.email
     },
+    oldPrice: jobBooking.oldPrice,
     status: isUpcoming ? "upcoming" : "completed",
     priceChangeNote: jobBooking.priceChangeNote
   };
