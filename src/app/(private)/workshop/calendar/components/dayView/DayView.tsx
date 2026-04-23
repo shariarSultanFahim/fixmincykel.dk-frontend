@@ -98,9 +98,7 @@ export function DayView({ data }: DayViewProps) {
               {booking.status === "in-progress" && (
                 <>
                   <CompleteServiceDialog booking={booking} currency={data.currency} />
-                  <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-                    Add Note
-                  </Button>
+
                 </>
               )}
               {booking.status === "awaiting-payment" && (

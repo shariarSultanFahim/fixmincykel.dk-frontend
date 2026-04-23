@@ -26,6 +26,7 @@ export interface JobBooking {
   scheduleEnd: string;
   status: BookingStatus;
   paymentStatus: PaymentStatus;
+  priceChangeNote?: string;
   createdAt: string;
   updatedAt: string;
   workshop: {

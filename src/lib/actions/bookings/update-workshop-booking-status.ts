@@ -48,8 +48,19 @@ export const useCompleteWorkshopBooking = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (bookingId: string) => {
-      return patch<BookingStatusMutationResponse>(`/booking/${bookingId}/completed`);
+    mutationFn: async ({
+      bookingId,
+      new_price,
+      reason_for_price_increase
+    }: {
+      bookingId: string;
+      new_price?: number;
+      reason_for_price_increase?: string;
+    }) => {
+      return patch<BookingStatusMutationResponse>(`/booking/${bookingId}/completed`, {
+        new_price,
+        reason_for_price_increase
+      });
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["bookings"] });

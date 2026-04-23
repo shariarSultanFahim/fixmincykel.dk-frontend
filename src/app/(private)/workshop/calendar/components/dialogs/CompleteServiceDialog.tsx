@@ -14,8 +14,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
+  DialogTrigger,
+  Input,
+  Label,
+  Textarea
+} from "@/components/ui";
 import type { CalendarBooking } from "@/types";
 
 interface CompleteServiceDialogProps {
@@ -33,13 +36,38 @@ const formatCurrency = (amount: number, currency: string) => {
 
 export function CompleteServiceDialog({ booking, currency }: CompleteServiceDialogProps) {
   const [open, setOpen] = useState(false);
+  const [newPrice, setNewPrice] = useState<string>("");
+  const [reason, setReason] = useState<string>("");
+
   const { mutateAsync: completeBooking, isPending } = useCompleteWorkshopBooking();
 
   const handleCompleteBooking = async () => {
     try {
-      const response = await completeBooking(booking.id);
+      let payload: { bookingId: string; new_price?: number; reason_for_price_increase?: string } = {
+        bookingId: booking.id
+      };
+
+      if (newPrice || reason.trim().length >= 1) {
+        if (!newPrice || !reason) {
+          toast.error("Both new price and reason must be filled if you are increasing the price.");
+          return;
+        }
+
+        const priceValue = parseFloat(newPrice);
+        if (isNaN(priceValue) || priceValue <= booking.price) {
+          toast.error(`New price must be greater than the original price (${formatCurrency(booking.price, currency)})`);
+          return;
+        }
+
+        payload.new_price = priceValue;
+        payload.reason_for_price_increase = reason;
+      }
+
+      const response = await completeBooking(payload);
       toast.success(response.message || "Booking completed successfully.");
       setOpen(false);
+      setNewPrice("");
+      setReason("");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to complete booking.";
       toast.error(message);
@@ -67,6 +95,38 @@ export function CompleteServiceDialog({ booking, currency }: CompleteServiceDial
         <p className="text-sm text-muted-foreground">
           This will mark the booking as completed and update payment status based on backend rules.
         </p>
+
+        <div className="space-y-4 border-t pt-4">
+          <div className="space-y-2">
+            <Label htmlFor="new_price" className="text-navy font-semibold">
+              New Total Amount (Optional)
+            </Label>
+            <Input
+              id="new_price"
+              type="number"
+              placeholder="e.g. 500"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+              className="bg-gray-50/50"
+            />
+            <p className="text-[10px] text-muted-foreground">
+              Only fill if the amount has increased. Must be more than{" "}
+              {formatCurrency(booking.price, currency)}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reason" className="text-navy font-semibold">
+              Reason for Price Increase
+            </Label>
+            <Textarea
+              id="reason"
+              placeholder="Explain why the price is higher..."
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="min-h-[80px] bg-gray-50/50 resize-none"
+            />
+          </div>
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

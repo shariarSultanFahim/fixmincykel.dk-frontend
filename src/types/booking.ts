@@ -15,4 +15,5 @@ export interface Booking {
   priceDkk: number;
   workshop: BookingWorkshop;
   status: BookingStatus;
+  priceChangeNote?: string;
 }
