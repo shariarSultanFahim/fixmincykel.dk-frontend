@@ -20,7 +20,7 @@ const toDate = (v: Date | string | null | undefined) => {
   return parseDate(v);
 };
 
-export const formatDate = (date: Date | string, locale?: string, pattern = DATE_PATTERN.DATE) => {
+export const formatDate = (date: Date | string, locale?: string, pattern: string = DATE_PATTERN.DATE) => {
   const d = toDate(date);
   if (!d) return "-";
   const loc = DATEFNS_LOCALES[normalizeLocale(locale)];

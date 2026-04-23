@@ -1,5 +1,5 @@
 export interface SendOfferValues {
   price: string;
-  estimatedTime: string;
+  estimatedTime: Date;
   message?: string;
 }

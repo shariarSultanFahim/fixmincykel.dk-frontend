@@ -7,6 +7,8 @@ import type { JobOffer } from "@/types/jobs-manage";
 import { useGetJobOffers } from "@/lib/actions/jobs/offers.job";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/date";
+import { DATE_PATTERN } from "@/constants/date";
 
 import { OfferCard } from "./offer-card";
 
@@ -86,7 +88,7 @@ export function OffersGrid({ jobId }: OffersGridProps) {
         reviewCount: offer.workshop?.reviewsCount || 0,
         distance: `${offer.distance} km away`,
         address: offer.workshop?.address || "N/A",
-        duration: offer.estimatedTime || "N/A",
+        duration: formatDate(offer.estimatedTime, undefined, DATE_PATTERN.DATE_TIME) || "N/A",
         availability: "Available",
         price: offer.price,
         status: offer.status,

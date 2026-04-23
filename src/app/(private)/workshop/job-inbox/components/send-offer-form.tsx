@@ -20,6 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import { DateTimePicker } from "@/components/widgets/date-time-picker/DateAndTimePicker";
+
 import { sendOfferSchema } from "../schema/send-offer-schema";
 
 interface SendOfferFormProps {
@@ -36,7 +38,7 @@ export function SendOfferForm({ formId, jobId, onSuccess }: SendOfferFormProps) 
     resolver: zodResolver(sendOfferSchema),
     defaultValues: {
       price: "",
-      estimatedTime: "",
+      estimatedTime: undefined,
       message: ""
     }
   });
@@ -53,7 +55,7 @@ export function SendOfferForm({ formId, jobId, onSuccess }: SendOfferFormProps) 
         jobId,
         workshopId,
         price: Number(values.price),
-        estimatedTime: values.estimatedTime,
+        estimatedTime: values.estimatedTime.toISOString(),
         message: values.message?.trim() ?? ""
       });
 
@@ -86,10 +88,10 @@ export function SendOfferForm({ formId, jobId, onSuccess }: SendOfferFormProps) 
           control={form.control}
           name="estimatedTime"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Estimated Time</FormLabel>
               <FormControl>
-                <Input placeholder="1 hour" {...field} />
+                <DateTimePicker value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

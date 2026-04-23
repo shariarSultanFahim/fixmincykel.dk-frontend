@@ -24,6 +24,8 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/widgets";
+import { formatDate } from "@/lib/date";
+import { DATE_PATTERN } from "@/constants/date";
 
 const PAGE_SIZE = 10;
 
@@ -114,9 +116,12 @@ export function OffersTable({ jobId }: OffersTableProps) {
                     <TableCell className="font-semibold">
                       {currencyFormatter.format(offer.price)}
                     </TableCell>
-                    <TableCell className="text-sm">{offer.estimatedTime}</TableCell>
+                    <TableCell className="text-sm">
+                      {formatDate(offer.estimatedTime, undefined, DATE_PATTERN.DATE_TIME) ||
+                        "Not specified"}
+                    </TableCell>
                     <TableCell className="max-w-xs text-sm text-muted-foreground">
-                      <p className="line-clamp-2">{offer.message}</p>
+                      <p className="line-clamp-2">{offer.message || "N/A"}</p>
                     </TableCell>
                     <TableCell className="text-sm">{offer.distance} km</TableCell>
                     <TableCell>
