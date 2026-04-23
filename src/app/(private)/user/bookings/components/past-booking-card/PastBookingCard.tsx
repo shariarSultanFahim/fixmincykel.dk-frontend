@@ -33,11 +33,9 @@ export function PastBookingCard({ booking }: PastBookingCardProps) {
           <p className="text-sm font-semibold text-navy">
             {currencyFormatter.format(booking.priceDkk)}
           </p>
-          <p className="text-sm text-muted-foreground">
-            {
-              booking.priceChangeNote ? `Note: ${booking.priceChangeNote}` : ""
-            }
-          </p>
+          {booking.priceChangeNote && (
+            <p className="text-sm text-muted-foreground">Note: {booking.priceChangeNote}</p>
+          )}
         </div>
 
         <Button variant="secondary" size="sm" className="pointer-events-none gap-1">
