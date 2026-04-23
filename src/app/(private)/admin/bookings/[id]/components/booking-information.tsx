@@ -82,9 +82,17 @@ export default function BookingInformation({ booking }: BookingInformationProps)
             <DollarSign className="mt-1 h-5 w-5 shrink-0 text-primary" />
             <div>
               <p className="text-sm text-gray-600">Amount</p>
-              <p className="font-medium text-gray-900">
-                {currencyFormatter.format(booking.offer?.price ?? 0)}
-              </p>
+              <div className="flex flex-col">
+                {booking.oldPrice && (
+                  <p className="text-xs font-medium text-rose-500 line-through">
+                    {currencyFormatter.format(booking.oldPrice)}
+                  </p>
+                )}
+                <p className="font-medium text-gray-900">
+                  {booking.oldPrice ? "New Price: " : ""}
+                  {currencyFormatter.format(booking.offer?.price ?? 0)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -99,6 +107,15 @@ export default function BookingInformation({ booking }: BookingInformationProps)
                 <p className="text-sm text-gray-600">{booking.job.title}</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {booking.priceChangeNote && (
+          <div className="mt-4 border-t border-dashed border-gray-200 pt-4">
+            <p className="text-sm font-semibold text-gray-600">Price Change Note</p>
+            <p className="mt-1 text-sm leading-relaxed text-gray-700 italic">
+              "{booking.priceChangeNote}"
+            </p>
           </div>
         )}
       </CardContent>

@@ -104,6 +104,8 @@ export interface AdminBooking {
   scheduleEnd: string;
   status: BookingManageStatus;
   paymentStatus: BookingManagePaymentStatus;
+  priceChangeNote?: string;
+  oldPrice: number | null;
   createdAt: string;
   updatedAt: string;
   job: BookingManageJob;
