@@ -224,11 +224,11 @@ export function NewRepairForm() {
         title: "Success",
         description: "Your repair request has been submitted successfully."
       });
-      router.push(`/user/repairs/${createResponse.data.id}`);
+      router.push(`/repair-request/success`);
     } catch (error) {
       const errorMessage = isAxiosError(error)
         ? (error.response?.data as { message?: string } | undefined)?.message ||
-          "Failed to submit repair request."
+        "Failed to submit repair request."
         : "Failed to submit repair request. Please try again.";
 
       toast({
