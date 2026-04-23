@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 import { Check, ChevronLeft, Clock, Headset, LayoutDashboard, Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
-import type { LoginErrorResponse } from "@/types/auth";
+import { LoginErrorResponse } from "@/types/auth";
 
 import { useWorkshopRegister } from "@/lib/actions/auth/register.workshop";
 
+import DenmarkAddressInput from "@/components/map/DenmarkAddressInput";
 import {
   Button,
   Form,
@@ -28,7 +29,7 @@ import {
 
 import { createRegisterSchema, type RegisterFormValues } from "./register.schema";
 
-const LocationPicker = dynamic(() => import("@/components/map/LeafletMap"), {
+const RegisterLocationMap = dynamic(() => import("./register-location-map"), {
   ssr: false,
   loading: () => <div className="h-100 w-full animate-pulse rounded bg-muted" />
 });
@@ -50,12 +51,13 @@ export function FormRegister() {
       phone: "",
       ownerName: "",
       password: "",
-      latitude: undefined,
-      longitude: undefined
+      latitude: 55.6935403,
+      longitude: 12.5500641
     }
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
+    console.log(values);
     try {
       const response = await registerMutation.mutateAsync(values);
 
@@ -79,6 +81,9 @@ export function FormRegister() {
       toast.error(message);
     }
   });
+
+  const selectedLatitude = useWatch({ control: form.control, name: "latitude" });
+  const selectedLongitude = useWatch({ control: form.control, name: "longitude" });
 
   return (
     <section className="container my-10 flex min-h-screen flex-col items-center justify-center gap-8">
@@ -146,7 +151,31 @@ export function FormRegister() {
                   <FormItem>
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter street address" type="text" {...field} />
+                      <DenmarkAddressInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        onSelect={({ address, latitude, longitude, city, postalCode }) => {
+                          field.onChange(address);
+
+                          if (city) {
+                            form.setValue("city", city, { shouldValidate: true });
+                          }
+
+                          if (postalCode) {
+                            form.setValue("postalCode", postalCode, { shouldValidate: true });
+                          }
+
+                          if (typeof latitude === "number" && typeof longitude === "number") {
+                            form.setValue("latitude", latitude, { shouldValidate: true });
+                            form.setValue("longitude", longitude, { shouldValidate: true });
+                            return;
+                          }
+
+                          form.setValue("latitude", 55.6935403, { shouldValidate: true });
+                          form.setValue("longitude", 12.5500641, { shouldValidate: true });
+                        }}
+                        placeholder="Norrebrogade 45, 2200 Kobenhavn N"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -255,15 +284,17 @@ export function FormRegister() {
               <div className="space-y-3 rounded-xl border border-navy/10 p-4">
                 <p className="text-sm font-semibold text-navy">Workshop Location</p>
                 <p className="text-xs text-muted-foreground">
-                  We use your OpenStreet current location. You can drag the marker to fine-tune.
+                  Select an address first to place the marker. You can drag it or use GPS to adjust.
                 </p>
-                <LocationPicker
+                <RegisterLocationMap
+                  latitude={selectedLatitude}
+                  longitude={selectedLongitude}
                   onLocationSelect={(latitude, longitude) => {
                     form.setValue("latitude", latitude, { shouldValidate: true });
                     form.setValue("longitude", longitude, { shouldValidate: true });
                   }}
                 />
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="hidden gap-3 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="latitude"

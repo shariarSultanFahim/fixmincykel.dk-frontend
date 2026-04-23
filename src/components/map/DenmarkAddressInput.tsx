@@ -12,7 +12,23 @@ interface AddressSelection {
   address: string;
   latitude?: number;
   longitude?: number;
+  city?: string;
+  postalCode?: string;
 }
+
+const extractAddressParts = (components?: google.maps.GeocoderAddressComponent[]) => {
+  if (!components?.length) {
+    return { city: undefined, postalCode: undefined };
+  }
+
+  const postalCode = components.find((item) => item.types.includes("postal_code"))?.long_name;
+  const city =
+    components.find((item) => item.types.includes("locality"))?.long_name ??
+    components.find((item) => item.types.includes("postal_town"))?.long_name ??
+    components.find((item) => item.types.includes("administrative_area_level_2"))?.long_name;
+
+  return { city, postalCode };
+};
 
 interface DenmarkAddressInputProps {
   value?: string;
@@ -31,6 +47,14 @@ export default function DenmarkAddressInput({
 
   const controlledValue = value ?? "";
 
+  const onChangeRef = useRef(onChange);
+  const onSelectRef = useRef(onSelect);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+    onSelectRef.current = onSelect;
+  }, [onChange, onSelect]);
+
   useEffect(() => {
     if (inputRef.current && inputRef.current.value !== controlledValue) {
       inputRef.current.value = controlledValue;
@@ -44,40 +68,80 @@ export default function DenmarkAddressInput({
       return;
     }
 
+    let isCancelled = false;
     let listener: google.maps.MapsEventListener | undefined;
 
     setOptions({ key: apiKey });
 
-    importLibrary("places").then(({ Autocomplete }) => {
-      if (!inputRef.current) {
-        return;
-      }
+    Promise.all([importLibrary("places"), importLibrary("geocoding")]).then(
+      ([{ Autocomplete }, { Geocoder }]) => {
+        if (!inputRef.current || isCancelled) {
+          return;
+        }
 
-      const autocomplete = new Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "dk" },
-        fields: ["formatted_address", "geometry"],
-        types: ["address"]
-      });
+        const geocoder = new Geocoder();
 
-      listener = autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        const address = place.formatted_address ?? inputRef.current?.value ?? "";
-        const latitude = place.geometry?.location?.lat();
-        const longitude = place.geometry?.location?.lng();
-
-        onChange(address);
-        onSelect?.({
-          address,
-          latitude,
-          longitude
+        const autocomplete = new Autocomplete(inputRef.current, {
+          componentRestrictions: { country: "dk" },
+          fields: ["formatted_address", "geometry", "place_id", "address_components"],
+          types: ["address"]
         });
-      });
-    });
+
+        listener = autocomplete.addListener("place_changed", async () => {
+          const place = autocomplete.getPlace();
+          let { city, postalCode } = extractAddressParts(place.address_components);
+          let address = place.formatted_address ?? inputRef.current?.value ?? "";
+
+          let latitude = place.geometry?.location?.lat();
+          let longitude = place.geometry?.location?.lng();
+
+          // Instantly update the input/form state to avoid lag while geocoding
+          onChangeRef.current(address);
+
+          if (place.place_id) {
+            try {
+              const response = await geocoder.geocode({ placeId: place.place_id });
+              const topResult = response.results[0];
+              const location = topResult?.geometry?.location;
+
+              if (topResult?.formatted_address) {
+                address = topResult.formatted_address;
+              }
+
+              if (typeof latitude !== "number" || typeof longitude !== "number") {
+                if (location) {
+                  latitude = location.lat();
+                  longitude = location.lng();
+                }
+              }
+
+              if (!city || !postalCode) {
+                const fallbackParts = extractAddressParts(topResult?.address_components);
+                city = city ?? fallbackParts.city;
+                postalCode = postalCode ?? fallbackParts.postalCode;
+              }
+            } catch {
+              // Keep undefined coordinates if geocoding fallback fails.
+            }
+          }
+
+          onChangeRef.current(address);
+          onSelectRef.current?.({
+            address,
+            latitude,
+            longitude,
+            city,
+            postalCode
+          });
+        });
+      }
+    );
 
     return () => {
+      isCancelled = true;
       listener?.remove();
     };
-  }, [onChange, onSelect]);
+  }, []); // Only run once on mount
 
   return (
     <Input
