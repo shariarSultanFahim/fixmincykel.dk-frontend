@@ -50,12 +50,29 @@ export function PhotoForm({ form }: PhotoFormProps) {
 
     const incomingPhotos = Array.from(files);
     const currentPhotos = form.getValues("photos.photos") || [];
-    const combinedPhotos = [...currentPhotos, ...incomingPhotos].slice(0, 5);
 
-    if (currentPhotos.length + incomingPhotos.length > 5) {
+    // Filter out files larger than 5MB
+    const validIncomingPhotos = incomingPhotos.filter((file) => {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: `"${file.name}" exceeds 5MB limit.`,
+          variant: "destructive"
+        });
+        return false;
+      }
+      return true;
+    });
+
+    if (validIncomingPhotos.length === 0) return;
+
+    const totalPotentialPhotos = currentPhotos.length + validIncomingPhotos.length;
+    const combinedPhotos = [...currentPhotos, ...validIncomingPhotos].slice(0, 3);
+
+    if (totalPotentialPhotos > 3) {
       toast({
         title: "Photo limit reached",
-        description: "You can upload up to 5 photos.",
+        description: "You can upload up to 3 photos.",
         variant: "destructive"
       });
     }
@@ -107,7 +124,7 @@ export function PhotoForm({ form }: PhotoFormProps) {
       <div>
         <h3 className="text-lg font-semibold text-navy">Upload photos of the issue</h3>
         <p className="mt-1 text-sm text-gray-600">
-          Add 1-4 photos showing the problem. Clear photos help workshops give accurate quotes.
+          Add up to 3 photos (max 5MB each) showing the problem. Clear photos help workshops give accurate quotes.
         </p>
       </div>
 
@@ -182,7 +199,7 @@ export function PhotoForm({ form }: PhotoFormProps) {
 
                 {/* Photo Counter */}
                 <p className="text-center text-sm text-gray-600">
-                  {photoCount} of 5 photos uploaded (minimum 1 required)
+                  {photoCount} of 3 photos uploaded (minimum 1 required)
                 </p>
               </div>
             </FormControl>
