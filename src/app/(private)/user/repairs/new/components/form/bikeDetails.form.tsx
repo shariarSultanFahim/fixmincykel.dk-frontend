@@ -41,7 +41,7 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
     <div className="space-y-6">
       {/* Bike Information */}
       <div className="space-y-4">
-        <FormField
+        {/* <FormField
           control={form.control}
           name="details.repairIssue"
           render={({ field }) => (
@@ -77,7 +77,7 @@ export function BikeDetailsForm({ form }: BikeDetailsFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           control={form.control}
